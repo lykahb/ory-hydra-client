@@ -1,0 +1,3 @@
+allowNonUniqueOperationIds: true
+strictFields: false
+cabalPackage: ory-hydra-client
