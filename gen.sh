@@ -2,14 +2,16 @@
 
 set -e
 
-if [ "$1" = "" ]; then
+TAG="$1"
+OUT="generated-client"
+
+if [ "$TAG" = "" ]; then
     echo "Tag name is missing"
     exit 1
 fi
-TAG="$1"
 
-curl --fail https://raw.githubusercontent.com/ory/hydra/$TAG/.schema/api.swagger.json > api.swagger.json
+curl --fail https://raw.githubusercontent.com/ory/hydra/master/docs/versioned_docs/version-$TAG/.static/api.json > api.swagger.json
 
-openapi-generator-cli generate -i api.swagger.json -g haskell-http-client -o ory-hydra-client -c config.yml
+openapi-generator-cli generate -i api.swagger.json -g haskell-http-client -o $OUT -c config.yml
 
-cp LICENSE ory-hydra-client/
+cp LICENSE $OUT/
