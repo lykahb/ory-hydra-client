@@ -65,7 +65,7 @@ import qualified Prelude as P
 -- 
 -- When an authorization code, hybrid, or implicit OAuth 2.0 Flow is initiated, ORY Hydra asks the login provider to authenticate the subject and then tell ORY Hydra now about it. If the subject authenticated, he/she must now be asked if the OAuth 2.0 Client which initiated the flow should be allowed to access the resources on the subject's behalf.  The consent provider which handles this request and is a web app implemented and hosted by you. It shows a subject interface which asks the subject to grant or deny the client access to the requested scope (\"Application my-dropbox-app wants write access to all your private files\").  The consent challenge is appended to the consent provider's URL to which the subject's user-agent (browser) is redirected to. The consent provider uses that challenge to fetch information on the OAuth2 request and then tells ORY Hydra if the subject accepted or rejected the request.  This endpoint tells ORY Hydra that the subject has authorized the OAuth 2.0 client to access resources on his/her behalf. The consent provider includes additional information, such as session data for access and ID tokens, and if the consent request should be used as basis for future requests.  The response contains a redirect URL which the consent provider should redirect the user-agent to.
 -- 
-acceptConsentRequest0 
+acceptConsentRequest0
   :: (Consumes AcceptConsentRequest0 MimeJSON)
   => ConsentChallenge -- ^ "consentChallenge"
   -> ORYHydraRequest AcceptConsentRequest0 MimeJSON CompletedRequest MimeJSON
@@ -91,7 +91,7 @@ instance Produces AcceptConsentRequest0 MimeJSON
 -- 
 -- When an authorization code, hybrid, or implicit OAuth 2.0 Flow is initiated, ORY Hydra asks the login provider (sometimes called \"identity provider\") to authenticate the subject and then tell ORY Hydra now about it. The login provider is an web-app you write and host, and it must be able to authenticate (\"show the subject a login screen\") a subject (in OAuth2 the proper name for subject is \"resource owner\").  The authentication challenge is appended to the login provider URL to which the subject's user-agent (browser) is redirected to. The login provider uses that challenge to fetch information on the OAuth2 request and then accept or reject the requested authentication process.  This endpoint tells ORY Hydra that the subject has successfully authenticated and includes additional information such as the subject's ID and if ORY Hydra should remember the subject's subject agent for future authentication attempts by setting a cookie.  The response contains a redirect URL which the login provider should redirect the user-agent to.
 -- 
-acceptLoginRequest0 
+acceptLoginRequest0
   :: (Consumes AcceptLoginRequest0 MimeJSON)
   => LoginChallenge -- ^ "loginChallenge"
   -> ORYHydraRequest AcceptLoginRequest0 MimeJSON CompletedRequest MimeJSON
@@ -117,7 +117,7 @@ instance Produces AcceptLoginRequest0 MimeJSON
 -- 
 -- When a user or an application requests ORY Hydra to log out a user, this endpoint is used to confirm that logout request. No body is required.  The response contains a redirect URL which the consent provider should redirect the user-agent to.
 -- 
-acceptLogoutRequest 
+acceptLogoutRequest
   :: LogoutChallenge -- ^ "logoutChallenge"
   -> ORYHydraRequest AcceptLogoutRequest MimeNoContent CompletedRequest MimeJSON
 acceptLogoutRequest (LogoutChallenge logoutChallenge) =
@@ -137,7 +137,7 @@ instance Produces AcceptLogoutRequest MimeJSON
 -- 
 -- This endpoint is capable of generating JSON Web Key Sets for you. There a different strategies available, such as symmetric cryptographic keys (HS256, HS512) and asymetric cryptographic keys (RS256, ECDSA). If the specified JSON Web Key Set does not exist, it will be created.  A JSON Web Key (JWK) is a JavaScript Object Notation (JSON) data structure that represents a cryptographic key. A JWK Set is a JSON data structure that represents a set of JWKs. A JSON Web Key is identified by its set and key id. ORY Hydra uses this functionality to store cryptographic keys used for TLS and JSON Web Tokens (such as OpenID Connect ID tokens), and allows storing user-defined keys as well.
 -- 
-createJsonWebKeySet 
+createJsonWebKeySet
   :: (Consumes CreateJsonWebKeySet MimeJSON)
   => Set -- ^ "set" -  The set
   -> ORYHydraRequest CreateJsonWebKeySet MimeJSON JSONWebKeySet MimeJSON
@@ -162,7 +162,7 @@ instance Produces CreateJsonWebKeySet MimeJSON
 -- 
 -- Create a new OAuth 2.0 client If you pass `client_secret` the secret will be used, otherwise a random secret will be generated. The secret will be returned in the response and you will not be able to retrieve it later on. Write the secret down and keep it somwhere safe.  OAuth 2.0 clients are used to perform OAuth 2.0 and OpenID Connect flows. Usually, OAuth 2.0 clients are generated for applications which want to consume your OAuth 2.0 or OpenID Connect capabilities. To manage ORY Hydra, you will need an OAuth 2.0 Client as well. Make sure that this endpoint is well protected and only callable by first-party components.
 -- 
-createOAuth2Client 
+createOAuth2Client
   :: (Consumes CreateOAuth2Client MimeJSON, MimeRender MimeJSON OAuth2Client)
   => OAuth2Client -- ^ "body"
   -> ORYHydraRequest CreateOAuth2Client MimeJSON OAuth2Client MimeJSON
@@ -188,18 +188,15 @@ instance Produces CreateOAuth2Client MimeJSON
 -- 
 -- Use this endpoint to delete a single JSON Web Key.  A JSON Web Key (JWK) is a JavaScript Object Notation (JSON) data structure that represents a cryptographic key. A JWK Set is a JSON data structure that represents a set of JWKs. A JSON Web Key is identified by its set and key id. ORY Hydra uses this functionality to store cryptographic keys used for TLS and JSON Web Tokens (such as OpenID Connect ID tokens), and allows storing user-defined keys as well.
 -- 
--- Note: Has 'Produces' instances, but no response schema
--- 
-deleteJsonWebKey 
+deleteJsonWebKey
   :: Kid -- ^ "kid" -  The kid of the desired key
   -> Set -- ^ "set" -  The set
-  -> ORYHydraRequest DeleteJsonWebKey MimeNoContent res MimeJSON
+  -> ORYHydraRequest DeleteJsonWebKey MimeNoContent NoContent MimeNoContent
 deleteJsonWebKey (Kid kid) (Set set) =
   _mkRequest "DELETE" ["/keys/",toPath set,"/",toPath kid]
 
 data DeleteJsonWebKey  
--- | @application/json@
-instance Produces DeleteJsonWebKey MimeJSON
+instance Produces DeleteJsonWebKey MimeNoContent
 
 
 -- *** deleteJsonWebKeySet
@@ -210,17 +207,14 @@ instance Produces DeleteJsonWebKey MimeJSON
 -- 
 -- Use this endpoint to delete a complete JSON Web Key Set and all the keys in that set.  A JSON Web Key (JWK) is a JavaScript Object Notation (JSON) data structure that represents a cryptographic key. A JWK Set is a JSON data structure that represents a set of JWKs. A JSON Web Key is identified by its set and key id. ORY Hydra uses this functionality to store cryptographic keys used for TLS and JSON Web Tokens (such as OpenID Connect ID tokens), and allows storing user-defined keys as well.
 -- 
--- Note: Has 'Produces' instances, but no response schema
--- 
-deleteJsonWebKeySet 
+deleteJsonWebKeySet
   :: Set -- ^ "set" -  The set
-  -> ORYHydraRequest DeleteJsonWebKeySet MimeNoContent res MimeJSON
+  -> ORYHydraRequest DeleteJsonWebKeySet MimeNoContent NoContent MimeNoContent
 deleteJsonWebKeySet (Set set) =
   _mkRequest "DELETE" ["/keys/",toPath set]
 
 data DeleteJsonWebKeySet  
--- | @application/json@
-instance Produces DeleteJsonWebKeySet MimeJSON
+instance Produces DeleteJsonWebKeySet MimeNoContent
 
 
 -- *** deleteOAuth2Client
@@ -231,17 +225,14 @@ instance Produces DeleteJsonWebKeySet MimeJSON
 -- 
 -- Delete an existing OAuth 2.0 Client by its ID.  OAuth 2.0 clients are used to perform OAuth 2.0 and OpenID Connect flows. Usually, OAuth 2.0 clients are generated for applications which want to consume your OAuth 2.0 or OpenID Connect capabilities. To manage ORY Hydra, you will need an OAuth 2.0 Client as well. Make sure that this endpoint is well protected and only callable by first-party components.
 -- 
--- Note: Has 'Produces' instances, but no response schema
--- 
-deleteOAuth2Client 
+deleteOAuth2Client
   :: Id -- ^ "id" -  The id of the OAuth 2.0 Client.
-  -> ORYHydraRequest DeleteOAuth2Client MimeNoContent res MimeJSON
+  -> ORYHydraRequest DeleteOAuth2Client MimeNoContent NoContent MimeNoContent
 deleteOAuth2Client (Id id) =
   _mkRequest "DELETE" ["/clients/",toPath id]
 
 data DeleteOAuth2Client  
--- | @application/json@
-instance Produces DeleteOAuth2Client MimeJSON
+instance Produces DeleteOAuth2Client MimeNoContent
 
 
 -- *** deleteOAuth2Token
@@ -252,18 +243,15 @@ instance Produces DeleteOAuth2Client MimeJSON
 -- 
 -- This endpoint deletes OAuth2 access tokens issued for a client from the database
 -- 
--- Note: Has 'Produces' instances, but no response schema
--- 
-deleteOAuth2Token 
+deleteOAuth2Token
   :: ClientId -- ^ "clientId"
-  -> ORYHydraRequest DeleteOAuth2Token MimeNoContent res MimeJSON
+  -> ORYHydraRequest DeleteOAuth2Token MimeNoContent NoContent MimeNoContent
 deleteOAuth2Token (ClientId clientId) =
   _mkRequest "DELETE" ["/oauth2/tokens"]
     `addQuery` toQuery ("client_id", Just clientId)
 
 data DeleteOAuth2Token  
--- | @application/json@
-instance Produces DeleteOAuth2Token MimeJSON
+instance Produces DeleteOAuth2Token MimeNoContent
 
 
 -- *** flushInactiveOAuth2Tokens
@@ -274,11 +262,9 @@ instance Produces DeleteOAuth2Token MimeJSON
 -- 
 -- This endpoint flushes expired OAuth2 access tokens from the database. You can set a time after which no tokens will be not be touched, in case you want to keep recent tokens for auditing. Refresh tokens can not be flushed as they are deleted automatically when performing the refresh flow.
 -- 
--- Note: Has 'Produces' instances, but no response schema
--- 
-flushInactiveOAuth2Tokens 
+flushInactiveOAuth2Tokens
   :: (Consumes FlushInactiveOAuth2Tokens MimeJSON)
-  => ORYHydraRequest FlushInactiveOAuth2Tokens MimeJSON res MimeJSON
+  => ORYHydraRequest FlushInactiveOAuth2Tokens MimeJSON NoContent MimeNoContent
 flushInactiveOAuth2Tokens =
   _mkRequest "POST" ["/oauth2/flush"]
 
@@ -288,8 +274,7 @@ instance HasBodyParam FlushInactiveOAuth2Tokens FlushInactiveOAuth2TokensRequest
 -- | @application/json@
 instance Consumes FlushInactiveOAuth2Tokens MimeJSON
 
--- | @application/json@
-instance Produces FlushInactiveOAuth2Tokens MimeJSON
+instance Produces FlushInactiveOAuth2Tokens MimeNoContent
 
 
 -- *** getConsentRequest
@@ -300,7 +285,7 @@ instance Produces FlushInactiveOAuth2Tokens MimeJSON
 -- 
 -- When an authorization code, hybrid, or implicit OAuth 2.0 Flow is initiated, ORY Hydra asks the login provider to authenticate the subject and then tell ORY Hydra now about it. If the subject authenticated, he/she must now be asked if the OAuth 2.0 Client which initiated the flow should be allowed to access the resources on the subject's behalf.  The consent provider which handles this request and is a web app implemented and hosted by you. It shows a subject interface which asks the subject to grant or deny the client access to the requested scope (\"Application my-dropbox-app wants write access to all your private files\").  The consent challenge is appended to the consent provider's URL to which the subject's user-agent (browser) is redirected to. The consent provider uses that challenge to fetch information on the OAuth2 request and then tells ORY Hydra if the subject accepted or rejected the request.
 -- 
-getConsentRequest 
+getConsentRequest
   :: ConsentChallenge -- ^ "consentChallenge"
   -> ORYHydraRequest GetConsentRequest MimeNoContent ConsentRequest MimeJSON
 getConsentRequest (ConsentChallenge consentChallenge) =
@@ -320,7 +305,7 @@ instance Produces GetConsentRequest MimeJSON
 -- 
 -- This endpoint returns a singular JSON Web Key, identified by the set and the specific key ID (kid).
 -- 
-getJsonWebKey 
+getJsonWebKey
   :: Kid -- ^ "kid" -  The kid of the desired key
   -> Set -- ^ "set" -  The set
   -> ORYHydraRequest GetJsonWebKey MimeNoContent JSONWebKeySet MimeJSON
@@ -340,7 +325,7 @@ instance Produces GetJsonWebKey MimeJSON
 -- 
 -- This endpoint can be used to retrieve JWK Sets stored in ORY Hydra.  A JSON Web Key (JWK) is a JavaScript Object Notation (JSON) data structure that represents a cryptographic key. A JWK Set is a JSON data structure that represents a set of JWKs. A JSON Web Key is identified by its set and key id. ORY Hydra uses this functionality to store cryptographic keys used for TLS and JSON Web Tokens (such as OpenID Connect ID tokens), and allows storing user-defined keys as well.
 -- 
-getJsonWebKeySet 
+getJsonWebKeySet
   :: Set -- ^ "set" -  The set
   -> ORYHydraRequest GetJsonWebKeySet MimeNoContent JSONWebKeySet MimeJSON
 getJsonWebKeySet (Set set) =
@@ -359,7 +344,7 @@ instance Produces GetJsonWebKeySet MimeJSON
 -- 
 -- When an authorization code, hybrid, or implicit OAuth 2.0 Flow is initiated, ORY Hydra asks the login provider (sometimes called \"identity provider\") to authenticate the subject and then tell ORY Hydra now about it. The login provider is an web-app you write and host, and it must be able to authenticate (\"show the subject a login screen\") a subject (in OAuth2 the proper name for subject is \"resource owner\").  The authentication challenge is appended to the login provider URL to which the subject's user-agent (browser) is redirected to. The login provider uses that challenge to fetch information on the OAuth2 request and then accept or reject the requested authentication process.
 -- 
-getLoginRequest 
+getLoginRequest
   :: LoginChallenge -- ^ "loginChallenge"
   -> ORYHydraRequest GetLoginRequest MimeNoContent LoginRequest MimeJSON
 getLoginRequest (LoginChallenge loginChallenge) =
@@ -379,7 +364,7 @@ instance Produces GetLoginRequest MimeJSON
 -- 
 -- Use this endpoint to fetch a logout request.
 -- 
-getLogoutRequest 
+getLogoutRequest
   :: LogoutChallenge -- ^ "logoutChallenge"
   -> ORYHydraRequest GetLogoutRequest MimeNoContent LogoutRequest MimeJSON
 getLogoutRequest (LogoutChallenge logoutChallenge) =
@@ -399,7 +384,7 @@ instance Produces GetLogoutRequest MimeJSON
 -- 
 -- Get an OAUth 2.0 client by its ID. This endpoint never returns passwords.  OAuth 2.0 clients are used to perform OAuth 2.0 and OpenID Connect flows. Usually, OAuth 2.0 clients are generated for applications which want to consume your OAuth 2.0 or OpenID Connect capabilities. To manage ORY Hydra, you will need an OAuth 2.0 Client as well. Make sure that this endpoint is well protected and only callable by first-party components.
 -- 
-getOAuth2Client 
+getOAuth2Client
   :: Id -- ^ "id" -  The id of the OAuth 2.0 Client.
   -> ORYHydraRequest GetOAuth2Client MimeNoContent OAuth2Client MimeJSON
 getOAuth2Client (Id id) =
@@ -418,7 +403,7 @@ instance Produces GetOAuth2Client MimeJSON
 -- 
 -- This endpoint returns the service version typically notated using semantic versioning.  If the service supports TLS Edge Termination, this endpoint does not require the `X-Forwarded-Proto` header to be set.
 -- 
-getVersion 
+getVersion
   :: ORYHydraRequest GetVersion MimeNoContent Version MimeJSON
 getVersion =
   _mkRequest "GET" ["/version"]
@@ -436,7 +421,7 @@ instance Produces GetVersion MimeJSON
 -- 
 -- The introspection endpoint allows to check if a token (both refresh and access) is active or not. An active token is neither expired nor revoked. If a token is active, additional information on the token will be included. You can set additional data for a token by setting `accessTokenExtra` during the consent flow.  For more information [read this blog post](https://www.oauth.com/oauth2-servers/token-introspection-endpoint/).
 -- 
-introspectOAuth2Token 
+introspectOAuth2Token
   :: (Consumes IntrospectOAuth2Token MimeFormUrlEncoded)
   => Token -- ^ "token" -  The string value of the token. For access tokens, this is the \\\"access_token\\\" value returned from the token endpoint defined in OAuth 2.0. For refresh tokens, this is the \\\"refresh_token\\\" value returned.
   -> ORYHydraRequest IntrospectOAuth2Token MimeFormUrlEncoded OAuth2TokenIntrospection MimeJSON
@@ -466,7 +451,7 @@ instance Produces IntrospectOAuth2Token MimeJSON
 -- 
 -- This endpoint returns a 200 status code when the HTTP server is up running. This status does currently not include checks whether the database connection is working.  If the service supports TLS Edge Termination, this endpoint does not require the `X-Forwarded-Proto` header to be set.  Be aware that if you are running multiple nodes of this service, the health status will never refer to the cluster state, only to a single instance.
 -- 
-isInstanceAlive 
+isInstanceAlive
   :: ORYHydraRequest IsInstanceAlive MimeNoContent HealthStatus MimeJSON
 isInstanceAlive =
   _mkRequest "GET" ["/health/alive"]
@@ -484,14 +469,14 @@ instance Produces IsInstanceAlive MimeJSON
 -- 
 -- This endpoint lists all clients in the database, and never returns client secrets. As a default it lists the first 100 clients. The `limit` parameter can be used to retrieve more clients, but it has an upper bound at 500 objects. Pagination should be used to retrieve more than 500 objects.  OAuth 2.0 clients are used to perform OAuth 2.0 and OpenID Connect flows. Usually, OAuth 2.0 clients are generated for applications which want to consume your OAuth 2.0 or OpenID Connect capabilities. To manage ORY Hydra, you will need an OAuth 2.0 Client as well. Make sure that this endpoint is well protected and only callable by first-party components. The \"Link\" header is also included in successful responses, which contains one or more links for pagination, formatted like so: '<https://hydra-url/admin/clients?limit={limit}&offset={offset}>; rel=\"{page}\"', where page is one of the following applicable pages: 'first', 'next', 'last', and 'previous'. Multiple links can be included in this header, and will be separated by a comma.
 -- 
-listOAuth2Clients 
+listOAuth2Clients
   :: ORYHydraRequest ListOAuth2Clients MimeNoContent [OAuth2Client] MimeJSON
 listOAuth2Clients =
   _mkRequest "GET" ["/clients"]
 
 data ListOAuth2Clients  
 
--- | /Optional Param/ "limit" - The maximum amount of policies returned, upper bound is 500 policies
+-- | /Optional Param/ "limit" - The maximum amount of clients to returned, upper bound is 500 clients.
 instance HasOptionalParam ListOAuth2Clients Limit where
   applyOptionalParam req (Limit xs) =
     req `addQuery` toQuery ("limit", Just xs)
@@ -500,6 +485,16 @@ instance HasOptionalParam ListOAuth2Clients Limit where
 instance HasOptionalParam ListOAuth2Clients Offset where
   applyOptionalParam req (Offset xs) =
     req `addQuery` toQuery ("offset", Just xs)
+
+-- | /Optional Param/ "client_name" - The name of the clients to filter by.
+instance HasOptionalParam ListOAuth2Clients ClientName where
+  applyOptionalParam req (ClientName xs) =
+    req `addQuery` toQuery ("client_name", Just xs)
+
+-- | /Optional Param/ "owner" - The owner of the clients to filter by.
+instance HasOptionalParam ListOAuth2Clients Owner where
+  applyOptionalParam req (Owner xs) =
+    req `addQuery` toQuery ("owner", Just xs)
 -- | @application/json@
 instance Produces ListOAuth2Clients MimeJSON
 
@@ -512,7 +507,7 @@ instance Produces ListOAuth2Clients MimeJSON
 -- 
 -- This endpoint lists all subject's granted consent sessions, including client and granted scope. If the subject is unknown or has not granted any consent sessions yet, the endpoint returns an empty JSON array with status code 200 OK.   The \"Link\" header is also included in successful responses, which contains one or more links for pagination, formatted like so: '<https://hydra-url/admin/oauth2/auth/sessions/consent?subject={user}&limit={limit}&offset={offset}>; rel=\"{page}\"', where page is one of the following applicable pages: 'first', 'next', 'last', and 'previous'. Multiple links can be included in this header, and will be separated by a comma.
 -- 
-listSubjectConsentSessions 
+listSubjectConsentSessions
   :: Subject -- ^ "subject"
   -> ORYHydraRequest ListSubjectConsentSessions MimeNoContent [PreviousConsentSession] MimeJSON
 listSubjectConsentSessions (Subject subject) =
@@ -524,21 +519,31 @@ data ListSubjectConsentSessions
 instance Produces ListSubjectConsentSessions MimeJSON
 
 
--- *** prometheus
+-- *** patchOAuth2Client
 
--- | @GET \/metrics\/prometheus@
+-- | @PATCH \/clients\/{id}@
 -- 
--- Get Snapshot Metrics from the Hydra Service.
+-- Patch an OAuth 2.0 Client
 -- 
--- If you're using k8s, you can then add annotations to your deployment like so:  ``` metadata: annotations: prometheus.io/port: \"4445\" prometheus.io/path: \"/metrics/prometheus\" ```  If the service supports TLS Edge Termination, this endpoint does not require the `X-Forwarded-Proto` header to be set.
+-- Patch an existing OAuth 2.0 Client. If you pass `client_secret` the secret will be updated and returned via the API. This is the only time you will be able to retrieve the client secret, so write it down and keep it safe.  OAuth 2.0 clients are used to perform OAuth 2.0 and OpenID Connect flows. Usually, OAuth 2.0 clients are generated for applications which want to consume your OAuth 2.0 or OpenID Connect capabilities. To manage ORY Hydra, you will need an OAuth 2.0 Client as well. Make sure that this endpoint is well protected and only callable by first-party components.
 -- 
-prometheus 
-  :: ORYHydraRequest Prometheus MimeNoContent NoContent MimeNoContent
-prometheus =
-  _mkRequest "GET" ["/metrics/prometheus"]
+patchOAuth2Client
+  :: (Consumes PatchOAuth2Client MimeJSON, MimeRender MimeJSON Body)
+  => Body -- ^ "body"
+  -> Id -- ^ "id"
+  -> ORYHydraRequest PatchOAuth2Client MimeJSON OAuth2Client MimeJSON
+patchOAuth2Client body (Id id) =
+  _mkRequest "PATCH" ["/clients/",toPath id]
+    `setBodyParam` body
 
-data Prometheus  
-instance Produces Prometheus MimeNoContent
+data PatchOAuth2Client 
+instance HasBodyParam PatchOAuth2Client Body 
+
+-- | @application/json@
+instance Consumes PatchOAuth2Client MimeJSON
+
+-- | @application/json@
+instance Produces PatchOAuth2Client MimeJSON
 
 
 -- *** rejectConsentRequest
@@ -549,7 +554,7 @@ instance Produces Prometheus MimeNoContent
 -- 
 -- When an authorization code, hybrid, or implicit OAuth 2.0 Flow is initiated, ORY Hydra asks the login provider to authenticate the subject and then tell ORY Hydra now about it. If the subject authenticated, he/she must now be asked if the OAuth 2.0 Client which initiated the flow should be allowed to access the resources on the subject's behalf.  The consent provider which handles this request and is a web app implemented and hosted by you. It shows a subject interface which asks the subject to grant or deny the client access to the requested scope (\"Application my-dropbox-app wants write access to all your private files\").  The consent challenge is appended to the consent provider's URL to which the subject's user-agent (browser) is redirected to. The consent provider uses that challenge to fetch information on the OAuth2 request and then tells ORY Hydra if the subject accepted or rejected the request.  This endpoint tells ORY Hydra that the subject has not authorized the OAuth 2.0 client to access resources on his/her behalf. The consent provider must include a reason why the consent was not granted.  The response contains a redirect URL which the consent provider should redirect the user-agent to.
 -- 
-rejectConsentRequest 
+rejectConsentRequest
   :: (Consumes RejectConsentRequest MimeJSON)
   => ConsentChallenge -- ^ "consentChallenge"
   -> ORYHydraRequest RejectConsentRequest MimeJSON CompletedRequest MimeJSON
@@ -575,7 +580,7 @@ instance Produces RejectConsentRequest MimeJSON
 -- 
 -- When an authorization code, hybrid, or implicit OAuth 2.0 Flow is initiated, ORY Hydra asks the login provider (sometimes called \"identity provider\") to authenticate the subject and then tell ORY Hydra now about it. The login provider is an web-app you write and host, and it must be able to authenticate (\"show the subject a login screen\") a subject (in OAuth2 the proper name for subject is \"resource owner\").  The authentication challenge is appended to the login provider URL to which the subject's user-agent (browser) is redirected to. The login provider uses that challenge to fetch information on the OAuth2 request and then accept or reject the requested authentication process.  This endpoint tells ORY Hydra that the subject has not authenticated and includes a reason why the authentication was be denied.  The response contains a redirect URL which the login provider should redirect the user-agent to.
 -- 
-rejectLoginRequest 
+rejectLoginRequest
   :: (Consumes RejectLoginRequest MimeJSON)
   => LoginChallenge -- ^ "loginChallenge"
   -> ORYHydraRequest RejectLoginRequest MimeJSON CompletedRequest MimeJSON
@@ -601,13 +606,11 @@ instance Produces RejectLoginRequest MimeJSON
 -- 
 -- When a user or an application requests ORY Hydra to log out a user, this endpoint is used to deny that logout request. No body is required.  The response is empty as the logout provider has to chose what action to perform next.
 -- 
--- Note: Has 'Produces' instances, but no response schema
--- 
-rejectLogoutRequest 
+rejectLogoutRequest
   :: (Consumes RejectLogoutRequest contentType)
   => ContentType contentType -- ^ request content-type ('MimeType')
   -> LogoutChallenge -- ^ "logoutChallenge"
-  -> ORYHydraRequest RejectLogoutRequest contentType res MimeJSON
+  -> ORYHydraRequest RejectLogoutRequest contentType NoContent MimeNoContent
 rejectLogoutRequest _ (LogoutChallenge logoutChallenge) =
   _mkRequest "PUT" ["/oauth2/auth/requests/logout/reject"]
     `addQuery` toQuery ("logout_challenge", Just logoutChallenge)
@@ -620,8 +623,7 @@ instance Consumes RejectLogoutRequest MimeJSON
 -- | @application/x-www-form-urlencoded@
 instance Consumes RejectLogoutRequest MimeFormUrlEncoded
 
--- | @application/json@
-instance Produces RejectLogoutRequest MimeJSON
+instance Produces RejectLogoutRequest MimeNoContent
 
 
 -- *** revokeAuthenticationSession
@@ -632,18 +634,15 @@ instance Produces RejectLogoutRequest MimeJSON
 -- 
 -- This endpoint invalidates a subject's authentication session. After revoking the authentication session, the subject has to re-authenticate at ORY Hydra. This endpoint does not invalidate any tokens and does not work with OpenID Connect Front- or Back-channel logout.
 -- 
--- Note: Has 'Produces' instances, but no response schema
--- 
-revokeAuthenticationSession 
+revokeAuthenticationSession
   :: Subject -- ^ "subject"
-  -> ORYHydraRequest RevokeAuthenticationSession MimeNoContent res MimeJSON
+  -> ORYHydraRequest RevokeAuthenticationSession MimeNoContent NoContent MimeNoContent
 revokeAuthenticationSession (Subject subject) =
   _mkRequest "DELETE" ["/oauth2/auth/sessions/login"]
     `addQuery` toQuery ("subject", Just subject)
 
 data RevokeAuthenticationSession  
--- | @application/json@
-instance Produces RevokeAuthenticationSession MimeJSON
+instance Produces RevokeAuthenticationSession MimeNoContent
 
 
 -- *** revokeConsentSessions
@@ -654,11 +653,9 @@ instance Produces RevokeAuthenticationSession MimeJSON
 -- 
 -- This endpoint revokes a subject's granted consent sessions for a specific OAuth 2.0 Client and invalidates all associated OAuth 2.0 Access Tokens.
 -- 
--- Note: Has 'Produces' instances, but no response schema
--- 
-revokeConsentSessions 
+revokeConsentSessions
   :: Subject -- ^ "subject" -  The subject (Subject) who's consent sessions should be deleted.
-  -> ORYHydraRequest RevokeConsentSessions MimeNoContent res MimeJSON
+  -> ORYHydraRequest RevokeConsentSessions MimeNoContent NoContent MimeNoContent
 revokeConsentSessions (Subject subject) =
   _mkRequest "DELETE" ["/oauth2/auth/sessions/consent"]
     `addQuery` toQuery ("subject", Just subject)
@@ -674,8 +671,7 @@ instance HasOptionalParam RevokeConsentSessions Client where
 instance HasOptionalParam RevokeConsentSessions All where
   applyOptionalParam req (All xs) =
     req `addQuery` toQuery ("all", Just xs)
--- | @application/json@
-instance Produces RevokeConsentSessions MimeJSON
+instance Produces RevokeConsentSessions MimeNoContent
 
 
 -- *** updateJsonWebKey
@@ -686,7 +682,7 @@ instance Produces RevokeConsentSessions MimeJSON
 -- 
 -- Use this method if you do not want to let Hydra generate the JWKs for you, but instead save your own.  A JSON Web Key (JWK) is a JavaScript Object Notation (JSON) data structure that represents a cryptographic key. A JWK Set is a JSON data structure that represents a set of JWKs. A JSON Web Key is identified by its set and key id. ORY Hydra uses this functionality to store cryptographic keys used for TLS and JSON Web Tokens (such as OpenID Connect ID tokens), and allows storing user-defined keys as well.
 -- 
-updateJsonWebKey 
+updateJsonWebKey
   :: (Consumes UpdateJsonWebKey MimeJSON)
   => Kid -- ^ "kid" -  The kid of the desired key
   -> Set -- ^ "set" -  The set
@@ -712,7 +708,7 @@ instance Produces UpdateJsonWebKey MimeJSON
 -- 
 -- Use this method if you do not want to let Hydra generate the JWKs for you, but instead save your own.  A JSON Web Key (JWK) is a JavaScript Object Notation (JSON) data structure that represents a cryptographic key. A JWK Set is a JSON data structure that represents a set of JWKs. A JSON Web Key is identified by its set and key id. ORY Hydra uses this functionality to store cryptographic keys used for TLS and JSON Web Tokens (such as OpenID Connect ID tokens), and allows storing user-defined keys as well.
 -- 
-updateJsonWebKeySet 
+updateJsonWebKeySet
   :: (Consumes UpdateJsonWebKeySet MimeJSON)
   => Set -- ^ "set" -  The set
   -> ORYHydraRequest UpdateJsonWebKeySet MimeJSON JSONWebKeySet MimeJSON
@@ -737,7 +733,7 @@ instance Produces UpdateJsonWebKeySet MimeJSON
 -- 
 -- Update an existing OAuth 2.0 Client. If you pass `client_secret` the secret will be updated and returned via the API. This is the only time you will be able to retrieve the client secret, so write it down and keep it safe.  OAuth 2.0 clients are used to perform OAuth 2.0 and OpenID Connect flows. Usually, OAuth 2.0 clients are generated for applications which want to consume your OAuth 2.0 or OpenID Connect capabilities. To manage ORY Hydra, you will need an OAuth 2.0 Client as well. Make sure that this endpoint is well protected and only callable by first-party components.
 -- 
-updateOAuth2Client 
+updateOAuth2Client
   :: (Consumes UpdateOAuth2Client MimeJSON, MimeRender MimeJSON OAuth2Client)
   => OAuth2Client -- ^ "body"
   -> Id -- ^ "id"

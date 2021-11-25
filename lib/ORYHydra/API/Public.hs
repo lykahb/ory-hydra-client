@@ -65,7 +65,7 @@ import qualified Prelude as P
 -- 
 -- This endpoint initiates and completes user logout at ORY Hydra and initiates OpenID Connect Front-/Back-channel logout:  https://openid.net/specs/openid-connect-frontchannel-1_0.html https://openid.net/specs/openid-connect-backchannel-1_0.html
 -- 
-disconnectUser 
+disconnectUser
   :: ORYHydraRequest DisconnectUser MimeNoContent NoContent MimeNoContent
 disconnectUser =
   _mkRequest "GET" ["/oauth2/sessions/logout"]
@@ -82,7 +82,7 @@ instance Produces DisconnectUser MimeNoContent
 -- 
 -- The well known endpoint an be used to retrieve information for OpenID Connect clients. We encourage you to not roll your own OpenID Connect client but to use an OpenID Connect client library instead. You can learn more on this flow at https://openid.net/specs/openid-connect-discovery-1_0.html .  Popular libraries for OpenID Connect clients include oidc-client-js (JavaScript), go-oidc (Golang), and others. For a full list of clients go here: https://openid.net/developers/certified/
 -- 
-discoverOpenIDConfiguration 
+discoverOpenIDConfiguration
   :: ORYHydraRequest DiscoverOpenIDConfiguration MimeNoContent WellKnown MimeJSON
 discoverOpenIDConfiguration =
   _mkRequest "GET" ["/.well-known/openid-configuration"]
@@ -100,7 +100,7 @@ instance Produces DiscoverOpenIDConfiguration MimeJSON
 -- 
 -- This endpoint returns a 200 status code when the HTTP server is up running and the environment dependencies (e.g. the database) are responsive as well.  If the service supports TLS Edge Termination, this endpoint does not require the `X-Forwarded-Proto` header to be set.  Be aware that if you are running multiple nodes of this service, the health status will never refer to the cluster state, only to a single instance.
 -- 
-isInstanceReady 
+isInstanceReady
   :: ORYHydraRequest IsInstanceReady MimeNoContent HealthStatus MimeJSON
 isInstanceReady =
   _mkRequest "GET" ["/health/ready"]
@@ -120,7 +120,7 @@ instance Produces IsInstanceReady MimeJSON
 -- 
 -- AuthMethod: 'AuthBasicBasic', 'AuthOAuthOauth2'
 -- 
-oauth2Token 
+oauth2Token
   :: (Consumes Oauth2Token MimeFormUrlEncoded)
   => GrantType -- ^ "grantType"
   -> ORYHydraRequest Oauth2Token MimeFormUrlEncoded Oauth2TokenResponse MimeJSON
@@ -159,16 +159,13 @@ instance Produces Oauth2Token MimeJSON
 -- 
 -- This endpoint is not documented here because you should never use your own implementation to perform OAuth2 flows. OAuth2 is a very popular protocol and a library for your programming language will exists.  To learn more about this flow please refer to the specification: https://tools.ietf.org/html/rfc6749
 -- 
--- Note: Has 'Produces' instances, but no response schema
--- 
-oauthAuth 
-  :: ORYHydraRequest OauthAuth MimeNoContent res MimeJSON
+oauthAuth
+  :: ORYHydraRequest OauthAuth MimeNoContent NoContent MimeNoContent
 oauthAuth =
   _mkRequest "GET" ["/oauth2/auth"]
 
 data OauthAuth  
--- | @application/json@
-instance Produces OauthAuth MimeJSON
+instance Produces OauthAuth MimeNoContent
 
 
 -- *** revokeOAuth2Token
@@ -181,12 +178,10 @@ instance Produces OauthAuth MimeJSON
 -- 
 -- AuthMethod: 'AuthBasicBasic', 'AuthOAuthOauth2'
 -- 
--- Note: Has 'Produces' instances, but no response schema
--- 
-revokeOAuth2Token 
+revokeOAuth2Token
   :: (Consumes RevokeOAuth2Token MimeFormUrlEncoded)
   => Token -- ^ "token"
-  -> ORYHydraRequest RevokeOAuth2Token MimeFormUrlEncoded res MimeJSON
+  -> ORYHydraRequest RevokeOAuth2Token MimeFormUrlEncoded NoContent MimeNoContent
 revokeOAuth2Token (Token token) =
   _mkRequest "POST" ["/oauth2/revoke"]
     `_hasAuthType` (P.Proxy :: P.Proxy AuthBasicBasic)
@@ -198,8 +193,7 @@ data RevokeOAuth2Token
 -- | @application/x-www-form-urlencoded@
 instance Consumes RevokeOAuth2Token MimeFormUrlEncoded
 
--- | @application/json@
-instance Produces RevokeOAuth2Token MimeJSON
+instance Produces RevokeOAuth2Token MimeNoContent
 
 
 -- *** userinfo
@@ -208,11 +202,11 @@ instance Produces RevokeOAuth2Token MimeJSON
 -- 
 -- OpenID Connect Userinfo
 -- 
--- This endpoint returns the payload of the ID Token, including the idTokenExtra values, of the provided OAuth 2.0 Access Token.  For more information please [refer to the spec](http://openid.net/specs/openid-connect-core-1_0.html#UserInfo).
+-- This endpoint returns the payload of the ID Token, including the idTokenExtra values, of the provided OAuth 2.0 Access Token.  For more information please [refer to the spec](http://openid.net/specs/openid-connect-core-1_0.html#UserInfo).  In the case of authentication error, a WWW-Authenticate header might be set in the response with more information about the error. See [the spec](https://datatracker.ietf.org/doc/html/rfc6750#section-3) for more details about header format.
 -- 
 -- AuthMethod: 'AuthOAuthOauth2'
 -- 
-userinfo 
+userinfo
   :: ORYHydraRequest Userinfo MimeNoContent UserinfoResponse MimeJSON
 userinfo =
   _mkRequest "GET" ["/userinfo"]
@@ -231,7 +225,7 @@ instance Produces Userinfo MimeJSON
 -- 
 -- This endpoint returns JSON Web Keys to be used as public keys for verifying OpenID Connect ID Tokens and, if enabled, OAuth 2.0 JWT Access Tokens. This endpoint can be used with client libraries like [node-jwks-rsa](https://github.com/auth0/node-jwks-rsa) among others.
 -- 
-wellKnown0 
+wellKnown0
   :: ORYHydraRequest WellKnown0 MimeNoContent JSONWebKeySet MimeJSON
 wellKnown0 =
   _mkRequest "GET" ["/.well-known/jwks.json"]

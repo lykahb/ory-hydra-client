@@ -71,7 +71,7 @@ instance Arbitrary A.Value where
       sizedObject n =
         liftM (A.object . map mapF) $
         replicateM n $ (,) <$> (arbitrary :: Gen String) <*> simpleAndArrays
-    
+
 -- | Checks if a given list has no duplicates in _O(n log n)_.
 hasNoDups
   :: (Ord a)
@@ -86,7 +86,7 @@ hasNoDups = go Set.empty
 
 instance ApproxEq TI.Day where
   (=~) = (==)
-    
+
 arbitraryReduced :: Arbitrary a => Int -> Gen a
 arbitraryReduced n = resize (n `div` 2) arbitrary
 
@@ -103,7 +103,7 @@ arbitraryReducedMaybeValue n = do
     else return generated
 
 -- * Models
- 
+
 instance Arbitrary AcceptConsentRequest where
   arbitrary = sized genAcceptConsentRequest
 
@@ -182,17 +182,6 @@ genFlushInactiveOAuth2TokensRequest n =
   FlushInactiveOAuth2TokensRequest
     <$> arbitraryReducedMaybe n -- flushInactiveOAuth2TokensRequestNotAfter :: Maybe DateTime
   
-instance Arbitrary GenericError where
-  arbitrary = sized genGenericError
-
-genGenericError :: Int -> Gen GenericError
-genGenericError n =
-  GenericError
-    <$> arbitraryReducedMaybe n -- genericErrorDebug :: Maybe Text
-    <*> arbitrary -- genericErrorError :: Text
-    <*> arbitraryReducedMaybe n -- genericErrorErrorDescription :: Maybe Text
-    <*> arbitraryReducedMaybe n -- genericErrorStatusCode :: Maybe Integer
-  
 instance Arbitrary HealthNotReadyStatus where
   arbitrary = sized genHealthNotReadyStatus
 
@@ -241,6 +230,17 @@ genJSONWebKeySet n =
   JSONWebKeySet
     <$> arbitraryReducedMaybe n -- jSONWebKeySetKeys :: Maybe [JSONWebKey]
   
+instance Arbitrary JsonError where
+  arbitrary = sized genJsonError
+
+genJsonError :: Int -> Gen JsonError
+genJsonError n =
+  JsonError
+    <$> arbitraryReducedMaybe n -- jsonErrorError :: Maybe Text
+    <*> arbitraryReducedMaybe n -- jsonErrorErrorDebug :: Maybe Text
+    <*> arbitraryReducedMaybe n -- jsonErrorErrorDescription :: Maybe Text
+    <*> arbitraryReducedMaybe n -- jsonErrorStatusCode :: Maybe Integer
+  
 instance Arbitrary JsonWebKeySetGeneratorRequest where
   arbitrary = sized genJsonWebKeySetGeneratorRequest
 
@@ -273,7 +273,9 @@ instance Arbitrary LogoutRequest where
 genLogoutRequest :: Int -> Gen LogoutRequest
 genLogoutRequest n =
   LogoutRequest
-    <$> arbitraryReducedMaybe n -- logoutRequestRequestUrl :: Maybe Text
+    <$> arbitraryReducedMaybe n -- logoutRequestChallenge :: Maybe Text
+    <*> arbitraryReducedMaybe n -- logoutRequestClient :: Maybe OAuth2Client
+    <*> arbitraryReducedMaybe n -- logoutRequestRequestUrl :: Maybe Text
     <*> arbitraryReducedMaybe n -- logoutRequestRpInitiated :: Maybe Bool
     <*> arbitraryReducedMaybe n -- logoutRequestSid :: Maybe Text
     <*> arbitraryReducedMaybe n -- logoutRequestSubject :: Maybe Text
@@ -363,6 +365,17 @@ genOpenIDConnectContext n =
     <*> arbitraryReducedMaybeValue n -- openIDConnectContextIdTokenHintClaims :: Maybe A.Value
     <*> arbitraryReducedMaybe n -- openIDConnectContextLoginHint :: Maybe Text
     <*> arbitraryReducedMaybe n -- openIDConnectContextUiLocales :: Maybe [Text]
+  
+instance Arbitrary PatchDocument where
+  arbitrary = sized genPatchDocument
+
+genPatchDocument :: Int -> Gen PatchDocument
+genPatchDocument n =
+  PatchDocument
+    <$> arbitraryReducedMaybe n -- patchDocumentFrom :: Maybe Text
+    <*> arbitrary -- patchDocumentOp :: Text
+    <*> arbitrary -- patchDocumentPath :: Text
+    <*> arbitraryReducedMaybeValue n -- patchDocumentValue :: Maybe A.Value
   
 instance Arbitrary PluginConfig where
   arbitrary = sized genPluginConfig
@@ -526,6 +539,14 @@ genRejectRequest n =
     <*> arbitraryReducedMaybe n -- rejectRequestErrorHint :: Maybe Text
     <*> arbitraryReducedMaybe n -- rejectRequestStatusCode :: Maybe Integer
   
+instance Arbitrary RequestWasHandledResponse where
+  arbitrary = sized genRequestWasHandledResponse
+
+genRequestWasHandledResponse :: Int -> Gen RequestWasHandledResponse
+genRequestWasHandledResponse n =
+  RequestWasHandledResponse
+    <$> arbitrary -- requestWasHandledResponseRedirectTo :: Text
+  
 instance Arbitrary UserinfoResponse where
   arbitrary = sized genUserinfoResponse
 
@@ -560,6 +581,22 @@ genVersion n =
   Version
     <$> arbitraryReducedMaybe n -- versionVersion :: Maybe Text
   
+instance Arbitrary Volume where
+  arbitrary = sized genVolume
+
+genVolume :: Int -> Gen Volume
+genVolume n =
+  Volume
+    <$> arbitraryReducedMaybe n -- volumeCreatedAt :: Maybe Text
+    <*> arbitrary -- volumeDriver :: Text
+    <*> arbitrary -- volumeLabels :: (Map.Map String Text)
+    <*> arbitrary -- volumeMountpoint :: Text
+    <*> arbitrary -- volumeName :: Text
+    <*> arbitrary -- volumeOptions :: (Map.Map String Text)
+    <*> arbitrary -- volumeScope :: Text
+    <*> arbitraryReducedMaybeValue n -- volumeStatus :: Maybe A.Value
+    <*> arbitraryReducedMaybe n -- volumeUsageData :: Maybe VolumeUsageData
+  
 instance Arbitrary VolumeUsageData where
   arbitrary = sized genVolumeUsageData
 
@@ -580,6 +617,7 @@ genWellKnown n =
     <*> arbitraryReducedMaybe n -- wellKnownBackchannelLogoutSupported :: Maybe Bool
     <*> arbitraryReducedMaybe n -- wellKnownClaimsParameterSupported :: Maybe Bool
     <*> arbitraryReducedMaybe n -- wellKnownClaimsSupported :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- wellKnownCodeChallengeMethodsSupported :: Maybe [Text]
     <*> arbitraryReducedMaybe n -- wellKnownEndSessionEndpoint :: Maybe Text
     <*> arbitraryReducedMaybe n -- wellKnownFrontchannelLogoutSessionSupported :: Maybe Bool
     <*> arbitraryReducedMaybe n -- wellKnownFrontchannelLogoutSupported :: Maybe Bool

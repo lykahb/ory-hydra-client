@@ -209,30 +209,6 @@ flushInactiveOAuth2TokensRequestNotAfterL f FlushInactiveOAuth2TokensRequest{..}
 
 
 
--- * GenericError
-
--- | 'genericErrorDebug' Lens
-genericErrorDebugL :: Lens_' GenericError (Maybe Text)
-genericErrorDebugL f GenericError{..} = (\genericErrorDebug -> GenericError { genericErrorDebug, ..} ) <$> f genericErrorDebug
-{-# INLINE genericErrorDebugL #-}
-
--- | 'genericErrorError' Lens
-genericErrorErrorL :: Lens_' GenericError (Text)
-genericErrorErrorL f GenericError{..} = (\genericErrorError -> GenericError { genericErrorError, ..} ) <$> f genericErrorError
-{-# INLINE genericErrorErrorL #-}
-
--- | 'genericErrorErrorDescription' Lens
-genericErrorErrorDescriptionL :: Lens_' GenericError (Maybe Text)
-genericErrorErrorDescriptionL f GenericError{..} = (\genericErrorErrorDescription -> GenericError { genericErrorErrorDescription, ..} ) <$> f genericErrorErrorDescription
-{-# INLINE genericErrorErrorDescriptionL #-}
-
--- | 'genericErrorStatusCode' Lens
-genericErrorStatusCodeL :: Lens_' GenericError (Maybe Integer)
-genericErrorStatusCodeL f GenericError{..} = (\genericErrorStatusCode -> GenericError { genericErrorStatusCode, ..} ) <$> f genericErrorStatusCode
-{-# INLINE genericErrorStatusCodeL #-}
-
-
-
 -- * HealthNotReadyStatus
 
 -- | 'healthNotReadyStatusErrors' Lens
@@ -349,6 +325,30 @@ jSONWebKeySetKeysL f JSONWebKeySet{..} = (\jSONWebKeySetKeys -> JSONWebKeySet { 
 
 
 
+-- * JsonError
+
+-- | 'jsonErrorError' Lens
+jsonErrorErrorL :: Lens_' JsonError (Maybe Text)
+jsonErrorErrorL f JsonError{..} = (\jsonErrorError -> JsonError { jsonErrorError, ..} ) <$> f jsonErrorError
+{-# INLINE jsonErrorErrorL #-}
+
+-- | 'jsonErrorErrorDebug' Lens
+jsonErrorErrorDebugL :: Lens_' JsonError (Maybe Text)
+jsonErrorErrorDebugL f JsonError{..} = (\jsonErrorErrorDebug -> JsonError { jsonErrorErrorDebug, ..} ) <$> f jsonErrorErrorDebug
+{-# INLINE jsonErrorErrorDebugL #-}
+
+-- | 'jsonErrorErrorDescription' Lens
+jsonErrorErrorDescriptionL :: Lens_' JsonError (Maybe Text)
+jsonErrorErrorDescriptionL f JsonError{..} = (\jsonErrorErrorDescription -> JsonError { jsonErrorErrorDescription, ..} ) <$> f jsonErrorErrorDescription
+{-# INLINE jsonErrorErrorDescriptionL #-}
+
+-- | 'jsonErrorStatusCode' Lens
+jsonErrorStatusCodeL :: Lens_' JsonError (Maybe Integer)
+jsonErrorStatusCodeL f JsonError{..} = (\jsonErrorStatusCode -> JsonError { jsonErrorStatusCode, ..} ) <$> f jsonErrorStatusCode
+{-# INLINE jsonErrorStatusCodeL #-}
+
+
+
 -- * JsonWebKeySetGeneratorRequest
 
 -- | 'jsonWebKeySetGeneratorRequestAlg' Lens
@@ -418,6 +418,16 @@ loginRequestSubjectL f LoginRequest{..} = (\loginRequestSubject -> LoginRequest 
 
 
 -- * LogoutRequest
+
+-- | 'logoutRequestChallenge' Lens
+logoutRequestChallengeL :: Lens_' LogoutRequest (Maybe Text)
+logoutRequestChallengeL f LogoutRequest{..} = (\logoutRequestChallenge -> LogoutRequest { logoutRequestChallenge, ..} ) <$> f logoutRequestChallenge
+{-# INLINE logoutRequestChallengeL #-}
+
+-- | 'logoutRequestClient' Lens
+logoutRequestClientL :: Lens_' LogoutRequest (Maybe OAuth2Client)
+logoutRequestClientL f LogoutRequest{..} = (\logoutRequestClient -> LogoutRequest { logoutRequestClient, ..} ) <$> f logoutRequestClient
+{-# INLINE logoutRequestClientL #-}
 
 -- | 'logoutRequestRequestUrl' Lens
 logoutRequestRequestUrlL :: Lens_' LogoutRequest (Maybe Text)
@@ -744,6 +754,30 @@ openIDConnectContextLoginHintL f OpenIDConnectContext{..} = (\openIDConnectConte
 openIDConnectContextUiLocalesL :: Lens_' OpenIDConnectContext (Maybe [Text])
 openIDConnectContextUiLocalesL f OpenIDConnectContext{..} = (\openIDConnectContextUiLocales -> OpenIDConnectContext { openIDConnectContextUiLocales, ..} ) <$> f openIDConnectContextUiLocales
 {-# INLINE openIDConnectContextUiLocalesL #-}
+
+
+
+-- * PatchDocument
+
+-- | 'patchDocumentFrom' Lens
+patchDocumentFromL :: Lens_' PatchDocument (Maybe Text)
+patchDocumentFromL f PatchDocument{..} = (\patchDocumentFrom -> PatchDocument { patchDocumentFrom, ..} ) <$> f patchDocumentFrom
+{-# INLINE patchDocumentFromL #-}
+
+-- | 'patchDocumentOp' Lens
+patchDocumentOpL :: Lens_' PatchDocument (Text)
+patchDocumentOpL f PatchDocument{..} = (\patchDocumentOp -> PatchDocument { patchDocumentOp, ..} ) <$> f patchDocumentOp
+{-# INLINE patchDocumentOpL #-}
+
+-- | 'patchDocumentPath' Lens
+patchDocumentPathL :: Lens_' PatchDocument (Text)
+patchDocumentPathL f PatchDocument{..} = (\patchDocumentPath -> PatchDocument { patchDocumentPath, ..} ) <$> f patchDocumentPath
+{-# INLINE patchDocumentPathL #-}
+
+-- | 'patchDocumentValue' Lens
+patchDocumentValueL :: Lens_' PatchDocument (Maybe A.Value)
+patchDocumentValueL f PatchDocument{..} = (\patchDocumentValue -> PatchDocument { patchDocumentValue, ..} ) <$> f patchDocumentValue
+{-# INLINE patchDocumentValueL #-}
 
 
 
@@ -1123,6 +1157,15 @@ rejectRequestStatusCodeL f RejectRequest{..} = (\rejectRequestStatusCode -> Reje
 
 
 
+-- * RequestWasHandledResponse
+
+-- | 'requestWasHandledResponseRedirectTo' Lens
+requestWasHandledResponseRedirectToL :: Lens_' RequestWasHandledResponse (Text)
+requestWasHandledResponseRedirectToL f RequestWasHandledResponse{..} = (\requestWasHandledResponseRedirectTo -> RequestWasHandledResponse { requestWasHandledResponseRedirectTo, ..} ) <$> f requestWasHandledResponseRedirectTo
+{-# INLINE requestWasHandledResponseRedirectToL #-}
+
+
+
 -- * UserinfoResponse
 
 -- | 'userinfoResponseBirthdate' Lens
@@ -1231,6 +1274,55 @@ versionVersionL f Version{..} = (\versionVersion -> Version { versionVersion, ..
 
 
 
+-- * Volume
+
+-- | 'volumeCreatedAt' Lens
+volumeCreatedAtL :: Lens_' Volume (Maybe Text)
+volumeCreatedAtL f Volume{..} = (\volumeCreatedAt -> Volume { volumeCreatedAt, ..} ) <$> f volumeCreatedAt
+{-# INLINE volumeCreatedAtL #-}
+
+-- | 'volumeDriver' Lens
+volumeDriverL :: Lens_' Volume (Text)
+volumeDriverL f Volume{..} = (\volumeDriver -> Volume { volumeDriver, ..} ) <$> f volumeDriver
+{-# INLINE volumeDriverL #-}
+
+-- | 'volumeLabels' Lens
+volumeLabelsL :: Lens_' Volume ((Map.Map String Text))
+volumeLabelsL f Volume{..} = (\volumeLabels -> Volume { volumeLabels, ..} ) <$> f volumeLabels
+{-# INLINE volumeLabelsL #-}
+
+-- | 'volumeMountpoint' Lens
+volumeMountpointL :: Lens_' Volume (Text)
+volumeMountpointL f Volume{..} = (\volumeMountpoint -> Volume { volumeMountpoint, ..} ) <$> f volumeMountpoint
+{-# INLINE volumeMountpointL #-}
+
+-- | 'volumeName' Lens
+volumeNameL :: Lens_' Volume (Text)
+volumeNameL f Volume{..} = (\volumeName -> Volume { volumeName, ..} ) <$> f volumeName
+{-# INLINE volumeNameL #-}
+
+-- | 'volumeOptions' Lens
+volumeOptionsL :: Lens_' Volume ((Map.Map String Text))
+volumeOptionsL f Volume{..} = (\volumeOptions -> Volume { volumeOptions, ..} ) <$> f volumeOptions
+{-# INLINE volumeOptionsL #-}
+
+-- | 'volumeScope' Lens
+volumeScopeL :: Lens_' Volume (Text)
+volumeScopeL f Volume{..} = (\volumeScope -> Volume { volumeScope, ..} ) <$> f volumeScope
+{-# INLINE volumeScopeL #-}
+
+-- | 'volumeStatus' Lens
+volumeStatusL :: Lens_' Volume (Maybe A.Value)
+volumeStatusL f Volume{..} = (\volumeStatus -> Volume { volumeStatus, ..} ) <$> f volumeStatus
+{-# INLINE volumeStatusL #-}
+
+-- | 'volumeUsageData' Lens
+volumeUsageDataL :: Lens_' Volume (Maybe VolumeUsageData)
+volumeUsageDataL f Volume{..} = (\volumeUsageData -> Volume { volumeUsageData, ..} ) <$> f volumeUsageData
+{-# INLINE volumeUsageDataL #-}
+
+
+
 -- * VolumeUsageData
 
 -- | 'volumeUsageDataRefCount' Lens
@@ -1271,6 +1363,11 @@ wellKnownClaimsParameterSupportedL f WellKnown{..} = (\wellKnownClaimsParameterS
 wellKnownClaimsSupportedL :: Lens_' WellKnown (Maybe [Text])
 wellKnownClaimsSupportedL f WellKnown{..} = (\wellKnownClaimsSupported -> WellKnown { wellKnownClaimsSupported, ..} ) <$> f wellKnownClaimsSupported
 {-# INLINE wellKnownClaimsSupportedL #-}
+
+-- | 'wellKnownCodeChallengeMethodsSupported' Lens
+wellKnownCodeChallengeMethodsSupportedL :: Lens_' WellKnown (Maybe [Text])
+wellKnownCodeChallengeMethodsSupportedL f WellKnown{..} = (\wellKnownCodeChallengeMethodsSupported -> WellKnown { wellKnownCodeChallengeMethodsSupported, ..} ) <$> f wellKnownCodeChallengeMethodsSupported
+{-# INLINE wellKnownCodeChallengeMethodsSupportedL #-}
 
 -- | 'wellKnownEndSessionEndpoint' Lens
 wellKnownEndSessionEndpointL :: Lens_' WellKnown (Maybe Text)
