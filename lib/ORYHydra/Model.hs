@@ -35,6 +35,7 @@ import Data.Aeson ((.:),(.:!),(.:?),(.=))
 
 import qualified Control.Arrow as P (left)
 import qualified Data.Aeson as A
+import qualified Data.Aeson.Key as K
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Base64 as B64
 import qualified Data.ByteString.Char8 as BC
@@ -160,12 +161,12 @@ instance A.FromJSON AcceptConsentRequest where
 instance A.ToJSON AcceptConsentRequest where
   toJSON AcceptConsentRequest {..} =
    _omitNulls
-      [ "grant_access_token_audience" .= acceptConsentRequestGrantAccessTokenAudience
-      , "grant_scope" .= acceptConsentRequestGrantScope
-      , "handled_at" .= acceptConsentRequestHandledAt
-      , "remember" .= acceptConsentRequestRemember
-      , "remember_for" .= acceptConsentRequestRememberFor
-      , "session" .= acceptConsentRequestSession
+      [ K.fromText "grant_access_token_audience" .= acceptConsentRequestGrantAccessTokenAudience
+      , K.fromText "grant_scope" .= acceptConsentRequestGrantScope
+      , K.fromText "handled_at" .= acceptConsentRequestHandledAt
+      , K.fromText "remember" .= acceptConsentRequestRemember
+      , K.fromText "remember_for" .= acceptConsentRequestRememberFor
+      , K.fromText "session" .= acceptConsentRequestSession
       ]
 
 
@@ -210,12 +211,12 @@ instance A.FromJSON AcceptLoginRequest where
 instance A.ToJSON AcceptLoginRequest where
   toJSON AcceptLoginRequest {..} =
    _omitNulls
-      [ "acr" .= acceptLoginRequestAcr
-      , "context" .= acceptLoginRequestContext
-      , "force_subject_identifier" .= acceptLoginRequestForceSubjectIdentifier
-      , "remember" .= acceptLoginRequestRemember
-      , "remember_for" .= acceptLoginRequestRememberFor
-      , "subject" .= acceptLoginRequestSubject
+      [ K.fromText "acr" .= acceptLoginRequestAcr
+      , K.fromText "context" .= acceptLoginRequestContext
+      , K.fromText "force_subject_identifier" .= acceptLoginRequestForceSubjectIdentifier
+      , K.fromText "remember" .= acceptLoginRequestRemember
+      , K.fromText "remember_for" .= acceptLoginRequestRememberFor
+      , K.fromText "subject" .= acceptLoginRequestSubject
       ]
 
 
@@ -304,18 +305,18 @@ instance A.FromJSON ConsentRequest where
 instance A.ToJSON ConsentRequest where
   toJSON ConsentRequest {..} =
    _omitNulls
-      [ "acr" .= consentRequestAcr
-      , "challenge" .= consentRequestChallenge
-      , "client" .= consentRequestClient
-      , "context" .= consentRequestContext
-      , "login_challenge" .= consentRequestLoginChallenge
-      , "login_session_id" .= consentRequestLoginSessionId
-      , "oidc_context" .= consentRequestOidcContext
-      , "request_url" .= consentRequestRequestUrl
-      , "requested_access_token_audience" .= consentRequestRequestedAccessTokenAudience
-      , "requested_scope" .= consentRequestRequestedScope
-      , "skip" .= consentRequestSkip
-      , "subject" .= consentRequestSubject
+      [ K.fromText "acr" .= consentRequestAcr
+      , K.fromText "challenge" .= consentRequestChallenge
+      , K.fromText "client" .= consentRequestClient
+      , K.fromText "context" .= consentRequestContext
+      , K.fromText "login_challenge" .= consentRequestLoginChallenge
+      , K.fromText "login_session_id" .= consentRequestLoginSessionId
+      , K.fromText "oidc_context" .= consentRequestOidcContext
+      , K.fromText "request_url" .= consentRequestRequestUrl
+      , K.fromText "requested_access_token_audience" .= consentRequestRequestedAccessTokenAudience
+      , K.fromText "requested_scope" .= consentRequestRequestedScope
+      , K.fromText "skip" .= consentRequestSkip
+      , K.fromText "subject" .= consentRequestSubject
       ]
 
 
@@ -359,8 +360,8 @@ instance A.FromJSON ConsentRequestSession where
 instance A.ToJSON ConsentRequestSession where
   toJSON ConsentRequestSession {..} =
    _omitNulls
-      [ "access_token" .= consentRequestSessionAccessToken
-      , "id_token" .= consentRequestSessionIdToken
+      [ K.fromText "access_token" .= consentRequestSessionAccessToken
+      , K.fromText "id_token" .= consentRequestSessionIdToken
       ]
 
 
@@ -390,7 +391,7 @@ instance A.FromJSON ContainerWaitOKBodyError where
 instance A.ToJSON ContainerWaitOKBodyError where
   toJSON ContainerWaitOKBodyError {..} =
    _omitNulls
-      [ "Message" .= containerWaitOKBodyErrorMessage
+      [ K.fromText "Message" .= containerWaitOKBodyErrorMessage
       ]
 
 
@@ -418,7 +419,7 @@ instance A.FromJSON FlushInactiveOAuth2TokensRequest where
 instance A.ToJSON FlushInactiveOAuth2TokensRequest where
   toJSON FlushInactiveOAuth2TokensRequest {..} =
    _omitNulls
-      [ "notAfter" .= flushInactiveOAuth2TokensRequestNotAfter
+      [ K.fromText "notAfter" .= flushInactiveOAuth2TokensRequestNotAfter
       ]
 
 
@@ -446,7 +447,7 @@ instance A.FromJSON HealthNotReadyStatus where
 instance A.ToJSON HealthNotReadyStatus where
   toJSON HealthNotReadyStatus {..} =
    _omitNulls
-      [ "errors" .= healthNotReadyStatusErrors
+      [ K.fromText "errors" .= healthNotReadyStatusErrors
       ]
 
 
@@ -474,7 +475,7 @@ instance A.FromJSON HealthStatus where
 instance A.ToJSON HealthStatus where
   toJSON HealthStatus {..} =
    _omitNulls
-      [ "status" .= healthStatusStatus
+      [ K.fromText "status" .= healthStatusStatus
       ]
 
 
@@ -535,23 +536,23 @@ instance A.FromJSON JSONWebKey where
 instance A.ToJSON JSONWebKey where
   toJSON JSONWebKey {..} =
    _omitNulls
-      [ "alg" .= jSONWebKeyAlg
-      , "crv" .= jSONWebKeyCrv
-      , "d" .= jSONWebKeyD
-      , "dp" .= jSONWebKeyDp
-      , "dq" .= jSONWebKeyDq
-      , "e" .= jSONWebKeyE
-      , "k" .= jSONWebKeyK
-      , "kid" .= jSONWebKeyKid
-      , "kty" .= jSONWebKeyKty
-      , "n" .= jSONWebKeyN
-      , "p" .= jSONWebKeyP
-      , "q" .= jSONWebKeyQ
-      , "qi" .= jSONWebKeyQi
-      , "use" .= jSONWebKeyUse
-      , "x" .= jSONWebKeyX
-      , "x5c" .= jSONWebKeyX5c
-      , "y" .= jSONWebKeyY
+      [ K.fromText "alg" .= jSONWebKeyAlg
+      , K.fromText "crv" .= jSONWebKeyCrv
+      , K.fromText "d" .= jSONWebKeyD
+      , K.fromText "dp" .= jSONWebKeyDp
+      , K.fromText "dq" .= jSONWebKeyDq
+      , K.fromText "e" .= jSONWebKeyE
+      , K.fromText "k" .= jSONWebKeyK
+      , K.fromText "kid" .= jSONWebKeyKid
+      , K.fromText "kty" .= jSONWebKeyKty
+      , K.fromText "n" .= jSONWebKeyN
+      , K.fromText "p" .= jSONWebKeyP
+      , K.fromText "q" .= jSONWebKeyQ
+      , K.fromText "qi" .= jSONWebKeyQi
+      , K.fromText "use" .= jSONWebKeyUse
+      , K.fromText "x" .= jSONWebKeyX
+      , K.fromText "x5c" .= jSONWebKeyX5c
+      , K.fromText "y" .= jSONWebKeyY
       ]
 
 
@@ -600,7 +601,7 @@ instance A.FromJSON JSONWebKeySet where
 instance A.ToJSON JSONWebKeySet where
   toJSON JSONWebKeySet {..} =
    _omitNulls
-      [ "keys" .= jSONWebKeySetKeys
+      [ K.fromText "keys" .= jSONWebKeySetKeys
       ]
 
 
@@ -637,10 +638,10 @@ instance A.FromJSON JsonError where
 instance A.ToJSON JsonError where
   toJSON JsonError {..} =
    _omitNulls
-      [ "error" .= jsonErrorError
-      , "error_debug" .= jsonErrorErrorDebug
-      , "error_description" .= jsonErrorErrorDescription
-      , "status_code" .= jsonErrorStatusCode
+      [ K.fromText "error" .= jsonErrorError
+      , K.fromText "error_debug" .= jsonErrorErrorDebug
+      , K.fromText "error_description" .= jsonErrorErrorDescription
+      , K.fromText "status_code" .= jsonErrorStatusCode
       ]
 
 
@@ -675,9 +676,9 @@ instance A.FromJSON JsonWebKeySetGeneratorRequest where
 instance A.ToJSON JsonWebKeySetGeneratorRequest where
   toJSON JsonWebKeySetGeneratorRequest {..} =
    _omitNulls
-      [ "alg" .= jsonWebKeySetGeneratorRequestAlg
-      , "kid" .= jsonWebKeySetGeneratorRequestKid
-      , "use" .= jsonWebKeySetGeneratorRequestUse
+      [ K.fromText "alg" .= jsonWebKeySetGeneratorRequestAlg
+      , K.fromText "kid" .= jsonWebKeySetGeneratorRequestKid
+      , K.fromText "use" .= jsonWebKeySetGeneratorRequestUse
       ]
 
 
@@ -791,12 +792,12 @@ instance A.FromJSON LogoutRequest where
 instance A.ToJSON LogoutRequest where
   toJSON LogoutRequest {..} =
    _omitNulls
-      [ "challenge" .= logoutRequestChallenge
-      , "client" .= logoutRequestClient
-      , "request_url" .= logoutRequestRequestUrl
-      , "rp_initiated" .= logoutRequestRpInitiated
-      , "sid" .= logoutRequestSid
-      , "subject" .= logoutRequestSubject
+      [ K.fromText "challenge" .= logoutRequestChallenge
+      , K.fromText "client" .= logoutRequestClient
+      , K.fromText "request_url" .= logoutRequestRequestUrl
+      , K.fromText "rp_initiated" .= logoutRequestRpInitiated
+      , K.fromText "sid" .= logoutRequestSid
+      , K.fromText "subject" .= logoutRequestSubject
       ]
 
 
@@ -895,39 +896,39 @@ instance A.FromJSON OAuth2Client where
 instance A.ToJSON OAuth2Client where
   toJSON OAuth2Client {..} =
    _omitNulls
-      [ "allowed_cors_origins" .= oAuth2ClientAllowedCorsOrigins
-      , "audience" .= oAuth2ClientAudience
-      , "backchannel_logout_session_required" .= oAuth2ClientBackchannelLogoutSessionRequired
-      , "backchannel_logout_uri" .= oAuth2ClientBackchannelLogoutUri
-      , "client_id" .= oAuth2ClientClientId
-      , "client_name" .= oAuth2ClientClientName
-      , "client_secret" .= oAuth2ClientClientSecret
-      , "client_secret_expires_at" .= oAuth2ClientClientSecretExpiresAt
-      , "client_uri" .= oAuth2ClientClientUri
-      , "contacts" .= oAuth2ClientContacts
-      , "created_at" .= oAuth2ClientCreatedAt
-      , "frontchannel_logout_session_required" .= oAuth2ClientFrontchannelLogoutSessionRequired
-      , "frontchannel_logout_uri" .= oAuth2ClientFrontchannelLogoutUri
-      , "grant_types" .= oAuth2ClientGrantTypes
-      , "jwks" .= oAuth2ClientJwks
-      , "jwks_uri" .= oAuth2ClientJwksUri
-      , "logo_uri" .= oAuth2ClientLogoUri
-      , "metadata" .= oAuth2ClientMetadata
-      , "owner" .= oAuth2ClientOwner
-      , "policy_uri" .= oAuth2ClientPolicyUri
-      , "post_logout_redirect_uris" .= oAuth2ClientPostLogoutRedirectUris
-      , "redirect_uris" .= oAuth2ClientRedirectUris
-      , "request_object_signing_alg" .= oAuth2ClientRequestObjectSigningAlg
-      , "request_uris" .= oAuth2ClientRequestUris
-      , "response_types" .= oAuth2ClientResponseTypes
-      , "scope" .= oAuth2ClientScope
-      , "sector_identifier_uri" .= oAuth2ClientSectorIdentifierUri
-      , "subject_type" .= oAuth2ClientSubjectType
-      , "token_endpoint_auth_method" .= oAuth2ClientTokenEndpointAuthMethod
-      , "token_endpoint_auth_signing_alg" .= oAuth2ClientTokenEndpointAuthSigningAlg
-      , "tos_uri" .= oAuth2ClientTosUri
-      , "updated_at" .= oAuth2ClientUpdatedAt
-      , "userinfo_signed_response_alg" .= oAuth2ClientUserinfoSignedResponseAlg
+      [ K.fromText "allowed_cors_origins" .= oAuth2ClientAllowedCorsOrigins
+      , K.fromText "audience" .= oAuth2ClientAudience
+      , K.fromText "backchannel_logout_session_required" .= oAuth2ClientBackchannelLogoutSessionRequired
+      , K.fromText "backchannel_logout_uri" .= oAuth2ClientBackchannelLogoutUri
+      , K.fromText "client_id" .= oAuth2ClientClientId
+      , K.fromText "client_name" .= oAuth2ClientClientName
+      , K.fromText "client_secret" .= oAuth2ClientClientSecret
+      , K.fromText "client_secret_expires_at" .= oAuth2ClientClientSecretExpiresAt
+      , K.fromText "client_uri" .= oAuth2ClientClientUri
+      , K.fromText "contacts" .= oAuth2ClientContacts
+      , K.fromText "created_at" .= oAuth2ClientCreatedAt
+      , K.fromText "frontchannel_logout_session_required" .= oAuth2ClientFrontchannelLogoutSessionRequired
+      , K.fromText "frontchannel_logout_uri" .= oAuth2ClientFrontchannelLogoutUri
+      , K.fromText "grant_types" .= oAuth2ClientGrantTypes
+      , K.fromText "jwks" .= oAuth2ClientJwks
+      , K.fromText "jwks_uri" .= oAuth2ClientJwksUri
+      , K.fromText "logo_uri" .= oAuth2ClientLogoUri
+      , K.fromText "metadata" .= oAuth2ClientMetadata
+      , K.fromText "owner" .= oAuth2ClientOwner
+      , K.fromText "policy_uri" .= oAuth2ClientPolicyUri
+      , K.fromText "post_logout_redirect_uris" .= oAuth2ClientPostLogoutRedirectUris
+      , K.fromText "redirect_uris" .= oAuth2ClientRedirectUris
+      , K.fromText "request_object_signing_alg" .= oAuth2ClientRequestObjectSigningAlg
+      , K.fromText "request_uris" .= oAuth2ClientRequestUris
+      , K.fromText "response_types" .= oAuth2ClientResponseTypes
+      , K.fromText "scope" .= oAuth2ClientScope
+      , K.fromText "sector_identifier_uri" .= oAuth2ClientSectorIdentifierUri
+      , K.fromText "subject_type" .= oAuth2ClientSubjectType
+      , K.fromText "token_endpoint_auth_method" .= oAuth2ClientTokenEndpointAuthMethod
+      , K.fromText "token_endpoint_auth_signing_alg" .= oAuth2ClientTokenEndpointAuthSigningAlg
+      , K.fromText "tos_uri" .= oAuth2ClientTosUri
+      , K.fromText "updated_at" .= oAuth2ClientUpdatedAt
+      , K.fromText "userinfo_signed_response_alg" .= oAuth2ClientUserinfoSignedResponseAlg
       ]
 
 
@@ -1016,20 +1017,20 @@ instance A.FromJSON OAuth2TokenIntrospection where
 instance A.ToJSON OAuth2TokenIntrospection where
   toJSON OAuth2TokenIntrospection {..} =
    _omitNulls
-      [ "active" .= oAuth2TokenIntrospectionActive
-      , "aud" .= oAuth2TokenIntrospectionAud
-      , "client_id" .= oAuth2TokenIntrospectionClientId
-      , "exp" .= oAuth2TokenIntrospectionExp
-      , "ext" .= oAuth2TokenIntrospectionExt
-      , "iat" .= oAuth2TokenIntrospectionIat
-      , "iss" .= oAuth2TokenIntrospectionIss
-      , "nbf" .= oAuth2TokenIntrospectionNbf
-      , "obfuscated_subject" .= oAuth2TokenIntrospectionObfuscatedSubject
-      , "scope" .= oAuth2TokenIntrospectionScope
-      , "sub" .= oAuth2TokenIntrospectionSub
-      , "token_type" .= oAuth2TokenIntrospectionTokenType
-      , "token_use" .= oAuth2TokenIntrospectionTokenUse
-      , "username" .= oAuth2TokenIntrospectionUsername
+      [ K.fromText "active" .= oAuth2TokenIntrospectionActive
+      , K.fromText "aud" .= oAuth2TokenIntrospectionAud
+      , K.fromText "client_id" .= oAuth2TokenIntrospectionClientId
+      , K.fromText "exp" .= oAuth2TokenIntrospectionExp
+      , K.fromText "ext" .= oAuth2TokenIntrospectionExt
+      , K.fromText "iat" .= oAuth2TokenIntrospectionIat
+      , K.fromText "iss" .= oAuth2TokenIntrospectionIss
+      , K.fromText "nbf" .= oAuth2TokenIntrospectionNbf
+      , K.fromText "obfuscated_subject" .= oAuth2TokenIntrospectionObfuscatedSubject
+      , K.fromText "scope" .= oAuth2TokenIntrospectionScope
+      , K.fromText "sub" .= oAuth2TokenIntrospectionSub
+      , K.fromText "token_type" .= oAuth2TokenIntrospectionTokenType
+      , K.fromText "token_use" .= oAuth2TokenIntrospectionTokenUse
+      , K.fromText "username" .= oAuth2TokenIntrospectionUsername
       ]
 
 
@@ -1082,12 +1083,12 @@ instance A.FromJSON Oauth2TokenResponse where
 instance A.ToJSON Oauth2TokenResponse where
   toJSON Oauth2TokenResponse {..} =
    _omitNulls
-      [ "access_token" .= oauth2TokenResponseAccessToken
-      , "expires_in" .= oauth2TokenResponseExpiresIn
-      , "id_token" .= oauth2TokenResponseIdToken
-      , "refresh_token" .= oauth2TokenResponseRefreshToken
-      , "scope" .= oauth2TokenResponseScope
-      , "token_type" .= oauth2TokenResponseTokenType
+      [ K.fromText "access_token" .= oauth2TokenResponseAccessToken
+      , K.fromText "expires_in" .= oauth2TokenResponseExpiresIn
+      , K.fromText "id_token" .= oauth2TokenResponseIdToken
+      , K.fromText "refresh_token" .= oauth2TokenResponseRefreshToken
+      , K.fromText "scope" .= oauth2TokenResponseScope
+      , K.fromText "token_type" .= oauth2TokenResponseTokenType
       ]
 
 
@@ -1130,11 +1131,11 @@ instance A.FromJSON OpenIDConnectContext where
 instance A.ToJSON OpenIDConnectContext where
   toJSON OpenIDConnectContext {..} =
    _omitNulls
-      [ "acr_values" .= openIDConnectContextAcrValues
-      , "display" .= openIDConnectContextDisplay
-      , "id_token_hint_claims" .= openIDConnectContextIdTokenHintClaims
-      , "login_hint" .= openIDConnectContextLoginHint
-      , "ui_locales" .= openIDConnectContextUiLocales
+      [ K.fromText "acr_values" .= openIDConnectContextAcrValues
+      , K.fromText "display" .= openIDConnectContextDisplay
+      , K.fromText "id_token_hint_claims" .= openIDConnectContextIdTokenHintClaims
+      , K.fromText "login_hint" .= openIDConnectContextLoginHint
+      , K.fromText "ui_locales" .= openIDConnectContextUiLocales
       ]
 
 
@@ -1173,10 +1174,10 @@ instance A.FromJSON PatchDocument where
 instance A.ToJSON PatchDocument where
   toJSON PatchDocument {..} =
    _omitNulls
-      [ "from" .= patchDocumentFrom
-      , "op" .= patchDocumentOp
-      , "path" .= patchDocumentPath
-      , "value" .= patchDocumentValue
+      [ K.fromText "from" .= patchDocumentFrom
+      , K.fromText "op" .= patchDocumentOp
+      , K.fromText "path" .= patchDocumentPath
+      , K.fromText "value" .= patchDocumentValue
       ]
 
 
@@ -1241,22 +1242,22 @@ instance A.FromJSON PluginConfig where
 instance A.ToJSON PluginConfig where
   toJSON PluginConfig {..} =
    _omitNulls
-      [ "Args" .= pluginConfigArgs
-      , "Description" .= pluginConfigDescription
-      , "DockerVersion" .= pluginConfigDockerVersion
-      , "Documentation" .= pluginConfigDocumentation
-      , "Entrypoint" .= pluginConfigEntrypoint
-      , "Env" .= pluginConfigEnv
-      , "Interface" .= pluginConfigInterface
-      , "IpcHost" .= pluginConfigIpcHost
-      , "Linux" .= pluginConfigLinux
-      , "Mounts" .= pluginConfigMounts
-      , "Network" .= pluginConfigNetwork
-      , "PidHost" .= pluginConfigPidHost
-      , "PropagatedMount" .= pluginConfigPropagatedMount
-      , "User" .= pluginConfigUser
-      , "WorkDir" .= pluginConfigWorkDir
-      , "rootfs" .= pluginConfigRootfs
+      [ K.fromText "Args" .= pluginConfigArgs
+      , K.fromText "Description" .= pluginConfigDescription
+      , K.fromText "DockerVersion" .= pluginConfigDockerVersion
+      , K.fromText "Documentation" .= pluginConfigDocumentation
+      , K.fromText "Entrypoint" .= pluginConfigEntrypoint
+      , K.fromText "Env" .= pluginConfigEnv
+      , K.fromText "Interface" .= pluginConfigInterface
+      , K.fromText "IpcHost" .= pluginConfigIpcHost
+      , K.fromText "Linux" .= pluginConfigLinux
+      , K.fromText "Mounts" .= pluginConfigMounts
+      , K.fromText "Network" .= pluginConfigNetwork
+      , K.fromText "PidHost" .= pluginConfigPidHost
+      , K.fromText "PropagatedMount" .= pluginConfigPropagatedMount
+      , K.fromText "User" .= pluginConfigUser
+      , K.fromText "WorkDir" .= pluginConfigWorkDir
+      , K.fromText "rootfs" .= pluginConfigRootfs
       ]
 
 
@@ -1319,10 +1320,10 @@ instance A.FromJSON PluginConfigArgs where
 instance A.ToJSON PluginConfigArgs where
   toJSON PluginConfigArgs {..} =
    _omitNulls
-      [ "Description" .= pluginConfigArgsDescription
-      , "Name" .= pluginConfigArgsName
-      , "Settable" .= pluginConfigArgsSettable
-      , "Value" .= pluginConfigArgsValue
+      [ K.fromText "Description" .= pluginConfigArgsDescription
+      , K.fromText "Name" .= pluginConfigArgsName
+      , K.fromText "Settable" .= pluginConfigArgsSettable
+      , K.fromText "Value" .= pluginConfigArgsValue
       ]
 
 
@@ -1360,8 +1361,8 @@ instance A.FromJSON PluginConfigInterface where
 instance A.ToJSON PluginConfigInterface where
   toJSON PluginConfigInterface {..} =
    _omitNulls
-      [ "Socket" .= pluginConfigInterfaceSocket
-      , "Types" .= pluginConfigInterfaceTypes
+      [ K.fromText "Socket" .= pluginConfigInterfaceSocket
+      , K.fromText "Types" .= pluginConfigInterfaceTypes
       ]
 
 
@@ -1397,9 +1398,9 @@ instance A.FromJSON PluginConfigLinux where
 instance A.ToJSON PluginConfigLinux where
   toJSON PluginConfigLinux {..} =
    _omitNulls
-      [ "AllowAllDevices" .= pluginConfigLinuxAllowAllDevices
-      , "Capabilities" .= pluginConfigLinuxCapabilities
-      , "Devices" .= pluginConfigLinuxDevices
+      [ K.fromText "AllowAllDevices" .= pluginConfigLinuxAllowAllDevices
+      , K.fromText "Capabilities" .= pluginConfigLinuxCapabilities
+      , K.fromText "Devices" .= pluginConfigLinuxDevices
       ]
 
 
@@ -1433,7 +1434,7 @@ instance A.FromJSON PluginConfigNetwork where
 instance A.ToJSON PluginConfigNetwork where
   toJSON PluginConfigNetwork {..} =
    _omitNulls
-      [ "Type" .= pluginConfigNetworkType
+      [ K.fromText "Type" .= pluginConfigNetworkType
       ]
 
 
@@ -1498,8 +1499,8 @@ instance A.FromJSON PluginConfigUser where
 instance A.ToJSON PluginConfigUser where
   toJSON PluginConfigUser {..} =
    _omitNulls
-      [ "GID" .= pluginConfigUserGid
-      , "UID" .= pluginConfigUserUid
+      [ K.fromText "GID" .= pluginConfigUserGid
+      , K.fromText "UID" .= pluginConfigUserUid
       ]
 
 
@@ -1535,10 +1536,10 @@ instance A.FromJSON PluginDevice where
 instance A.ToJSON PluginDevice where
   toJSON PluginDevice {..} =
    _omitNulls
-      [ "Description" .= pluginDeviceDescription
-      , "Name" .= pluginDeviceName
-      , "Path" .= pluginDevicePath
-      , "Settable" .= pluginDeviceSettable
+      [ K.fromText "Description" .= pluginDeviceDescription
+      , K.fromText "Name" .= pluginDeviceName
+      , K.fromText "Path" .= pluginDevicePath
+      , K.fromText "Settable" .= pluginDeviceSettable
       ]
 
 
@@ -1580,10 +1581,10 @@ instance A.FromJSON PluginEnv where
 instance A.ToJSON PluginEnv where
   toJSON PluginEnv {..} =
    _omitNulls
-      [ "Description" .= pluginEnvDescription
-      , "Name" .= pluginEnvName
-      , "Settable" .= pluginEnvSettable
-      , "Value" .= pluginEnvValue
+      [ K.fromText "Description" .= pluginEnvDescription
+      , K.fromText "Name" .= pluginEnvName
+      , K.fromText "Settable" .= pluginEnvSettable
+      , K.fromText "Value" .= pluginEnvValue
       ]
 
 
@@ -1671,13 +1672,13 @@ instance A.FromJSON PluginMount where
 instance A.ToJSON PluginMount where
   toJSON PluginMount {..} =
    _omitNulls
-      [ "Description" .= pluginMountDescription
-      , "Destination" .= pluginMountDestination
-      , "Name" .= pluginMountName
-      , "Options" .= pluginMountOptions
-      , "Settable" .= pluginMountSettable
-      , "Source" .= pluginMountSource
-      , "Type" .= pluginMountType
+      [ K.fromText "Description" .= pluginMountDescription
+      , K.fromText "Destination" .= pluginMountDestination
+      , K.fromText "Name" .= pluginMountName
+      , K.fromText "Options" .= pluginMountOptions
+      , K.fromText "Settable" .= pluginMountSettable
+      , K.fromText "Source" .= pluginMountSource
+      , K.fromText "Type" .= pluginMountType
       ]
 
 
@@ -1726,10 +1727,10 @@ instance A.FromJSON PluginSettings where
 instance A.ToJSON PluginSettings where
   toJSON PluginSettings {..} =
    _omitNulls
-      [ "Args" .= pluginSettingsArgs
-      , "Devices" .= pluginSettingsDevices
-      , "Env" .= pluginSettingsEnv
-      , "Mounts" .= pluginSettingsMounts
+      [ K.fromText "Args" .= pluginSettingsArgs
+      , K.fromText "Devices" .= pluginSettingsDevices
+      , K.fromText "Env" .= pluginSettingsEnv
+      , K.fromText "Mounts" .= pluginSettingsMounts
       ]
 
 
@@ -1777,13 +1778,13 @@ instance A.FromJSON PreviousConsentSession where
 instance A.ToJSON PreviousConsentSession where
   toJSON PreviousConsentSession {..} =
    _omitNulls
-      [ "consent_request" .= previousConsentSessionConsentRequest
-      , "grant_access_token_audience" .= previousConsentSessionGrantAccessTokenAudience
-      , "grant_scope" .= previousConsentSessionGrantScope
-      , "handled_at" .= previousConsentSessionHandledAt
-      , "remember" .= previousConsentSessionRemember
-      , "remember_for" .= previousConsentSessionRememberFor
-      , "session" .= previousConsentSessionSession
+      [ K.fromText "consent_request" .= previousConsentSessionConsentRequest
+      , K.fromText "grant_access_token_audience" .= previousConsentSessionGrantAccessTokenAudience
+      , K.fromText "grant_scope" .= previousConsentSessionGrantScope
+      , K.fromText "handled_at" .= previousConsentSessionHandledAt
+      , K.fromText "remember" .= previousConsentSessionRemember
+      , K.fromText "remember_for" .= previousConsentSessionRememberFor
+      , K.fromText "session" .= previousConsentSessionSession
       ]
 
 
@@ -1827,11 +1828,11 @@ instance A.FromJSON RejectRequest where
 instance A.ToJSON RejectRequest where
   toJSON RejectRequest {..} =
    _omitNulls
-      [ "error" .= rejectRequestError
-      , "error_debug" .= rejectRequestErrorDebug
-      , "error_description" .= rejectRequestErrorDescription
-      , "error_hint" .= rejectRequestErrorHint
-      , "status_code" .= rejectRequestStatusCode
+      [ K.fromText "error" .= rejectRequestError
+      , K.fromText "error_debug" .= rejectRequestErrorDebug
+      , K.fromText "error_description" .= rejectRequestErrorDescription
+      , K.fromText "error_hint" .= rejectRequestErrorHint
+      , K.fromText "status_code" .= rejectRequestStatusCode
       ]
 
 -- | FromForm RejectRequest
@@ -1885,7 +1886,7 @@ instance A.FromJSON RequestWasHandledResponse where
 instance A.ToJSON RequestWasHandledResponse where
   toJSON RequestWasHandledResponse {..} =
    _omitNulls
-      [ "redirect_to" .= requestWasHandledResponseRedirectTo
+      [ K.fromText "redirect_to" .= requestWasHandledResponseRedirectTo
       ]
 
 
@@ -2060,15 +2061,15 @@ instance A.FromJSON Volume where
 instance A.ToJSON Volume where
   toJSON Volume {..} =
    _omitNulls
-      [ "CreatedAt" .= volumeCreatedAt
-      , "Driver" .= volumeDriver
-      , "Labels" .= volumeLabels
-      , "Mountpoint" .= volumeMountpoint
-      , "Name" .= volumeName
-      , "Options" .= volumeOptions
-      , "Scope" .= volumeScope
-      , "Status" .= volumeStatus
-      , "UsageData" .= volumeUsageData
+      [ K.fromText "CreatedAt" .= volumeCreatedAt
+      , K.fromText "Driver" .= volumeDriver
+      , K.fromText "Labels" .= volumeLabels
+      , K.fromText "Mountpoint" .= volumeMountpoint
+      , K.fromText "Name" .= volumeName
+      , K.fromText "Options" .= volumeOptions
+      , K.fromText "Scope" .= volumeScope
+      , K.fromText "Status" .= volumeStatus
+      , K.fromText "UsageData" .= volumeUsageData
       ]
 
 
@@ -2113,8 +2114,8 @@ instance A.FromJSON VolumeUsageData where
 instance A.ToJSON VolumeUsageData where
   toJSON VolumeUsageData {..} =
    _omitNulls
-      [ "RefCount" .= volumeUsageDataRefCount
-      , "Size" .= volumeUsageDataSize
+      [ K.fromText "RefCount" .= volumeUsageDataRefCount
+      , K.fromText "Size" .= volumeUsageDataSize
       ]
 
 
@@ -2200,33 +2201,33 @@ instance A.FromJSON WellKnown where
 instance A.ToJSON WellKnown where
   toJSON WellKnown {..} =
    _omitNulls
-      [ "authorization_endpoint" .= wellKnownAuthorizationEndpoint
-      , "backchannel_logout_session_supported" .= wellKnownBackchannelLogoutSessionSupported
-      , "backchannel_logout_supported" .= wellKnownBackchannelLogoutSupported
-      , "claims_parameter_supported" .= wellKnownClaimsParameterSupported
-      , "claims_supported" .= wellKnownClaimsSupported
-      , "code_challenge_methods_supported" .= wellKnownCodeChallengeMethodsSupported
-      , "end_session_endpoint" .= wellKnownEndSessionEndpoint
-      , "frontchannel_logout_session_supported" .= wellKnownFrontchannelLogoutSessionSupported
-      , "frontchannel_logout_supported" .= wellKnownFrontchannelLogoutSupported
-      , "grant_types_supported" .= wellKnownGrantTypesSupported
-      , "id_token_signing_alg_values_supported" .= wellKnownIdTokenSigningAlgValuesSupported
-      , "issuer" .= wellKnownIssuer
-      , "jwks_uri" .= wellKnownJwksUri
-      , "registration_endpoint" .= wellKnownRegistrationEndpoint
-      , "request_object_signing_alg_values_supported" .= wellKnownRequestObjectSigningAlgValuesSupported
-      , "request_parameter_supported" .= wellKnownRequestParameterSupported
-      , "request_uri_parameter_supported" .= wellKnownRequestUriParameterSupported
-      , "require_request_uri_registration" .= wellKnownRequireRequestUriRegistration
-      , "response_modes_supported" .= wellKnownResponseModesSupported
-      , "response_types_supported" .= wellKnownResponseTypesSupported
-      , "revocation_endpoint" .= wellKnownRevocationEndpoint
-      , "scopes_supported" .= wellKnownScopesSupported
-      , "subject_types_supported" .= wellKnownSubjectTypesSupported
-      , "token_endpoint" .= wellKnownTokenEndpoint
-      , "token_endpoint_auth_methods_supported" .= wellKnownTokenEndpointAuthMethodsSupported
-      , "userinfo_endpoint" .= wellKnownUserinfoEndpoint
-      , "userinfo_signing_alg_values_supported" .= wellKnownUserinfoSigningAlgValuesSupported
+      [ K.fromText "authorization_endpoint" .= wellKnownAuthorizationEndpoint
+      , K.fromText "backchannel_logout_session_supported" .= wellKnownBackchannelLogoutSessionSupported
+      , K.fromText "backchannel_logout_supported" .= wellKnownBackchannelLogoutSupported
+      , K.fromText "claims_parameter_supported" .= wellKnownClaimsParameterSupported
+      , K.fromText "claims_supported" .= wellKnownClaimsSupported
+      , K.fromText "code_challenge_methods_supported" .= wellKnownCodeChallengeMethodsSupported
+      , K.fromText "end_session_endpoint" .= wellKnownEndSessionEndpoint
+      , K.fromText "frontchannel_logout_session_supported" .= wellKnownFrontchannelLogoutSessionSupported
+      , K.fromText "frontchannel_logout_supported" .= wellKnownFrontchannelLogoutSupported
+      , K.fromText "grant_types_supported" .= wellKnownGrantTypesSupported
+      , K.fromText "id_token_signing_alg_values_supported" .= wellKnownIdTokenSigningAlgValuesSupported
+      , K.fromText "issuer" .= wellKnownIssuer
+      , K.fromText "jwks_uri" .= wellKnownJwksUri
+      , K.fromText "registration_endpoint" .= wellKnownRegistrationEndpoint
+      , K.fromText "request_object_signing_alg_values_supported" .= wellKnownRequestObjectSigningAlgValuesSupported
+      , K.fromText "request_parameter_supported" .= wellKnownRequestParameterSupported
+      , K.fromText "request_uri_parameter_supported" .= wellKnownRequestUriParameterSupported
+      , K.fromText "require_request_uri_registration" .= wellKnownRequireRequestUriRegistration
+      , K.fromText "response_modes_supported" .= wellKnownResponseModesSupported
+      , K.fromText "response_types_supported" .= wellKnownResponseTypesSupported
+      , K.fromText "revocation_endpoint" .= wellKnownRevocationEndpoint
+      , K.fromText "scopes_supported" .= wellKnownScopesSupported
+      , K.fromText "subject_types_supported" .= wellKnownSubjectTypesSupported
+      , K.fromText "token_endpoint" .= wellKnownTokenEndpoint
+      , K.fromText "token_endpoint_auth_methods_supported" .= wellKnownTokenEndpointAuthMethodsSupported
+      , K.fromText "userinfo_endpoint" .= wellKnownUserinfoEndpoint
+      , K.fromText "userinfo_signing_alg_values_supported" .= wellKnownUserinfoSigningAlgValuesSupported
       ]
 
 

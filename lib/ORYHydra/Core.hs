@@ -34,6 +34,7 @@ import qualified Control.Arrow as P (left)
 import qualified Control.DeepSeq as NF
 import qualified Control.Exception.Safe as E
 import qualified Data.Aeson as A
+import qualified Data.Aeson.Key as A
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Base64.Lazy as BL64
 import qualified Data.ByteString.Builder as BB
@@ -428,11 +429,15 @@ _applyAuthMethods req config@(ORYHydraConfig {configAuthMethods = as}) =
 -- * Utils
 
 -- | Removes Null fields.  (OpenAPI-Specification 2.0 does not allow Null in JSON)
-_omitNulls :: [(Text, A.Value)] -> A.Value
-_omitNulls = A.object . P.filter notNull
+_omitNulls :: [(A.Key, A.Value)] -> A.Value
+_omitNulls = A.object . fmap makeKey . P.filter notNull . fmap unmakeKey
   where
     notNull (_, A.Null) = False
     notNull _ = True
+    makeKey :: (Text, A.Value) -> (A.Key, A.Value)
+    makeKey (txt, val) = (A.fromText txt, val)
+    unmakeKey :: (A.Key, A.Value) -> (Text, A.Value)
+    unmakeKey (key, val) = (A.toText key, val)
 
 -- | Encodes fields using WH.toQueryParam
 _toFormItem :: (WH.ToHttpApiData a, Functor f) => t -> f a -> f (t, [Text])
