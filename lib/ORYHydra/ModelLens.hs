@@ -209,6 +209,30 @@ flushInactiveOAuth2TokensRequestNotAfterL f FlushInactiveOAuth2TokensRequest{..}
 
 
 
+-- * GenericError
+
+-- | 'genericErrorDebug' Lens
+genericErrorDebugL :: Lens_' GenericError (Maybe Text)
+genericErrorDebugL f GenericError{..} = (\genericErrorDebug -> GenericError { genericErrorDebug, ..} ) <$> f genericErrorDebug
+{-# INLINE genericErrorDebugL #-}
+
+-- | 'genericErrorError' Lens
+genericErrorErrorL :: Lens_' GenericError (Text)
+genericErrorErrorL f GenericError{..} = (\genericErrorError -> GenericError { genericErrorError, ..} ) <$> f genericErrorError
+{-# INLINE genericErrorErrorL #-}
+
+-- | 'genericErrorErrorDescription' Lens
+genericErrorErrorDescriptionL :: Lens_' GenericError (Maybe Text)
+genericErrorErrorDescriptionL f GenericError{..} = (\genericErrorErrorDescription -> GenericError { genericErrorErrorDescription, ..} ) <$> f genericErrorErrorDescription
+{-# INLINE genericErrorErrorDescriptionL #-}
+
+-- | 'genericErrorStatusCode' Lens
+genericErrorStatusCodeL :: Lens_' GenericError (Maybe Integer)
+genericErrorStatusCodeL f GenericError{..} = (\genericErrorStatusCode -> GenericError { genericErrorStatusCode, ..} ) <$> f genericErrorStatusCode
+{-# INLINE genericErrorStatusCodeL #-}
+
+
+
 -- * HealthNotReadyStatus
 
 -- | 'healthNotReadyStatusErrors' Lens
@@ -325,30 +349,6 @@ jSONWebKeySetKeysL f JSONWebKeySet{..} = (\jSONWebKeySetKeys -> JSONWebKeySet { 
 
 
 
--- * JsonError
-
--- | 'jsonErrorError' Lens
-jsonErrorErrorL :: Lens_' JsonError (Maybe Text)
-jsonErrorErrorL f JsonError{..} = (\jsonErrorError -> JsonError { jsonErrorError, ..} ) <$> f jsonErrorError
-{-# INLINE jsonErrorErrorL #-}
-
--- | 'jsonErrorErrorDebug' Lens
-jsonErrorErrorDebugL :: Lens_' JsonError (Maybe Text)
-jsonErrorErrorDebugL f JsonError{..} = (\jsonErrorErrorDebug -> JsonError { jsonErrorErrorDebug, ..} ) <$> f jsonErrorErrorDebug
-{-# INLINE jsonErrorErrorDebugL #-}
-
--- | 'jsonErrorErrorDescription' Lens
-jsonErrorErrorDescriptionL :: Lens_' JsonError (Maybe Text)
-jsonErrorErrorDescriptionL f JsonError{..} = (\jsonErrorErrorDescription -> JsonError { jsonErrorErrorDescription, ..} ) <$> f jsonErrorErrorDescription
-{-# INLINE jsonErrorErrorDescriptionL #-}
-
--- | 'jsonErrorStatusCode' Lens
-jsonErrorStatusCodeL :: Lens_' JsonError (Maybe Integer)
-jsonErrorStatusCodeL f JsonError{..} = (\jsonErrorStatusCode -> JsonError { jsonErrorStatusCode, ..} ) <$> f jsonErrorStatusCode
-{-# INLINE jsonErrorStatusCodeL #-}
-
-
-
 -- * JsonWebKeySetGeneratorRequest
 
 -- | 'jsonWebKeySetGeneratorRequestAlg' Lens
@@ -418,16 +418,6 @@ loginRequestSubjectL f LoginRequest{..} = (\loginRequestSubject -> LoginRequest 
 
 
 -- * LogoutRequest
-
--- | 'logoutRequestChallenge' Lens
-logoutRequestChallengeL :: Lens_' LogoutRequest (Maybe Text)
-logoutRequestChallengeL f LogoutRequest{..} = (\logoutRequestChallenge -> LogoutRequest { logoutRequestChallenge, ..} ) <$> f logoutRequestChallenge
-{-# INLINE logoutRequestChallengeL #-}
-
--- | 'logoutRequestClient' Lens
-logoutRequestClientL :: Lens_' LogoutRequest (Maybe OAuth2Client)
-logoutRequestClientL f LogoutRequest{..} = (\logoutRequestClient -> LogoutRequest { logoutRequestClient, ..} ) <$> f logoutRequestClient
-{-# INLINE logoutRequestClientL #-}
 
 -- | 'logoutRequestRequestUrl' Lens
 logoutRequestRequestUrlL :: Lens_' LogoutRequest (Maybe Text)
@@ -757,30 +747,6 @@ openIDConnectContextUiLocalesL f OpenIDConnectContext{..} = (\openIDConnectConte
 
 
 
--- * PatchDocument
-
--- | 'patchDocumentFrom' Lens
-patchDocumentFromL :: Lens_' PatchDocument (Maybe Text)
-patchDocumentFromL f PatchDocument{..} = (\patchDocumentFrom -> PatchDocument { patchDocumentFrom, ..} ) <$> f patchDocumentFrom
-{-# INLINE patchDocumentFromL #-}
-
--- | 'patchDocumentOp' Lens
-patchDocumentOpL :: Lens_' PatchDocument (Text)
-patchDocumentOpL f PatchDocument{..} = (\patchDocumentOp -> PatchDocument { patchDocumentOp, ..} ) <$> f patchDocumentOp
-{-# INLINE patchDocumentOpL #-}
-
--- | 'patchDocumentPath' Lens
-patchDocumentPathL :: Lens_' PatchDocument (Text)
-patchDocumentPathL f PatchDocument{..} = (\patchDocumentPath -> PatchDocument { patchDocumentPath, ..} ) <$> f patchDocumentPath
-{-# INLINE patchDocumentPathL #-}
-
--- | 'patchDocumentValue' Lens
-patchDocumentValueL :: Lens_' PatchDocument (Maybe A.Value)
-patchDocumentValueL f PatchDocument{..} = (\patchDocumentValue -> PatchDocument { patchDocumentValue, ..} ) <$> f patchDocumentValue
-{-# INLINE patchDocumentValueL #-}
-
-
-
 -- * PluginConfig
 
 -- | 'pluginConfigArgs' Lens
@@ -890,6 +856,11 @@ pluginConfigArgsValueL f PluginConfigArgs{..} = (\pluginConfigArgsValue -> Plugi
 
 
 -- * PluginConfigInterface
+
+-- | 'pluginConfigInterfaceProtocolScheme' Lens
+pluginConfigInterfaceProtocolSchemeL :: Lens_' PluginConfigInterface (Maybe Text)
+pluginConfigInterfaceProtocolSchemeL f PluginConfigInterface{..} = (\pluginConfigInterfaceProtocolScheme -> PluginConfigInterface { pluginConfigInterfaceProtocolScheme, ..} ) <$> f pluginConfigInterfaceProtocolScheme
+{-# INLINE pluginConfigInterfaceProtocolSchemeL #-}
 
 -- | 'pluginConfigInterfaceSocket' Lens
 pluginConfigInterfaceSocketL :: Lens_' PluginConfigInterface (Text)
@@ -1157,15 +1128,6 @@ rejectRequestStatusCodeL f RejectRequest{..} = (\rejectRequestStatusCode -> Reje
 
 
 
--- * RequestWasHandledResponse
-
--- | 'requestWasHandledResponseRedirectTo' Lens
-requestWasHandledResponseRedirectToL :: Lens_' RequestWasHandledResponse (Text)
-requestWasHandledResponseRedirectToL f RequestWasHandledResponse{..} = (\requestWasHandledResponseRedirectTo -> RequestWasHandledResponse { requestWasHandledResponseRedirectTo, ..} ) <$> f requestWasHandledResponseRedirectTo
-{-# INLINE requestWasHandledResponseRedirectToL #-}
-
-
-
 -- * UserinfoResponse
 
 -- | 'userinfoResponseBirthdate' Lens
@@ -1363,11 +1325,6 @@ wellKnownClaimsParameterSupportedL f WellKnown{..} = (\wellKnownClaimsParameterS
 wellKnownClaimsSupportedL :: Lens_' WellKnown (Maybe [Text])
 wellKnownClaimsSupportedL f WellKnown{..} = (\wellKnownClaimsSupported -> WellKnown { wellKnownClaimsSupported, ..} ) <$> f wellKnownClaimsSupported
 {-# INLINE wellKnownClaimsSupportedL #-}
-
--- | 'wellKnownCodeChallengeMethodsSupported' Lens
-wellKnownCodeChallengeMethodsSupportedL :: Lens_' WellKnown (Maybe [Text])
-wellKnownCodeChallengeMethodsSupportedL f WellKnown{..} = (\wellKnownCodeChallengeMethodsSupported -> WellKnown { wellKnownCodeChallengeMethodsSupported, ..} ) <$> f wellKnownCodeChallengeMethodsSupported
-{-# INLINE wellKnownCodeChallengeMethodsSupportedL #-}
 
 -- | 'wellKnownEndSessionEndpoint' Lens
 wellKnownEndSessionEndpointL :: Lens_' WellKnown (Maybe Text)

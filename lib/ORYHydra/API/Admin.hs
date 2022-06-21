@@ -476,7 +476,7 @@ listOAuth2Clients =
 
 data ListOAuth2Clients  
 
--- | /Optional Param/ "limit" - The maximum amount of clients to returned, upper bound is 500 clients.
+-- | /Optional Param/ "limit" - The maximum amount of policies returned, upper bound is 500 policies
 instance HasOptionalParam ListOAuth2Clients Limit where
   applyOptionalParam req (Limit xs) =
     req `addQuery` toQuery ("limit", Just xs)
@@ -485,16 +485,6 @@ instance HasOptionalParam ListOAuth2Clients Limit where
 instance HasOptionalParam ListOAuth2Clients Offset where
   applyOptionalParam req (Offset xs) =
     req `addQuery` toQuery ("offset", Just xs)
-
--- | /Optional Param/ "client_name" - The name of the clients to filter by.
-instance HasOptionalParam ListOAuth2Clients ClientName where
-  applyOptionalParam req (ClientName xs) =
-    req `addQuery` toQuery ("client_name", Just xs)
-
--- | /Optional Param/ "owner" - The owner of the clients to filter by.
-instance HasOptionalParam ListOAuth2Clients Owner where
-  applyOptionalParam req (Owner xs) =
-    req `addQuery` toQuery ("owner", Just xs)
 -- | @application/json@
 instance Produces ListOAuth2Clients MimeJSON
 
@@ -519,31 +509,21 @@ data ListSubjectConsentSessions
 instance Produces ListSubjectConsentSessions MimeJSON
 
 
--- *** patchOAuth2Client
+-- *** prometheus
 
--- | @PATCH \/clients\/{id}@
+-- | @GET \/metrics\/prometheus@
 -- 
--- Patch an OAuth 2.0 Client
+-- Get Snapshot Metrics from the Hydra Service.
 -- 
--- Patch an existing OAuth 2.0 Client. If you pass `client_secret` the secret will be updated and returned via the API. This is the only time you will be able to retrieve the client secret, so write it down and keep it safe.  OAuth 2.0 clients are used to perform OAuth 2.0 and OpenID Connect flows. Usually, OAuth 2.0 clients are generated for applications which want to consume your OAuth 2.0 or OpenID Connect capabilities. To manage ORY Hydra, you will need an OAuth 2.0 Client as well. Make sure that this endpoint is well protected and only callable by first-party components.
+-- If you're using k8s, you can then add annotations to your deployment like so:  ``` metadata: annotations: prometheus.io/port: \"4445\" prometheus.io/path: \"/metrics/prometheus\" ```  If the service supports TLS Edge Termination, this endpoint does not require the `X-Forwarded-Proto` header to be set.
 -- 
-patchOAuth2Client
-  :: (Consumes PatchOAuth2Client MimeJSON, MimeRender MimeJSON Body)
-  => Body -- ^ "body"
-  -> Id -- ^ "id"
-  -> ORYHydraRequest PatchOAuth2Client MimeJSON OAuth2Client MimeJSON
-patchOAuth2Client body (Id id) =
-  _mkRequest "PATCH" ["/clients/",toPath id]
-    `setBodyParam` body
+prometheus
+  :: ORYHydraRequest Prometheus MimeNoContent NoContent MimeNoContent
+prometheus =
+  _mkRequest "GET" ["/metrics/prometheus"]
 
-data PatchOAuth2Client 
-instance HasBodyParam PatchOAuth2Client Body 
-
--- | @application/json@
-instance Consumes PatchOAuth2Client MimeJSON
-
--- | @application/json@
-instance Produces PatchOAuth2Client MimeJSON
+data Prometheus  
+instance Produces Prometheus MimeNoContent
 
 
 -- *** rejectConsentRequest

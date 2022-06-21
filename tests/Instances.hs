@@ -12,6 +12,7 @@ import qualified Data.Set as Set
 import qualified Data.Text as T
 import qualified Data.Time as TI
 import qualified Data.Vector as V
+import Data.String (fromString)
 
 import Control.Monad
 import Data.Char (isSpace)
@@ -50,6 +51,31 @@ instance Arbitrary DateTime where
 instance Arbitrary Date where
     arbitrary = Date <$> arbitrary
     shrink (Date xs) = Date <$> shrink xs
+
+-- | A naive Arbitrary instance for A.Value:
+-- instance Arbitrary A.Value where
+--   arbitrary = arbitraryValue
+
+arbitraryValue :: Gen A.Value
+arbitraryValue =
+  frequency [(3, simpleTypes), (1, arrayTypes), (1, objectTypes)]
+    where
+      simpleTypes :: Gen A.Value
+      simpleTypes =
+        frequency
+          [ (1, return A.Null)
+          , (2, liftM A.Bool (arbitrary :: Gen Bool))
+          , (2, liftM (A.Number . fromIntegral) (arbitrary :: Gen Int))
+          , (2, liftM (A.String . T.pack) (arbitrary :: Gen String))
+          ]
+      mapF (k, v) = (fromString k, v)
+      simpleAndArrays = frequency [(1, sized sizedArray), (4, simpleTypes)]
+      arrayTypes = sized sizedArray
+      objectTypes = sized sizedObject
+      sizedArray n = liftM (A.Array . V.fromList) $ replicateM n simpleTypes
+      sizedObject n =
+        liftM (A.object . map mapF) $
+        replicateM n $ (,) <$> (arbitrary :: Gen String) <*> simpleAndArrays
 
 -- | Checks if a given list has no duplicates in _O(n log n)_.
 hasNoDups
@@ -161,6 +187,17 @@ genFlushInactiveOAuth2TokensRequest n =
   FlushInactiveOAuth2TokensRequest
     <$> arbitraryReducedMaybe n -- flushInactiveOAuth2TokensRequestNotAfter :: Maybe DateTime
   
+instance Arbitrary GenericError where
+  arbitrary = sized genGenericError
+
+genGenericError :: Int -> Gen GenericError
+genGenericError n =
+  GenericError
+    <$> arbitraryReducedMaybe n -- genericErrorDebug :: Maybe Text
+    <*> arbitrary -- genericErrorError :: Text
+    <*> arbitraryReducedMaybe n -- genericErrorErrorDescription :: Maybe Text
+    <*> arbitraryReducedMaybe n -- genericErrorStatusCode :: Maybe Integer
+  
 instance Arbitrary HealthNotReadyStatus where
   arbitrary = sized genHealthNotReadyStatus
 
@@ -209,17 +246,6 @@ genJSONWebKeySet n =
   JSONWebKeySet
     <$> arbitraryReducedMaybe n -- jSONWebKeySetKeys :: Maybe [JSONWebKey]
   
-instance Arbitrary JsonError where
-  arbitrary = sized genJsonError
-
-genJsonError :: Int -> Gen JsonError
-genJsonError n =
-  JsonError
-    <$> arbitraryReducedMaybe n -- jsonErrorError :: Maybe Text
-    <*> arbitraryReducedMaybe n -- jsonErrorErrorDebug :: Maybe Text
-    <*> arbitraryReducedMaybe n -- jsonErrorErrorDescription :: Maybe Text
-    <*> arbitraryReducedMaybe n -- jsonErrorStatusCode :: Maybe Integer
-  
 instance Arbitrary JsonWebKeySetGeneratorRequest where
   arbitrary = sized genJsonWebKeySetGeneratorRequest
 
@@ -252,9 +278,7 @@ instance Arbitrary LogoutRequest where
 genLogoutRequest :: Int -> Gen LogoutRequest
 genLogoutRequest n =
   LogoutRequest
-    <$> arbitraryReducedMaybe n -- logoutRequestChallenge :: Maybe Text
-    <*> arbitraryReducedMaybe n -- logoutRequestClient :: Maybe OAuth2Client
-    <*> arbitraryReducedMaybe n -- logoutRequestRequestUrl :: Maybe Text
+    <$> arbitraryReducedMaybe n -- logoutRequestRequestUrl :: Maybe Text
     <*> arbitraryReducedMaybe n -- logoutRequestRpInitiated :: Maybe Bool
     <*> arbitraryReducedMaybe n -- logoutRequestSid :: Maybe Text
     <*> arbitraryReducedMaybe n -- logoutRequestSubject :: Maybe Text
@@ -345,17 +369,6 @@ genOpenIDConnectContext n =
     <*> arbitraryReducedMaybe n -- openIDConnectContextLoginHint :: Maybe Text
     <*> arbitraryReducedMaybe n -- openIDConnectContextUiLocales :: Maybe [Text]
   
-instance Arbitrary PatchDocument where
-  arbitrary = sized genPatchDocument
-
-genPatchDocument :: Int -> Gen PatchDocument
-genPatchDocument n =
-  PatchDocument
-    <$> arbitraryReducedMaybe n -- patchDocumentFrom :: Maybe Text
-    <*> arbitrary -- patchDocumentOp :: Text
-    <*> arbitrary -- patchDocumentPath :: Text
-    <*> arbitraryReducedMaybeValue n -- patchDocumentValue :: Maybe A.Value
-  
 instance Arbitrary PluginConfig where
   arbitrary = sized genPluginConfig
 
@@ -396,7 +409,8 @@ instance Arbitrary PluginConfigInterface where
 genPluginConfigInterface :: Int -> Gen PluginConfigInterface
 genPluginConfigInterface n =
   PluginConfigInterface
-    <$> arbitrary -- pluginConfigInterfaceSocket :: Text
+    <$> arbitraryReducedMaybe n -- pluginConfigInterfaceProtocolScheme :: Maybe Text
+    <*> arbitrary -- pluginConfigInterfaceSocket :: Text
     <*> arbitraryReduced n -- pluginConfigInterfaceTypes :: [PluginInterfaceType]
   
 instance Arbitrary PluginConfigLinux where
@@ -518,14 +532,6 @@ genRejectRequest n =
     <*> arbitraryReducedMaybe n -- rejectRequestErrorHint :: Maybe Text
     <*> arbitraryReducedMaybe n -- rejectRequestStatusCode :: Maybe Integer
   
-instance Arbitrary RequestWasHandledResponse where
-  arbitrary = sized genRequestWasHandledResponse
-
-genRequestWasHandledResponse :: Int -> Gen RequestWasHandledResponse
-genRequestWasHandledResponse n =
-  RequestWasHandledResponse
-    <$> arbitrary -- requestWasHandledResponseRedirectTo :: Text
-  
 instance Arbitrary UserinfoResponse where
   arbitrary = sized genUserinfoResponse
 
@@ -596,7 +602,6 @@ genWellKnown n =
     <*> arbitraryReducedMaybe n -- wellKnownBackchannelLogoutSupported :: Maybe Bool
     <*> arbitraryReducedMaybe n -- wellKnownClaimsParameterSupported :: Maybe Bool
     <*> arbitraryReducedMaybe n -- wellKnownClaimsSupported :: Maybe [Text]
-    <*> arbitraryReducedMaybe n -- wellKnownCodeChallengeMethodsSupported :: Maybe [Text]
     <*> arbitraryReducedMaybe n -- wellKnownEndSessionEndpoint :: Maybe Text
     <*> arbitraryReducedMaybe n -- wellKnownFrontchannelLogoutSessionSupported :: Maybe Bool
     <*> arbitraryReducedMaybe n -- wellKnownFrontchannelLogoutSupported :: Maybe Bool
