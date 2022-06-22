@@ -69,17 +69,11 @@ import qualified Prelude as P
 -- ** All
 newtype All = All { unAll :: Bool } deriving (P.Eq, P.Show)
 
--- ** Body
-newtype Body = Body { unBody :: [PatchDocument] } deriving (P.Eq, P.Show, A.ToJSON)
-
 -- ** Client
 newtype Client = Client { unClient :: Text } deriving (P.Eq, P.Show)
 
 -- ** ClientId
 newtype ClientId = ClientId { unClientId :: Text } deriving (P.Eq, P.Show)
-
--- ** ClientName
-newtype ClientName = ClientName { unClientName :: Text } deriving (P.Eq, P.Show)
 
 -- ** Code
 newtype Code = Code { unCode :: Text } deriving (P.Eq, P.Show)
@@ -107,9 +101,6 @@ newtype LogoutChallenge = LogoutChallenge { unLogoutChallenge :: Text } deriving
 
 -- ** Offset
 newtype Offset = Offset { unOffset :: Integer } deriving (P.Eq, P.Show)
-
--- ** Owner
-newtype Owner = Owner { unOwner :: Text } deriving (P.Eq, P.Show)
 
 -- ** RedirectUri
 newtype RedirectUri = RedirectUri { unRedirectUri :: Text } deriving (P.Eq, P.Show)
@@ -430,6 +421,50 @@ mkFlushInactiveOAuth2TokensRequest =
   { flushInactiveOAuth2TokensRequestNotAfter = Nothing
   }
 
+-- ** GenericError
+-- | GenericError
+-- Error response
+-- 
+-- Error responses are sent when an error (e.g. unauthorized, bad request, ...) occurred.
+data GenericError = GenericError
+  { genericErrorDebug :: Maybe Text -- ^ "debug" - Debug contains debug information. This is usually not available and has to be enabled.
+  , genericErrorError :: Text -- ^ /Required/ "error" - Name is the error name.
+  , genericErrorErrorDescription :: Maybe Text -- ^ "error_description" - Description contains further information on the nature of the error.
+  , genericErrorStatusCode :: Maybe Integer -- ^ "status_code" - Code represents the error status code (404, 403, 401, ...).
+  } deriving (P.Show, P.Eq, P.Typeable)
+
+-- | FromJSON GenericError
+instance A.FromJSON GenericError where
+  parseJSON = A.withObject "GenericError" $ \o ->
+    GenericError
+      <$> (o .:? "debug")
+      <*> (o .:  "error")
+      <*> (o .:? "error_description")
+      <*> (o .:? "status_code")
+
+-- | ToJSON GenericError
+instance A.ToJSON GenericError where
+  toJSON GenericError {..} =
+   _omitNulls
+      [ "debug" .= genericErrorDebug
+      , "error" .= genericErrorError
+      , "error_description" .= genericErrorErrorDescription
+      , "status_code" .= genericErrorStatusCode
+      ]
+
+
+-- | Construct a value of type 'GenericError' (by applying it's required fields, if any)
+mkGenericError
+  :: Text -- ^ 'genericErrorError': Name is the error name.
+  -> GenericError
+mkGenericError genericErrorError =
+  GenericError
+  { genericErrorDebug = Nothing
+  , genericErrorError
+  , genericErrorErrorDescription = Nothing
+  , genericErrorStatusCode = Nothing
+  }
+
 -- ** HealthNotReadyStatus
 -- | HealthNotReadyStatus
 data HealthNotReadyStatus = HealthNotReadyStatus
@@ -612,53 +647,10 @@ mkJSONWebKeySet =
   { jSONWebKeySetKeys = Nothing
   }
 
--- ** JsonError
--- | JsonError
--- Generic Error Response
--- 
--- Error responses are sent when an error (e.g. unauthorized, bad request, ...) occurred.
-data JsonError = JsonError
-  { jsonErrorError :: Maybe Text -- ^ "error" - Name is the error name.
-  , jsonErrorErrorDebug :: Maybe Text -- ^ "error_debug" - Debug contains debug information. This is usually not available and has to be enabled.
-  , jsonErrorErrorDescription :: Maybe Text -- ^ "error_description" - Description contains further information on the nature of the error.
-  , jsonErrorStatusCode :: Maybe Integer -- ^ "status_code" - Code represents the error status code (404, 403, 401, ...).
-  } deriving (P.Show, P.Eq, P.Typeable)
-
--- | FromJSON JsonError
-instance A.FromJSON JsonError where
-  parseJSON = A.withObject "JsonError" $ \o ->
-    JsonError
-      <$> (o .:? "error")
-      <*> (o .:? "error_debug")
-      <*> (o .:? "error_description")
-      <*> (o .:? "status_code")
-
--- | ToJSON JsonError
-instance A.ToJSON JsonError where
-  toJSON JsonError {..} =
-   _omitNulls
-      [ "error" .= jsonErrorError
-      , "error_debug" .= jsonErrorErrorDebug
-      , "error_description" .= jsonErrorErrorDescription
-      , "status_code" .= jsonErrorStatusCode
-      ]
-
-
--- | Construct a value of type 'JsonError' (by applying it's required fields, if any)
-mkJsonError
-  :: JsonError
-mkJsonError =
-  JsonError
-  { jsonErrorError = Nothing
-  , jsonErrorErrorDebug = Nothing
-  , jsonErrorErrorDescription = Nothing
-  , jsonErrorStatusCode = Nothing
-  }
-
 -- ** JsonWebKeySetGeneratorRequest
 -- | JsonWebKeySetGeneratorRequest
 data JsonWebKeySetGeneratorRequest = JsonWebKeySetGeneratorRequest
-  { jsonWebKeySetGeneratorRequestAlg :: Text -- ^ /Required/ "alg" - The algorithm to be used for creating the key. Supports \&quot;RS256\&quot;, \&quot;ES256\&quot;, \&quot;ES512\&quot;, \&quot;HS512\&quot;, and \&quot;HS256\&quot;
+  { jsonWebKeySetGeneratorRequestAlg :: Text -- ^ /Required/ "alg" - The algorithm to be used for creating the key. Supports \&quot;RS256\&quot;, \&quot;ES512\&quot;, \&quot;HS512\&quot;, and \&quot;HS256\&quot;
   , jsonWebKeySetGeneratorRequestKid :: Text -- ^ /Required/ "kid" - The kid of the key to be created
   , jsonWebKeySetGeneratorRequestUse :: Text -- ^ /Required/ "use" - The \&quot;use\&quot; (public key use) parameter identifies the intended use of the public key. The \&quot;use\&quot; parameter is employed to indicate whether a public key is used for encrypting data or verifying the signature on data. Valid values are \&quot;enc\&quot; and \&quot;sig\&quot;.
   } deriving (P.Show, P.Eq, P.Typeable)
@@ -683,7 +675,7 @@ instance A.ToJSON JsonWebKeySetGeneratorRequest where
 
 -- | Construct a value of type 'JsonWebKeySetGeneratorRequest' (by applying it's required fields, if any)
 mkJsonWebKeySetGeneratorRequest
-  :: Text -- ^ 'jsonWebKeySetGeneratorRequestAlg': The algorithm to be used for creating the key. Supports \"RS256\", \"ES256\", \"ES512\", \"HS512\", and \"HS256\"
+  :: Text -- ^ 'jsonWebKeySetGeneratorRequestAlg': The algorithm to be used for creating the key. Supports \"RS256\", \"ES512\", \"HS512\", and \"HS256\"
   -> Text -- ^ 'jsonWebKeySetGeneratorRequestKid': The kid of the key to be created
   -> Text -- ^ 'jsonWebKeySetGeneratorRequestUse': The \"use\" (public key use) parameter identifies the intended use of the public key. The \"use\" parameter is employed to indicate whether a public key is used for encrypting data or verifying the signature on data. Valid values are \"enc\" and \"sig\".
   -> JsonWebKeySetGeneratorRequest
@@ -768,9 +760,7 @@ mkLoginRequest loginRequestChallenge loginRequestClient loginRequestRequestUrl l
 -- Contains information about an ongoing logout request.
 -- 
 data LogoutRequest = LogoutRequest
-  { logoutRequestChallenge :: Maybe Text -- ^ "challenge" - Challenge is the identifier (\&quot;logout challenge\&quot;) of the logout authentication request. It is used to identify the session.
-  , logoutRequestClient :: Maybe OAuth2Client -- ^ "client"
-  , logoutRequestRequestUrl :: Maybe Text -- ^ "request_url" - RequestURL is the original Logout URL requested.
+  { logoutRequestRequestUrl :: Maybe Text -- ^ "request_url" - RequestURL is the original Logout URL requested.
   , logoutRequestRpInitiated :: Maybe Bool -- ^ "rp_initiated" - RPInitiated is set to true if the request was initiated by a Relying Party (RP), also known as an OAuth 2.0 Client.
   , logoutRequestSid :: Maybe Text -- ^ "sid" - SessionID is the login session ID that was requested to log out.
   , logoutRequestSubject :: Maybe Text -- ^ "subject" - Subject is the user for whom the logout was request.
@@ -780,9 +770,7 @@ data LogoutRequest = LogoutRequest
 instance A.FromJSON LogoutRequest where
   parseJSON = A.withObject "LogoutRequest" $ \o ->
     LogoutRequest
-      <$> (o .:? "challenge")
-      <*> (o .:? "client")
-      <*> (o .:? "request_url")
+      <$> (o .:? "request_url")
       <*> (o .:? "rp_initiated")
       <*> (o .:? "sid")
       <*> (o .:? "subject")
@@ -791,9 +779,7 @@ instance A.FromJSON LogoutRequest where
 instance A.ToJSON LogoutRequest where
   toJSON LogoutRequest {..} =
    _omitNulls
-      [ "challenge" .= logoutRequestChallenge
-      , "client" .= logoutRequestClient
-      , "request_url" .= logoutRequestRequestUrl
+      [ "request_url" .= logoutRequestRequestUrl
       , "rp_initiated" .= logoutRequestRpInitiated
       , "sid" .= logoutRequestSid
       , "subject" .= logoutRequestSubject
@@ -805,9 +791,7 @@ mkLogoutRequest
   :: LogoutRequest
 mkLogoutRequest =
   LogoutRequest
-  { logoutRequestChallenge = Nothing
-  , logoutRequestClient = Nothing
-  , logoutRequestRequestUrl = Nothing
+  { logoutRequestRequestUrl = Nothing
   , logoutRequestRpInitiated = Nothing
   , logoutRequestSid = Nothing
   , logoutRequestSubject = Nothing
@@ -1150,49 +1134,6 @@ mkOpenIDConnectContext =
   , openIDConnectContextUiLocales = Nothing
   }
 
--- ** PatchDocument
--- | PatchDocument
--- A JSONPatch document as defined by RFC 6902
-data PatchDocument = PatchDocument
-  { patchDocumentFrom :: Maybe Text -- ^ "from" - A JSON-pointer
-  , patchDocumentOp :: Text -- ^ /Required/ "op" - The operation to be performed
-  , patchDocumentPath :: Text -- ^ /Required/ "path" - A JSON-pointer
-  , patchDocumentValue :: Maybe A.Value -- ^ "value" - The value to be used within the operations
-  } deriving (P.Show, P.Eq, P.Typeable)
-
--- | FromJSON PatchDocument
-instance A.FromJSON PatchDocument where
-  parseJSON = A.withObject "PatchDocument" $ \o ->
-    PatchDocument
-      <$> (o .:? "from")
-      <*> (o .:  "op")
-      <*> (o .:  "path")
-      <*> (o .:? "value")
-
--- | ToJSON PatchDocument
-instance A.ToJSON PatchDocument where
-  toJSON PatchDocument {..} =
-   _omitNulls
-      [ "from" .= patchDocumentFrom
-      , "op" .= patchDocumentOp
-      , "path" .= patchDocumentPath
-      , "value" .= patchDocumentValue
-      ]
-
-
--- | Construct a value of type 'PatchDocument' (by applying it's required fields, if any)
-mkPatchDocument
-  :: Text -- ^ 'patchDocumentOp': The operation to be performed
-  -> Text -- ^ 'patchDocumentPath': A JSON-pointer
-  -> PatchDocument
-mkPatchDocument patchDocumentOp patchDocumentPath =
-  PatchDocument
-  { patchDocumentFrom = Nothing
-  , patchDocumentOp
-  , patchDocumentPath
-  , patchDocumentValue = Nothing
-  }
-
 -- ** PluginConfig
 -- | PluginConfig
 -- PluginConfig The config of a plugin.
@@ -1345,7 +1286,8 @@ mkPluginConfigArgs pluginConfigArgsDescription pluginConfigArgsName pluginConfig
 -- | PluginConfigInterface
 -- PluginConfigInterface The interface between Docker and the plugin
 data PluginConfigInterface = PluginConfigInterface
-  { pluginConfigInterfaceSocket :: Text -- ^ /Required/ "Socket" - socket
+  { pluginConfigInterfaceProtocolScheme :: Maybe Text -- ^ "ProtocolScheme" - Protocol to use for clients connecting to the plugin.
+  , pluginConfigInterfaceSocket :: Text -- ^ /Required/ "Socket" - socket
   , pluginConfigInterfaceTypes :: [PluginInterfaceType] -- ^ /Required/ "Types" - types
   } deriving (P.Show, P.Eq, P.Typeable)
 
@@ -1353,14 +1295,16 @@ data PluginConfigInterface = PluginConfigInterface
 instance A.FromJSON PluginConfigInterface where
   parseJSON = A.withObject "PluginConfigInterface" $ \o ->
     PluginConfigInterface
-      <$> (o .:  "Socket")
+      <$> (o .:? "ProtocolScheme")
+      <*> (o .:  "Socket")
       <*> (o .:  "Types")
 
 -- | ToJSON PluginConfigInterface
 instance A.ToJSON PluginConfigInterface where
   toJSON PluginConfigInterface {..} =
    _omitNulls
-      [ "Socket" .= pluginConfigInterfaceSocket
+      [ "ProtocolScheme" .= pluginConfigInterfaceProtocolScheme
+      , "Socket" .= pluginConfigInterfaceSocket
       , "Types" .= pluginConfigInterfaceTypes
       ]
 
@@ -1372,7 +1316,8 @@ mkPluginConfigInterface
   -> PluginConfigInterface
 mkPluginConfigInterface pluginConfigInterfaceSocket pluginConfigInterfaceTypes =
   PluginConfigInterface
-  { pluginConfigInterfaceSocket
+  { pluginConfigInterfaceProtocolScheme = Nothing
+  , pluginConfigInterfaceSocket
   , pluginConfigInterfaceTypes
   }
 
@@ -1867,37 +1812,6 @@ mkRejectRequest =
   , rejectRequestStatusCode = Nothing
   }
 
--- ** RequestWasHandledResponse
--- | RequestWasHandledResponse
--- The response payload sent when there is an attempt to access already handled request.
--- 
-data RequestWasHandledResponse = RequestWasHandledResponse
-  { requestWasHandledResponseRedirectTo :: Text -- ^ /Required/ "redirect_to" - Original request URL to which you should redirect the user if request was already handled.
-  } deriving (P.Show, P.Eq, P.Typeable)
-
--- | FromJSON RequestWasHandledResponse
-instance A.FromJSON RequestWasHandledResponse where
-  parseJSON = A.withObject "RequestWasHandledResponse" $ \o ->
-    RequestWasHandledResponse
-      <$> (o .:  "redirect_to")
-
--- | ToJSON RequestWasHandledResponse
-instance A.ToJSON RequestWasHandledResponse where
-  toJSON RequestWasHandledResponse {..} =
-   _omitNulls
-      [ "redirect_to" .= requestWasHandledResponseRedirectTo
-      ]
-
-
--- | Construct a value of type 'RequestWasHandledResponse' (by applying it's required fields, if any)
-mkRequestWasHandledResponse
-  :: Text -- ^ 'requestWasHandledResponseRedirectTo': Original request URL to which you should redirect the user if request was already handled.
-  -> RequestWasHandledResponse
-mkRequestWasHandledResponse requestWasHandledResponseRedirectTo =
-  RequestWasHandledResponse
-  { requestWasHandledResponseRedirectTo
-  }
-
 -- ** UserinfoResponse
 -- | UserinfoResponse
 -- The userinfo response
@@ -2140,7 +2054,6 @@ data WellKnown = WellKnown
   , wellKnownBackchannelLogoutSupported :: Maybe Bool -- ^ "backchannel_logout_supported" - Boolean value specifying whether the OP supports back-channel logout, with true indicating support.
   , wellKnownClaimsParameterSupported :: Maybe Bool -- ^ "claims_parameter_supported" - Boolean value specifying whether the OP supports use of the claims parameter, with true indicating support.
   , wellKnownClaimsSupported :: Maybe [Text] -- ^ "claims_supported" - JSON array containing a list of the Claim Names of the Claims that the OpenID Provider MAY be able to supply values for. Note that for privacy or other reasons, this might not be an exhaustive list.
-  , wellKnownCodeChallengeMethodsSupported :: Maybe [Text] -- ^ "code_challenge_methods_supported" - JSON array containing a list of Proof Key for Code Exchange (PKCE) [RFC7636] code challenge methods supported by this authorization server.
   , wellKnownEndSessionEndpoint :: Maybe Text -- ^ "end_session_endpoint" - URL at the OP to which an RP can perform a redirect to request that the End-User be logged out at the OP.
   , wellKnownFrontchannelLogoutSessionSupported :: Maybe Bool -- ^ "frontchannel_logout_session_supported" - Boolean value specifying whether the OP can pass iss (issuer) and sid (session ID) query parameters to identify the RP session with the OP when the frontchannel_logout_uri is used. If supported, the sid Claim is also included in ID Tokens issued by the OP.
   , wellKnownFrontchannelLogoutSupported :: Maybe Bool -- ^ "frontchannel_logout_supported" - Boolean value specifying whether the OP supports HTTP-based logout, with true indicating support.
@@ -2173,7 +2086,6 @@ instance A.FromJSON WellKnown where
       <*> (o .:? "backchannel_logout_supported")
       <*> (o .:? "claims_parameter_supported")
       <*> (o .:? "claims_supported")
-      <*> (o .:? "code_challenge_methods_supported")
       <*> (o .:? "end_session_endpoint")
       <*> (o .:? "frontchannel_logout_session_supported")
       <*> (o .:? "frontchannel_logout_supported")
@@ -2205,7 +2117,6 @@ instance A.ToJSON WellKnown where
       , "backchannel_logout_supported" .= wellKnownBackchannelLogoutSupported
       , "claims_parameter_supported" .= wellKnownClaimsParameterSupported
       , "claims_supported" .= wellKnownClaimsSupported
-      , "code_challenge_methods_supported" .= wellKnownCodeChallengeMethodsSupported
       , "end_session_endpoint" .= wellKnownEndSessionEndpoint
       , "frontchannel_logout_session_supported" .= wellKnownFrontchannelLogoutSessionSupported
       , "frontchannel_logout_supported" .= wellKnownFrontchannelLogoutSupported
@@ -2247,7 +2158,6 @@ mkWellKnown wellKnownAuthorizationEndpoint wellKnownIdTokenSigningAlgValuesSuppo
   , wellKnownBackchannelLogoutSupported = Nothing
   , wellKnownClaimsParameterSupported = Nothing
   , wellKnownClaimsSupported = Nothing
-  , wellKnownCodeChallengeMethodsSupported = Nothing
   , wellKnownEndSessionEndpoint = Nothing
   , wellKnownFrontchannelLogoutSessionSupported = Nothing
   , wellKnownFrontchannelLogoutSupported = Nothing

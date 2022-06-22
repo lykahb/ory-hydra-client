@@ -1,6 +1,6 @@
 name:           ory-hydra-client
-version:        1.10
-synopsis:       Auto-generated ory-hydra-client API Client
+version:        1.10.1
+synopsis:       Auto-generated ory-hydra API Client
 description:    .
                 Client library for calling the ORY Hydra API based on http-client.
                 .
@@ -8,12 +8,12 @@ description:    .
                 .
                 base path: http://localhost
                 .
-                ORY Hydra API version: 1.10
+                ORY Hydra API version: 1.10.1
                 .
                 OpenAPI version: 3.0.1
                 .
 category:       Web, OAuth, Network
-homepage:       https://github.com/lykahb/ory-hydra-client
+homepage:       https://github.com/lykahb/ory-hydra
 author:         Boris Lykah
 maintainer:     lykahb@gmail.com
 copyright:      2021 - Boris Lykah, Mercury
@@ -36,7 +36,7 @@ library
       lib
   ghc-options: -Wall -funbox-strict-fields
   build-depends:
-      aeson >=1.0 && <2.0
+      aeson >=2.0 && <3.0
     , base >=4.7 && <5.0
     , base64-bytestring >1.0 && <2.0
     , bytestring >=0.10.0
@@ -65,7 +65,6 @@ library
   exposed-modules:
       ORYHydra
       ORYHydra.API.Admin
-      ORYHydra.API.Metadata
       ORYHydra.API.Public
       ORYHydra.Client
       ORYHydra.Core
