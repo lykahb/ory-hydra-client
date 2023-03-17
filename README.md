@@ -1,8 +1,8 @@
-## OpenAPI Auto-Generated [http-client](https://www.stackage.org/lts-10.0/package/http-client-0.5.7.1) Bindings to `ORY Hydra`
+## OpenAPI Auto-Generated [http-client](https://www.stackage.org/lts-10.0/package/http-client-0.5.7.1) Bindings to `Ory Hydra API`
 
-The library in `lib` provides auto-generated-from-OpenAPI [http-client](https://www.stackage.org/lts-10.0/package/http-client-0.5.7.1) bindings to the ORY Hydra API.
+The library in `lib` provides auto-generated-from-OpenAPI [http-client](https://www.stackage.org/lts-10.0/package/http-client-0.5.7.1) bindings to the Ory Hydra API API.
 
-OpenApi Version: 3.0.1
+OpenApi Version: 3.0.3
 
 ## Installation
 
@@ -59,11 +59,11 @@ These options allow some customization of the code generation process.
 | allowFromJsonNulls              | allow JSON Null during model decoding from JSON                                                                               | true     | true              |
 | allowNonUniqueOperationIds      | allow *different* API modules to contain the same operationId. Each API must be imported qualified                            | false    | true    |
 | allowToJsonNulls                | allow emitting JSON Null during model encoding to JSON                                                                        | false    | false                |
-| baseModule                      | Set the base module namespace                                                                                                 |          | ORYHydra                      |
+| baseModule                      | Set the base module namespace                                                                                                 |          | OryHydra                      |
 | cabalPackage                    | Set the cabal package name, which consists of one or more alphanumeric words separated by hyphens                             |          | ory-hydra-client                    |
 | cabalVersion                    | Set the cabal version number, consisting of a sequence of one or more integers separated by dots                              | 0.1.0.0  | 0.1.0.0                    |
 | customTestInstanceModule        | test module used to provide typeclass instances for types not known by the generator                                          |          |         |
-| configType                      | Set the name of the type used for configuration                                                                               |          | ORYHydraConfig                      |
+| configType                      | Set the name of the type used for configuration                                                                               |          | OryHydraConfig                      |
 | dateFormat                      | format string used to parse/render a date                                                                                     | %Y-%m-%d | %Y-%m-%d                      |
 | dateTimeFormat                  | format string used to parse/render a datetime. (Defaults to [formatISO8601Millis][1] when not provided)                       |          |                   |
 | dateTimeParseFormat             | overrides the format string used to parse a datetime                                                                          |          |              |
@@ -73,7 +73,7 @@ These options allow some customization of the code generation process.
 | generateModelConstructors       | Generate smart constructors (only supply required fields) for models                                                          | true     | true       |
 | inlineMimeTypes                 | Inline (hardcode) the content-type and accept parameters on operations, when there is only 1 option                           | true     | true                 |
 | modelDeriving                   | Additional classes to include in the deriving() clause of Models                                                              |          |                    |
-| requestType                     | Set the name of the type used to generate requests                                                                            |          | ORYHydraRequest                     |
+| requestType                     | Set the name of the type used to generate requests                                                                            |          | OryHydraRequest                     |
 | strictFields                    | Add strictness annotations to all model fields                                                                                | true     | false                  |
 | useKatip                        | Sets the default value for the UseKatip cabal flag. If true, the katip package provides logging instead of monad-logger       | true     | true                      |
 | queryExtraUnreserved            | Configures additional querystring characters which must not be URI encoded, e.g. '+' or ':'                                   |          |           |
@@ -112,13 +112,13 @@ This library is intended to be imported qualified.
 
 | MODULE              | NOTES                                               |
 | ------------------- | --------------------------------------------------- |
-| ORYHydra.Client    | use the "dispatch" functions to send requests       |
-| ORYHydra.Core      | core functions, config and request types            |
-| ORYHydra.API       | construct api requests                              |
-| ORYHydra.Model     | describes api models                                |
-| ORYHydra.MimeTypes | encoding/decoding MIME types (content-types/accept) |
-| ORYHydra.ModelLens | lenses for model fields                             |
-| ORYHydra.Logging   | logging functions and utils                         |
+| OryHydra.Client    | use the "dispatch" functions to send requests       |
+| OryHydra.Core      | core functions, config and request types            |
+| OryHydra.API       | construct api requests                              |
+| OryHydra.Model     | describes api models                                |
+| OryHydra.MimeTypes | encoding/decoding MIME types (content-types/accept) |
+| OryHydra.ModelLens | lenses for model fields                             |
+| OryHydra.Logging   | logging functions and utils                         |
 
 
 ### MimeTypes

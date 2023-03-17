@@ -15,7 +15,7 @@ import Test.QuickCheck
 import Test.QuickCheck.Property
 import Test.Hspec.QuickCheck (prop)
 
-import ORYHydra.MimeTypes
+import OryHydra.MimeTypes
 
 import ApproxEq
 

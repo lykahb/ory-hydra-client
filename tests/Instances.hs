@@ -1,9 +1,10 @@
+{-# LANGUAGE CPP #-}
 {-# OPTIONS_GHC -fno-warn-unused-imports -fno-warn-unused-matches #-}
 
 module Instances where
 
-import ORYHydra.Model
-import ORYHydra.Core
+import OryHydra.Model
+import OryHydra.Core
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Lazy as BL
@@ -52,9 +53,12 @@ instance Arbitrary Date where
     arbitrary = Date <$> arbitrary
     shrink (Date xs) = Date <$> shrink xs
 
+#if MIN_VERSION_aeson(2,0,0)
+#else
 -- | A naive Arbitrary instance for A.Value:
--- instance Arbitrary A.Value where
---   arbitrary = arbitraryValue
+instance Arbitrary A.Value where
+  arbitrary = arbitraryValue
+#endif
 
 arbitraryValue :: Gen A.Value
 arbitraryValue =
@@ -109,83 +113,63 @@ arbitraryReducedMaybeValue n = do
 
 -- * Models
 
-instance Arbitrary AcceptConsentRequest where
-  arbitrary = sized genAcceptConsentRequest
+instance Arbitrary AcceptOAuth2ConsentRequest where
+  arbitrary = sized genAcceptOAuth2ConsentRequest
 
-genAcceptConsentRequest :: Int -> Gen AcceptConsentRequest
-genAcceptConsentRequest n =
-  AcceptConsentRequest
-    <$> arbitraryReducedMaybe n -- acceptConsentRequestGrantAccessTokenAudience :: Maybe [Text]
-    <*> arbitraryReducedMaybe n -- acceptConsentRequestGrantScope :: Maybe [Text]
-    <*> arbitraryReducedMaybe n -- acceptConsentRequestHandledAt :: Maybe DateTime
-    <*> arbitraryReducedMaybe n -- acceptConsentRequestRemember :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- acceptConsentRequestRememberFor :: Maybe Integer
-    <*> arbitraryReducedMaybe n -- acceptConsentRequestSession :: Maybe ConsentRequestSession
+genAcceptOAuth2ConsentRequest :: Int -> Gen AcceptOAuth2ConsentRequest
+genAcceptOAuth2ConsentRequest n =
+  AcceptOAuth2ConsentRequest
+    <$> arbitraryReducedMaybe n -- acceptOAuth2ConsentRequestGrantAccessTokenAudience :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- acceptOAuth2ConsentRequestGrantScope :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- acceptOAuth2ConsentRequestHandledAt :: Maybe DateTime
+    <*> arbitraryReducedMaybe n -- acceptOAuth2ConsentRequestRemember :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- acceptOAuth2ConsentRequestRememberFor :: Maybe Integer
+    <*> arbitraryReducedMaybe n -- acceptOAuth2ConsentRequestSession :: Maybe AcceptOAuth2ConsentRequestSession
   
-instance Arbitrary AcceptLoginRequest where
-  arbitrary = sized genAcceptLoginRequest
+instance Arbitrary AcceptOAuth2ConsentRequestSession where
+  arbitrary = sized genAcceptOAuth2ConsentRequestSession
 
-genAcceptLoginRequest :: Int -> Gen AcceptLoginRequest
-genAcceptLoginRequest n =
-  AcceptLoginRequest
-    <$> arbitraryReducedMaybe n -- acceptLoginRequestAcr :: Maybe Text
-    <*> arbitraryReducedMaybeValue n -- acceptLoginRequestContext :: Maybe A.Value
-    <*> arbitraryReducedMaybe n -- acceptLoginRequestForceSubjectIdentifier :: Maybe Text
-    <*> arbitraryReducedMaybe n -- acceptLoginRequestRemember :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- acceptLoginRequestRememberFor :: Maybe Integer
-    <*> arbitrary -- acceptLoginRequestSubject :: Text
+genAcceptOAuth2ConsentRequestSession :: Int -> Gen AcceptOAuth2ConsentRequestSession
+genAcceptOAuth2ConsentRequestSession n =
+  AcceptOAuth2ConsentRequestSession
+    <$> arbitraryReducedMaybe n -- acceptOAuth2ConsentRequestSessionAccessToken :: Maybe AnyType
+    <*> arbitraryReducedMaybe n -- acceptOAuth2ConsentRequestSessionIdToken :: Maybe AnyType
   
-instance Arbitrary CompletedRequest where
-  arbitrary = sized genCompletedRequest
+instance Arbitrary AcceptOAuth2LoginRequest where
+  arbitrary = sized genAcceptOAuth2LoginRequest
 
-genCompletedRequest :: Int -> Gen CompletedRequest
-genCompletedRequest n =
-  CompletedRequest
-    <$> arbitrary -- completedRequestRedirectTo :: Text
+genAcceptOAuth2LoginRequest :: Int -> Gen AcceptOAuth2LoginRequest
+genAcceptOAuth2LoginRequest n =
+  AcceptOAuth2LoginRequest
+    <$> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestAcr :: Maybe Text
+    <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestAmr :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestContext :: Maybe AnyType
+    <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestForceSubjectIdentifier :: Maybe Text
+    <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestRemember :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestRememberFor :: Maybe Integer
+    <*> arbitrary -- acceptOAuth2LoginRequestSubject :: Text
   
-instance Arbitrary ConsentRequest where
-  arbitrary = sized genConsentRequest
+instance Arbitrary CreateJsonWebKeySet where
+  arbitrary = sized genCreateJsonWebKeySet
 
-genConsentRequest :: Int -> Gen ConsentRequest
-genConsentRequest n =
-  ConsentRequest
-    <$> arbitraryReducedMaybe n -- consentRequestAcr :: Maybe Text
-    <*> arbitrary -- consentRequestChallenge :: Text
-    <*> arbitraryReducedMaybe n -- consentRequestClient :: Maybe OAuth2Client
-    <*> arbitraryReducedMaybeValue n -- consentRequestContext :: Maybe A.Value
-    <*> arbitraryReducedMaybe n -- consentRequestLoginChallenge :: Maybe Text
-    <*> arbitraryReducedMaybe n -- consentRequestLoginSessionId :: Maybe Text
-    <*> arbitraryReducedMaybe n -- consentRequestOidcContext :: Maybe OpenIDConnectContext
-    <*> arbitraryReducedMaybe n -- consentRequestRequestUrl :: Maybe Text
-    <*> arbitraryReducedMaybe n -- consentRequestRequestedAccessTokenAudience :: Maybe [Text]
-    <*> arbitraryReducedMaybe n -- consentRequestRequestedScope :: Maybe [Text]
-    <*> arbitraryReducedMaybe n -- consentRequestSkip :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- consentRequestSubject :: Maybe Text
+genCreateJsonWebKeySet :: Int -> Gen CreateJsonWebKeySet
+genCreateJsonWebKeySet n =
+  CreateJsonWebKeySet
+    <$> arbitrary -- createJsonWebKeySetAlg :: Text
+    <*> arbitrary -- createJsonWebKeySetKid :: Text
+    <*> arbitrary -- createJsonWebKeySetUse :: Text
   
-instance Arbitrary ConsentRequestSession where
-  arbitrary = sized genConsentRequestSession
+instance Arbitrary ErrorOAuth2 where
+  arbitrary = sized genErrorOAuth2
 
-genConsentRequestSession :: Int -> Gen ConsentRequestSession
-genConsentRequestSession n =
-  ConsentRequestSession
-    <$> arbitraryReducedMaybeValue n -- consentRequestSessionAccessToken :: Maybe A.Value
-    <*> arbitraryReducedMaybeValue n -- consentRequestSessionIdToken :: Maybe A.Value
-  
-instance Arbitrary ContainerWaitOKBodyError where
-  arbitrary = sized genContainerWaitOKBodyError
-
-genContainerWaitOKBodyError :: Int -> Gen ContainerWaitOKBodyError
-genContainerWaitOKBodyError n =
-  ContainerWaitOKBodyError
-    <$> arbitraryReducedMaybe n -- containerWaitOKBodyErrorMessage :: Maybe Text
-  
-instance Arbitrary FlushInactiveOAuth2TokensRequest where
-  arbitrary = sized genFlushInactiveOAuth2TokensRequest
-
-genFlushInactiveOAuth2TokensRequest :: Int -> Gen FlushInactiveOAuth2TokensRequest
-genFlushInactiveOAuth2TokensRequest n =
-  FlushInactiveOAuth2TokensRequest
-    <$> arbitraryReducedMaybe n -- flushInactiveOAuth2TokensRequestNotAfter :: Maybe DateTime
+genErrorOAuth2 :: Int -> Gen ErrorOAuth2
+genErrorOAuth2 n =
+  ErrorOAuth2
+    <$> arbitraryReducedMaybe n -- errorOAuth2Error :: Maybe Text
+    <*> arbitraryReducedMaybe n -- errorOAuth2ErrorDebug :: Maybe Text
+    <*> arbitraryReducedMaybe n -- errorOAuth2ErrorDescription :: Maybe Text
+    <*> arbitraryReducedMaybe n -- errorOAuth2ErrorHint :: Maybe Text
+    <*> arbitraryReducedMaybe n -- errorOAuth2StatusCode :: Maybe Integer
   
 instance Arbitrary GenericError where
   arbitrary = sized genGenericError
@@ -193,10 +177,22 @@ instance Arbitrary GenericError where
 genGenericError :: Int -> Gen GenericError
 genGenericError n =
   GenericError
-    <$> arbitraryReducedMaybe n -- genericErrorDebug :: Maybe Text
-    <*> arbitrary -- genericErrorError :: Text
-    <*> arbitraryReducedMaybe n -- genericErrorErrorDescription :: Maybe Text
-    <*> arbitraryReducedMaybe n -- genericErrorStatusCode :: Maybe Integer
+    <$> arbitraryReducedMaybe n -- genericErrorCode :: Maybe Integer
+    <*> arbitraryReducedMaybe n -- genericErrorDebug :: Maybe Text
+    <*> arbitraryReducedMaybe n -- genericErrorDetails :: Maybe AnyType
+    <*> arbitraryReducedMaybe n -- genericErrorId :: Maybe Text
+    <*> arbitrary -- genericErrorMessage :: Text
+    <*> arbitraryReducedMaybe n -- genericErrorReason :: Maybe Text
+    <*> arbitraryReducedMaybe n -- genericErrorRequest :: Maybe Text
+    <*> arbitraryReducedMaybe n -- genericErrorStatus :: Maybe Text
+  
+instance Arbitrary GetVersion200Response where
+  arbitrary = sized genGetVersion200Response
+
+genGetVersion200Response :: Int -> Gen GetVersion200Response
+genGetVersion200Response n =
+  GetVersion200Response
+    <$> arbitraryReducedMaybe n -- getVersion200ResponseVersion :: Maybe Text
   
 instance Arbitrary HealthNotReadyStatus where
   arbitrary = sized genHealthNotReadyStatus
@@ -214,74 +210,85 @@ genHealthStatus n =
   HealthStatus
     <$> arbitraryReducedMaybe n -- healthStatusStatus :: Maybe Text
   
-instance Arbitrary JSONWebKey where
-  arbitrary = sized genJSONWebKey
+instance Arbitrary IntrospectedOAuth2Token where
+  arbitrary = sized genIntrospectedOAuth2Token
 
-genJSONWebKey :: Int -> Gen JSONWebKey
-genJSONWebKey n =
-  JSONWebKey
-    <$> arbitrary -- jSONWebKeyAlg :: Text
-    <*> arbitraryReducedMaybe n -- jSONWebKeyCrv :: Maybe Text
-    <*> arbitraryReducedMaybe n -- jSONWebKeyD :: Maybe Text
-    <*> arbitraryReducedMaybe n -- jSONWebKeyDp :: Maybe Text
-    <*> arbitraryReducedMaybe n -- jSONWebKeyDq :: Maybe Text
-    <*> arbitraryReducedMaybe n -- jSONWebKeyE :: Maybe Text
-    <*> arbitraryReducedMaybe n -- jSONWebKeyK :: Maybe Text
-    <*> arbitrary -- jSONWebKeyKid :: Text
-    <*> arbitrary -- jSONWebKeyKty :: Text
-    <*> arbitraryReducedMaybe n -- jSONWebKeyN :: Maybe Text
-    <*> arbitraryReducedMaybe n -- jSONWebKeyP :: Maybe Text
-    <*> arbitraryReducedMaybe n -- jSONWebKeyQ :: Maybe Text
-    <*> arbitraryReducedMaybe n -- jSONWebKeyQi :: Maybe Text
-    <*> arbitrary -- jSONWebKeyUse :: Text
-    <*> arbitraryReducedMaybe n -- jSONWebKeyX :: Maybe Text
-    <*> arbitraryReducedMaybe n -- jSONWebKeyX5c :: Maybe [Text]
-    <*> arbitraryReducedMaybe n -- jSONWebKeyY :: Maybe Text
+genIntrospectedOAuth2Token :: Int -> Gen IntrospectedOAuth2Token
+genIntrospectedOAuth2Token n =
+  IntrospectedOAuth2Token
+    <$> arbitrary -- introspectedOAuth2TokenActive :: Bool
+    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenAud :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenClientId :: Maybe Text
+    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenExp :: Maybe Integer
+    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenExt :: Maybe (Map.Map String AnyType)
+    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenIat :: Maybe Integer
+    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenIss :: Maybe Text
+    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenNbf :: Maybe Integer
+    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenObfuscatedSubject :: Maybe Text
+    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenScope :: Maybe Text
+    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenSub :: Maybe Text
+    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenTokenType :: Maybe Text
+    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenTokenUse :: Maybe Text
+    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenUsername :: Maybe Text
   
-instance Arbitrary JSONWebKeySet where
-  arbitrary = sized genJSONWebKeySet
+instance Arbitrary IsReady200Response where
+  arbitrary = sized genIsReady200Response
 
-genJSONWebKeySet :: Int -> Gen JSONWebKeySet
-genJSONWebKeySet n =
-  JSONWebKeySet
-    <$> arbitraryReducedMaybe n -- jSONWebKeySetKeys :: Maybe [JSONWebKey]
+genIsReady200Response :: Int -> Gen IsReady200Response
+genIsReady200Response n =
+  IsReady200Response
+    <$> arbitraryReducedMaybe n -- isReady200ResponseStatus :: Maybe Text
   
-instance Arbitrary JsonWebKeySetGeneratorRequest where
-  arbitrary = sized genJsonWebKeySetGeneratorRequest
+instance Arbitrary IsReady503Response where
+  arbitrary = sized genIsReady503Response
 
-genJsonWebKeySetGeneratorRequest :: Int -> Gen JsonWebKeySetGeneratorRequest
-genJsonWebKeySetGeneratorRequest n =
-  JsonWebKeySetGeneratorRequest
-    <$> arbitrary -- jsonWebKeySetGeneratorRequestAlg :: Text
-    <*> arbitrary -- jsonWebKeySetGeneratorRequestKid :: Text
-    <*> arbitrary -- jsonWebKeySetGeneratorRequestUse :: Text
+genIsReady503Response :: Int -> Gen IsReady503Response
+genIsReady503Response n =
+  IsReady503Response
+    <$> arbitraryReducedMaybe n -- isReady503ResponseErrors :: Maybe (Map.Map String Text)
   
-instance Arbitrary LoginRequest where
-  arbitrary = sized genLoginRequest
+instance Arbitrary JsonPatch where
+  arbitrary = sized genJsonPatch
 
-genLoginRequest :: Int -> Gen LoginRequest
-genLoginRequest n =
-  LoginRequest
-    <$> arbitrary -- loginRequestChallenge :: Text
-    <*> arbitraryReduced n -- loginRequestClient :: OAuth2Client
-    <*> arbitraryReducedMaybe n -- loginRequestOidcContext :: Maybe OpenIDConnectContext
-    <*> arbitrary -- loginRequestRequestUrl :: Text
-    <*> arbitrary -- loginRequestRequestedAccessTokenAudience :: [Text]
-    <*> arbitrary -- loginRequestRequestedScope :: [Text]
-    <*> arbitraryReducedMaybe n -- loginRequestSessionId :: Maybe Text
-    <*> arbitrary -- loginRequestSkip :: Bool
-    <*> arbitrary -- loginRequestSubject :: Text
+genJsonPatch :: Int -> Gen JsonPatch
+genJsonPatch n =
+  JsonPatch
+    <$> arbitraryReducedMaybe n -- jsonPatchFrom :: Maybe Text
+    <*> arbitrary -- jsonPatchOp :: Text
+    <*> arbitrary -- jsonPatchPath :: Text
+    <*> arbitraryReducedMaybe n -- jsonPatchValue :: Maybe AnyType
   
-instance Arbitrary LogoutRequest where
-  arbitrary = sized genLogoutRequest
+instance Arbitrary JsonWebKey where
+  arbitrary = sized genJsonWebKey
 
-genLogoutRequest :: Int -> Gen LogoutRequest
-genLogoutRequest n =
-  LogoutRequest
-    <$> arbitraryReducedMaybe n -- logoutRequestRequestUrl :: Maybe Text
-    <*> arbitraryReducedMaybe n -- logoutRequestRpInitiated :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- logoutRequestSid :: Maybe Text
-    <*> arbitraryReducedMaybe n -- logoutRequestSubject :: Maybe Text
+genJsonWebKey :: Int -> Gen JsonWebKey
+genJsonWebKey n =
+  JsonWebKey
+    <$> arbitrary -- jsonWebKeyAlg :: Text
+    <*> arbitraryReducedMaybe n -- jsonWebKeyCrv :: Maybe Text
+    <*> arbitraryReducedMaybe n -- jsonWebKeyD :: Maybe Text
+    <*> arbitraryReducedMaybe n -- jsonWebKeyDp :: Maybe Text
+    <*> arbitraryReducedMaybe n -- jsonWebKeyDq :: Maybe Text
+    <*> arbitraryReducedMaybe n -- jsonWebKeyE :: Maybe Text
+    <*> arbitraryReducedMaybe n -- jsonWebKeyK :: Maybe Text
+    <*> arbitrary -- jsonWebKeyKid :: Text
+    <*> arbitrary -- jsonWebKeyKty :: Text
+    <*> arbitraryReducedMaybe n -- jsonWebKeyN :: Maybe Text
+    <*> arbitraryReducedMaybe n -- jsonWebKeyP :: Maybe Text
+    <*> arbitraryReducedMaybe n -- jsonWebKeyQ :: Maybe Text
+    <*> arbitraryReducedMaybe n -- jsonWebKeyQi :: Maybe Text
+    <*> arbitrary -- jsonWebKeyUse :: Text
+    <*> arbitraryReducedMaybe n -- jsonWebKeyX :: Maybe Text
+    <*> arbitraryReducedMaybe n -- jsonWebKeyX5c :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- jsonWebKeyY :: Maybe Text
+  
+instance Arbitrary JsonWebKeySet where
+  arbitrary = sized genJsonWebKeySet
+
+genJsonWebKeySet :: Int -> Gen JsonWebKeySet
+genJsonWebKeySet n =
+  JsonWebKeySet
+    <$> arbitraryReducedMaybe n -- jsonWebKeySetKeys :: Maybe [JsonWebKey]
   
 instance Arbitrary OAuth2Client where
   arbitrary = sized genOAuth2Client
@@ -291,8 +298,12 @@ genOAuth2Client n =
   OAuth2Client
     <$> arbitraryReducedMaybe n -- oAuth2ClientAllowedCorsOrigins :: Maybe [Text]
     <*> arbitraryReducedMaybe n -- oAuth2ClientAudience :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- oAuth2ClientAuthorizationCodeGrantAccessTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientAuthorizationCodeGrantIdTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientAuthorizationCodeGrantRefreshTokenLifespan :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientBackchannelLogoutSessionRequired :: Maybe Bool
     <*> arbitraryReducedMaybe n -- oAuth2ClientBackchannelLogoutUri :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientClientCredentialsGrantAccessTokenLifespan :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientClientId :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientClientName :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientClientSecret :: Maybe Text
@@ -303,14 +314,22 @@ genOAuth2Client n =
     <*> arbitraryReducedMaybe n -- oAuth2ClientFrontchannelLogoutSessionRequired :: Maybe Bool
     <*> arbitraryReducedMaybe n -- oAuth2ClientFrontchannelLogoutUri :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientGrantTypes :: Maybe [Text]
-    <*> arbitraryReducedMaybeValue n -- oAuth2ClientJwks :: Maybe A.Value
+    <*> arbitraryReducedMaybe n -- oAuth2ClientImplicitGrantAccessTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientImplicitGrantIdTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientJwks :: Maybe AnyType
     <*> arbitraryReducedMaybe n -- oAuth2ClientJwksUri :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientJwtBearerGrantAccessTokenLifespan :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientLogoUri :: Maybe Text
-    <*> arbitraryReducedMaybeValue n -- oAuth2ClientMetadata :: Maybe A.Value
+    <*> arbitraryReducedMaybe n -- oAuth2ClientMetadata :: Maybe AnyType
     <*> arbitraryReducedMaybe n -- oAuth2ClientOwner :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientPolicyUri :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientPostLogoutRedirectUris :: Maybe [Text]
     <*> arbitraryReducedMaybe n -- oAuth2ClientRedirectUris :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- oAuth2ClientRefreshTokenGrantAccessTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientRefreshTokenGrantIdTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientRefreshTokenGrantRefreshTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientRegistrationAccessToken :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientRegistrationClientUri :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientRequestObjectSigningAlg :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientRequestUris :: Maybe [Text]
     <*> arbitraryReducedMaybe n -- oAuth2ClientResponseTypes :: Maybe [Text]
@@ -323,240 +342,296 @@ genOAuth2Client n =
     <*> arbitraryReducedMaybe n -- oAuth2ClientUpdatedAt :: Maybe DateTime
     <*> arbitraryReducedMaybe n -- oAuth2ClientUserinfoSignedResponseAlg :: Maybe Text
   
-instance Arbitrary OAuth2TokenIntrospection where
-  arbitrary = sized genOAuth2TokenIntrospection
+instance Arbitrary OAuth2ClientTokenLifespans where
+  arbitrary = sized genOAuth2ClientTokenLifespans
 
-genOAuth2TokenIntrospection :: Int -> Gen OAuth2TokenIntrospection
-genOAuth2TokenIntrospection n =
-  OAuth2TokenIntrospection
-    <$> arbitrary -- oAuth2TokenIntrospectionActive :: Bool
-    <*> arbitraryReducedMaybe n -- oAuth2TokenIntrospectionAud :: Maybe [Text]
-    <*> arbitraryReducedMaybe n -- oAuth2TokenIntrospectionClientId :: Maybe Text
-    <*> arbitraryReducedMaybe n -- oAuth2TokenIntrospectionExp :: Maybe Integer
-    <*> arbitraryReducedMaybeValue n -- oAuth2TokenIntrospectionExt :: Maybe A.Value
-    <*> arbitraryReducedMaybe n -- oAuth2TokenIntrospectionIat :: Maybe Integer
-    <*> arbitraryReducedMaybe n -- oAuth2TokenIntrospectionIss :: Maybe Text
-    <*> arbitraryReducedMaybe n -- oAuth2TokenIntrospectionNbf :: Maybe Integer
-    <*> arbitraryReducedMaybe n -- oAuth2TokenIntrospectionObfuscatedSubject :: Maybe Text
-    <*> arbitraryReducedMaybe n -- oAuth2TokenIntrospectionScope :: Maybe Text
-    <*> arbitraryReducedMaybe n -- oAuth2TokenIntrospectionSub :: Maybe Text
-    <*> arbitraryReducedMaybe n -- oAuth2TokenIntrospectionTokenType :: Maybe Text
-    <*> arbitraryReducedMaybe n -- oAuth2TokenIntrospectionTokenUse :: Maybe Text
-    <*> arbitraryReducedMaybe n -- oAuth2TokenIntrospectionUsername :: Maybe Text
+genOAuth2ClientTokenLifespans :: Int -> Gen OAuth2ClientTokenLifespans
+genOAuth2ClientTokenLifespans n =
+  OAuth2ClientTokenLifespans
+    <$> arbitraryReducedMaybe n -- oAuth2ClientTokenLifespansAuthorizationCodeGrantAccessTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientTokenLifespansAuthorizationCodeGrantIdTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientTokenLifespansAuthorizationCodeGrantRefreshTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientTokenLifespansClientCredentialsGrantAccessTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientTokenLifespansImplicitGrantAccessTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientTokenLifespansImplicitGrantIdTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientTokenLifespansJwtBearerGrantAccessTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientTokenLifespansRefreshTokenGrantAccessTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientTokenLifespansRefreshTokenGrantIdTokenLifespan :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientTokenLifespansRefreshTokenGrantRefreshTokenLifespan :: Maybe Text
   
-instance Arbitrary Oauth2TokenResponse where
-  arbitrary = sized genOauth2TokenResponse
+instance Arbitrary OAuth2ConsentRequest where
+  arbitrary = sized genOAuth2ConsentRequest
 
-genOauth2TokenResponse :: Int -> Gen Oauth2TokenResponse
-genOauth2TokenResponse n =
-  Oauth2TokenResponse
-    <$> arbitraryReducedMaybe n -- oauth2TokenResponseAccessToken :: Maybe Text
-    <*> arbitraryReducedMaybe n -- oauth2TokenResponseExpiresIn :: Maybe Integer
-    <*> arbitraryReducedMaybe n -- oauth2TokenResponseIdToken :: Maybe Text
-    <*> arbitraryReducedMaybe n -- oauth2TokenResponseRefreshToken :: Maybe Text
-    <*> arbitraryReducedMaybe n -- oauth2TokenResponseScope :: Maybe Text
-    <*> arbitraryReducedMaybe n -- oauth2TokenResponseTokenType :: Maybe Text
+genOAuth2ConsentRequest :: Int -> Gen OAuth2ConsentRequest
+genOAuth2ConsentRequest n =
+  OAuth2ConsentRequest
+    <$> arbitraryReducedMaybe n -- oAuth2ConsentRequestAcr :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestAmr :: Maybe [Text]
+    <*> arbitrary -- oAuth2ConsentRequestChallenge :: Text
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestClient :: Maybe OAuth2Client
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestContext :: Maybe AnyType
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestLoginChallenge :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestLoginSessionId :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestOidcContext :: Maybe OAuth2ConsentRequestOpenIDConnectContext
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestRequestUrl :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestRequestedAccessTokenAudience :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestRequestedScope :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestSkip :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestSubject :: Maybe Text
   
-instance Arbitrary OpenIDConnectContext where
-  arbitrary = sized genOpenIDConnectContext
+instance Arbitrary OAuth2ConsentRequestOpenIDConnectContext where
+  arbitrary = sized genOAuth2ConsentRequestOpenIDConnectContext
 
-genOpenIDConnectContext :: Int -> Gen OpenIDConnectContext
-genOpenIDConnectContext n =
-  OpenIDConnectContext
-    <$> arbitraryReducedMaybe n -- openIDConnectContextAcrValues :: Maybe [Text]
-    <*> arbitraryReducedMaybe n -- openIDConnectContextDisplay :: Maybe Text
-    <*> arbitraryReducedMaybeValue n -- openIDConnectContextIdTokenHintClaims :: Maybe A.Value
-    <*> arbitraryReducedMaybe n -- openIDConnectContextLoginHint :: Maybe Text
-    <*> arbitraryReducedMaybe n -- openIDConnectContextUiLocales :: Maybe [Text]
+genOAuth2ConsentRequestOpenIDConnectContext :: Int -> Gen OAuth2ConsentRequestOpenIDConnectContext
+genOAuth2ConsentRequestOpenIDConnectContext n =
+  OAuth2ConsentRequestOpenIDConnectContext
+    <$> arbitraryReducedMaybe n -- oAuth2ConsentRequestOpenIDConnectContextAcrValues :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestOpenIDConnectContextDisplay :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestOpenIDConnectContextIdTokenHintClaims :: Maybe (Map.Map String AnyType)
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestOpenIDConnectContextLoginHint :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestOpenIDConnectContextUiLocales :: Maybe [Text]
   
-instance Arbitrary PluginConfig where
-  arbitrary = sized genPluginConfig
+instance Arbitrary OAuth2ConsentSession where
+  arbitrary = sized genOAuth2ConsentSession
 
-genPluginConfig :: Int -> Gen PluginConfig
-genPluginConfig n =
-  PluginConfig
-    <$> arbitraryReduced n -- pluginConfigArgs :: PluginConfigArgs
-    <*> arbitrary -- pluginConfigDescription :: Text
-    <*> arbitraryReducedMaybe n -- pluginConfigDockerVersion :: Maybe Text
-    <*> arbitrary -- pluginConfigDocumentation :: Text
-    <*> arbitrary -- pluginConfigEntrypoint :: [Text]
-    <*> arbitraryReduced n -- pluginConfigEnv :: [PluginEnv]
-    <*> arbitraryReduced n -- pluginConfigInterface :: PluginConfigInterface
-    <*> arbitrary -- pluginConfigIpcHost :: Bool
-    <*> arbitraryReduced n -- pluginConfigLinux :: PluginConfigLinux
-    <*> arbitraryReduced n -- pluginConfigMounts :: [PluginMount]
-    <*> arbitraryReduced n -- pluginConfigNetwork :: PluginConfigNetwork
-    <*> arbitrary -- pluginConfigPidHost :: Bool
-    <*> arbitrary -- pluginConfigPropagatedMount :: Text
-    <*> arbitraryReducedMaybe n -- pluginConfigUser :: Maybe PluginConfigUser
-    <*> arbitrary -- pluginConfigWorkDir :: Text
-    <*> arbitraryReducedMaybe n -- pluginConfigRootfs :: Maybe PluginConfigRootfs
+genOAuth2ConsentSession :: Int -> Gen OAuth2ConsentSession
+genOAuth2ConsentSession n =
+  OAuth2ConsentSession
+    <$> arbitraryReducedMaybe n -- oAuth2ConsentSessionConsentRequest :: Maybe OAuth2ConsentRequest
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentSessionExpiresAt :: Maybe OAuth2ConsentSessionExpiresAt
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentSessionGrantAccessTokenAudience :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentSessionGrantScope :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentSessionHandledAt :: Maybe DateTime
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentSessionRemember :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentSessionRememberFor :: Maybe Integer
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentSessionSession :: Maybe AcceptOAuth2ConsentRequestSession
   
-instance Arbitrary PluginConfigArgs where
-  arbitrary = sized genPluginConfigArgs
+instance Arbitrary OAuth2ConsentSessionExpiresAt where
+  arbitrary = sized genOAuth2ConsentSessionExpiresAt
 
-genPluginConfigArgs :: Int -> Gen PluginConfigArgs
-genPluginConfigArgs n =
-  PluginConfigArgs
-    <$> arbitrary -- pluginConfigArgsDescription :: Text
-    <*> arbitrary -- pluginConfigArgsName :: Text
-    <*> arbitrary -- pluginConfigArgsSettable :: [Text]
-    <*> arbitrary -- pluginConfigArgsValue :: [Text]
+genOAuth2ConsentSessionExpiresAt :: Int -> Gen OAuth2ConsentSessionExpiresAt
+genOAuth2ConsentSessionExpiresAt n =
+  OAuth2ConsentSessionExpiresAt
+    <$> arbitraryReducedMaybe n -- oAuth2ConsentSessionExpiresAtAccessToken :: Maybe DateTime
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentSessionExpiresAtAuthorizeCode :: Maybe DateTime
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentSessionExpiresAtIdToken :: Maybe DateTime
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentSessionExpiresAtParContext :: Maybe DateTime
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentSessionExpiresAtRefreshToken :: Maybe DateTime
   
-instance Arbitrary PluginConfigInterface where
-  arbitrary = sized genPluginConfigInterface
+instance Arbitrary OAuth2LoginRequest where
+  arbitrary = sized genOAuth2LoginRequest
 
-genPluginConfigInterface :: Int -> Gen PluginConfigInterface
-genPluginConfigInterface n =
-  PluginConfigInterface
-    <$> arbitraryReducedMaybe n -- pluginConfigInterfaceProtocolScheme :: Maybe Text
-    <*> arbitrary -- pluginConfigInterfaceSocket :: Text
-    <*> arbitraryReduced n -- pluginConfigInterfaceTypes :: [PluginInterfaceType]
+genOAuth2LoginRequest :: Int -> Gen OAuth2LoginRequest
+genOAuth2LoginRequest n =
+  OAuth2LoginRequest
+    <$> arbitrary -- oAuth2LoginRequestChallenge :: Text
+    <*> arbitraryReduced n -- oAuth2LoginRequestClient :: OAuth2Client
+    <*> arbitraryReducedMaybe n -- oAuth2LoginRequestOidcContext :: Maybe OAuth2ConsentRequestOpenIDConnectContext
+    <*> arbitrary -- oAuth2LoginRequestRequestUrl :: Text
+    <*> arbitrary -- oAuth2LoginRequestRequestedAccessTokenAudience :: [Text]
+    <*> arbitrary -- oAuth2LoginRequestRequestedScope :: [Text]
+    <*> arbitraryReducedMaybe n -- oAuth2LoginRequestSessionId :: Maybe Text
+    <*> arbitrary -- oAuth2LoginRequestSkip :: Bool
+    <*> arbitrary -- oAuth2LoginRequestSubject :: Text
   
-instance Arbitrary PluginConfigLinux where
-  arbitrary = sized genPluginConfigLinux
+instance Arbitrary OAuth2LogoutRequest where
+  arbitrary = sized genOAuth2LogoutRequest
 
-genPluginConfigLinux :: Int -> Gen PluginConfigLinux
-genPluginConfigLinux n =
-  PluginConfigLinux
-    <$> arbitrary -- pluginConfigLinuxAllowAllDevices :: Bool
-    <*> arbitrary -- pluginConfigLinuxCapabilities :: [Text]
-    <*> arbitraryReduced n -- pluginConfigLinuxDevices :: [PluginDevice]
+genOAuth2LogoutRequest :: Int -> Gen OAuth2LogoutRequest
+genOAuth2LogoutRequest n =
+  OAuth2LogoutRequest
+    <$> arbitraryReducedMaybe n -- oAuth2LogoutRequestChallenge :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2LogoutRequestClient :: Maybe OAuth2Client
+    <*> arbitraryReducedMaybe n -- oAuth2LogoutRequestRequestUrl :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2LogoutRequestRpInitiated :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- oAuth2LogoutRequestSid :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2LogoutRequestSubject :: Maybe Text
   
-instance Arbitrary PluginConfigNetwork where
-  arbitrary = sized genPluginConfigNetwork
+instance Arbitrary OAuth2RedirectTo where
+  arbitrary = sized genOAuth2RedirectTo
 
-genPluginConfigNetwork :: Int -> Gen PluginConfigNetwork
-genPluginConfigNetwork n =
-  PluginConfigNetwork
-    <$> arbitrary -- pluginConfigNetworkType :: Text
+genOAuth2RedirectTo :: Int -> Gen OAuth2RedirectTo
+genOAuth2RedirectTo n =
+  OAuth2RedirectTo
+    <$> arbitrary -- oAuth2RedirectToRedirectTo :: Text
   
-instance Arbitrary PluginConfigRootfs where
-  arbitrary = sized genPluginConfigRootfs
+instance Arbitrary OAuth2TokenExchange where
+  arbitrary = sized genOAuth2TokenExchange
 
-genPluginConfigRootfs :: Int -> Gen PluginConfigRootfs
-genPluginConfigRootfs n =
-  PluginConfigRootfs
-    <$> arbitraryReducedMaybe n -- pluginConfigRootfsDiffIds :: Maybe [Text]
-    <*> arbitraryReducedMaybe n -- pluginConfigRootfsType :: Maybe Text
+genOAuth2TokenExchange :: Int -> Gen OAuth2TokenExchange
+genOAuth2TokenExchange n =
+  OAuth2TokenExchange
+    <$> arbitraryReducedMaybe n -- oAuth2TokenExchangeAccessToken :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2TokenExchangeExpiresIn :: Maybe Integer
+    <*> arbitraryReducedMaybe n -- oAuth2TokenExchangeIdToken :: Maybe Integer
+    <*> arbitraryReducedMaybe n -- oAuth2TokenExchangeRefreshToken :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2TokenExchangeScope :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2TokenExchangeTokenType :: Maybe Text
   
-instance Arbitrary PluginConfigUser where
-  arbitrary = sized genPluginConfigUser
+instance Arbitrary OidcConfiguration where
+  arbitrary = sized genOidcConfiguration
 
-genPluginConfigUser :: Int -> Gen PluginConfigUser
-genPluginConfigUser n =
-  PluginConfigUser
-    <$> arbitraryReducedMaybe n -- pluginConfigUserGid :: Maybe Int
-    <*> arbitraryReducedMaybe n -- pluginConfigUserUid :: Maybe Int
+genOidcConfiguration :: Int -> Gen OidcConfiguration
+genOidcConfiguration n =
+  OidcConfiguration
+    <$> arbitrary -- oidcConfigurationAuthorizationEndpoint :: Text
+    <*> arbitraryReducedMaybe n -- oidcConfigurationBackchannelLogoutSessionSupported :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- oidcConfigurationBackchannelLogoutSupported :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- oidcConfigurationClaimsParameterSupported :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- oidcConfigurationClaimsSupported :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- oidcConfigurationCodeChallengeMethodsSupported :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- oidcConfigurationEndSessionEndpoint :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcConfigurationFrontchannelLogoutSessionSupported :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- oidcConfigurationFrontchannelLogoutSupported :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- oidcConfigurationGrantTypesSupported :: Maybe [Text]
+    <*> arbitrary -- oidcConfigurationIdTokenSignedResponseAlg :: [Text]
+    <*> arbitrary -- oidcConfigurationIdTokenSigningAlgValuesSupported :: [Text]
+    <*> arbitrary -- oidcConfigurationIssuer :: Text
+    <*> arbitrary -- oidcConfigurationJwksUri :: Text
+    <*> arbitraryReducedMaybe n -- oidcConfigurationRegistrationEndpoint :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcConfigurationRequestObjectSigningAlgValuesSupported :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- oidcConfigurationRequestParameterSupported :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- oidcConfigurationRequestUriParameterSupported :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- oidcConfigurationRequireRequestUriRegistration :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- oidcConfigurationResponseModesSupported :: Maybe [Text]
+    <*> arbitrary -- oidcConfigurationResponseTypesSupported :: [Text]
+    <*> arbitraryReducedMaybe n -- oidcConfigurationRevocationEndpoint :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcConfigurationScopesSupported :: Maybe [Text]
+    <*> arbitrary -- oidcConfigurationSubjectTypesSupported :: [Text]
+    <*> arbitrary -- oidcConfigurationTokenEndpoint :: Text
+    <*> arbitraryReducedMaybe n -- oidcConfigurationTokenEndpointAuthMethodsSupported :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- oidcConfigurationUserinfoEndpoint :: Maybe Text
+    <*> arbitrary -- oidcConfigurationUserinfoSignedResponseAlg :: [Text]
+    <*> arbitraryReducedMaybe n -- oidcConfigurationUserinfoSigningAlgValuesSupported :: Maybe [Text]
   
-instance Arbitrary PluginDevice where
-  arbitrary = sized genPluginDevice
+instance Arbitrary OidcUserInfo where
+  arbitrary = sized genOidcUserInfo
 
-genPluginDevice :: Int -> Gen PluginDevice
-genPluginDevice n =
-  PluginDevice
-    <$> arbitrary -- pluginDeviceDescription :: Text
-    <*> arbitrary -- pluginDeviceName :: Text
-    <*> arbitrary -- pluginDevicePath :: Text
-    <*> arbitrary -- pluginDeviceSettable :: [Text]
+genOidcUserInfo :: Int -> Gen OidcUserInfo
+genOidcUserInfo n =
+  OidcUserInfo
+    <$> arbitraryReducedMaybe n -- oidcUserInfoBirthdate :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoEmail :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoEmailVerified :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- oidcUserInfoFamilyName :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoGender :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoGivenName :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoLocale :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoMiddleName :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoName :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoNickname :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoPhoneNumber :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoPhoneNumberVerified :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- oidcUserInfoPicture :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoPreferredUsername :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoProfile :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoSub :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoUpdatedAt :: Maybe Integer
+    <*> arbitraryReducedMaybe n -- oidcUserInfoWebsite :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oidcUserInfoZoneinfo :: Maybe Text
   
-instance Arbitrary PluginEnv where
-  arbitrary = sized genPluginEnv
+instance Arbitrary Pagination where
+  arbitrary = sized genPagination
 
-genPluginEnv :: Int -> Gen PluginEnv
-genPluginEnv n =
-  PluginEnv
-    <$> arbitrary -- pluginEnvDescription :: Text
-    <*> arbitrary -- pluginEnvName :: Text
-    <*> arbitrary -- pluginEnvSettable :: [Text]
-    <*> arbitrary -- pluginEnvValue :: Text
+genPagination :: Int -> Gen Pagination
+genPagination n =
+  Pagination
+    <$> arbitraryReducedMaybe n -- paginationPageSize :: Maybe Integer
+    <*> arbitraryReducedMaybe n -- paginationPageToken :: Maybe Text
   
-instance Arbitrary PluginInterfaceType where
-  arbitrary = sized genPluginInterfaceType
+instance Arbitrary PaginationHeaders where
+  arbitrary = sized genPaginationHeaders
 
-genPluginInterfaceType :: Int -> Gen PluginInterfaceType
-genPluginInterfaceType n =
-  PluginInterfaceType
-    <$> arbitrary -- pluginInterfaceTypeCapability :: Text
-    <*> arbitrary -- pluginInterfaceTypePrefix :: Text
-    <*> arbitrary -- pluginInterfaceTypeVersion :: Text
+genPaginationHeaders :: Int -> Gen PaginationHeaders
+genPaginationHeaders n =
+  PaginationHeaders
+    <$> arbitraryReducedMaybe n -- paginationHeadersLink :: Maybe Text
+    <*> arbitraryReducedMaybe n -- paginationHeadersXTotalCount :: Maybe Text
   
-instance Arbitrary PluginMount where
-  arbitrary = sized genPluginMount
+instance Arbitrary RejectOAuth2Request where
+  arbitrary = sized genRejectOAuth2Request
 
-genPluginMount :: Int -> Gen PluginMount
-genPluginMount n =
-  PluginMount
-    <$> arbitrary -- pluginMountDescription :: Text
-    <*> arbitrary -- pluginMountDestination :: Text
-    <*> arbitrary -- pluginMountName :: Text
-    <*> arbitrary -- pluginMountOptions :: [Text]
-    <*> arbitrary -- pluginMountSettable :: [Text]
-    <*> arbitrary -- pluginMountSource :: Text
-    <*> arbitrary -- pluginMountType :: Text
+genRejectOAuth2Request :: Int -> Gen RejectOAuth2Request
+genRejectOAuth2Request n =
+  RejectOAuth2Request
+    <$> arbitraryReducedMaybe n -- rejectOAuth2RequestError :: Maybe Text
+    <*> arbitraryReducedMaybe n -- rejectOAuth2RequestErrorDebug :: Maybe Text
+    <*> arbitraryReducedMaybe n -- rejectOAuth2RequestErrorDescription :: Maybe Text
+    <*> arbitraryReducedMaybe n -- rejectOAuth2RequestErrorHint :: Maybe Text
+    <*> arbitraryReducedMaybe n -- rejectOAuth2RequestStatusCode :: Maybe Integer
   
-instance Arbitrary PluginSettings where
-  arbitrary = sized genPluginSettings
+instance Arbitrary TokenPagination where
+  arbitrary = sized genTokenPagination
 
-genPluginSettings :: Int -> Gen PluginSettings
-genPluginSettings n =
-  PluginSettings
-    <$> arbitrary -- pluginSettingsArgs :: [Text]
-    <*> arbitraryReduced n -- pluginSettingsDevices :: [PluginDevice]
-    <*> arbitrary -- pluginSettingsEnv :: [Text]
-    <*> arbitraryReduced n -- pluginSettingsMounts :: [PluginMount]
+genTokenPagination :: Int -> Gen TokenPagination
+genTokenPagination n =
+  TokenPagination
+    <$> arbitraryReducedMaybe n -- tokenPaginationPageSize :: Maybe Integer
+    <*> arbitraryReducedMaybe n -- tokenPaginationPageToken :: Maybe Text
   
-instance Arbitrary PreviousConsentSession where
-  arbitrary = sized genPreviousConsentSession
+instance Arbitrary TokenPaginationHeaders where
+  arbitrary = sized genTokenPaginationHeaders
 
-genPreviousConsentSession :: Int -> Gen PreviousConsentSession
-genPreviousConsentSession n =
-  PreviousConsentSession
-    <$> arbitraryReducedMaybe n -- previousConsentSessionConsentRequest :: Maybe ConsentRequest
-    <*> arbitraryReducedMaybe n -- previousConsentSessionGrantAccessTokenAudience :: Maybe [Text]
-    <*> arbitraryReducedMaybe n -- previousConsentSessionGrantScope :: Maybe [Text]
-    <*> arbitraryReducedMaybe n -- previousConsentSessionHandledAt :: Maybe DateTime
-    <*> arbitraryReducedMaybe n -- previousConsentSessionRemember :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- previousConsentSessionRememberFor :: Maybe Integer
-    <*> arbitraryReducedMaybe n -- previousConsentSessionSession :: Maybe ConsentRequestSession
+genTokenPaginationHeaders :: Int -> Gen TokenPaginationHeaders
+genTokenPaginationHeaders n =
+  TokenPaginationHeaders
+    <$> arbitraryReducedMaybe n -- tokenPaginationHeadersLink :: Maybe Text
+    <*> arbitraryReducedMaybe n -- tokenPaginationHeadersXTotalCount :: Maybe Text
   
-instance Arbitrary RejectRequest where
-  arbitrary = sized genRejectRequest
+instance Arbitrary TokenPaginationRequestParameters where
+  arbitrary = sized genTokenPaginationRequestParameters
 
-genRejectRequest :: Int -> Gen RejectRequest
-genRejectRequest n =
-  RejectRequest
-    <$> arbitraryReducedMaybe n -- rejectRequestError :: Maybe Text
-    <*> arbitraryReducedMaybe n -- rejectRequestErrorDebug :: Maybe Text
-    <*> arbitraryReducedMaybe n -- rejectRequestErrorDescription :: Maybe Text
-    <*> arbitraryReducedMaybe n -- rejectRequestErrorHint :: Maybe Text
-    <*> arbitraryReducedMaybe n -- rejectRequestStatusCode :: Maybe Integer
+genTokenPaginationRequestParameters :: Int -> Gen TokenPaginationRequestParameters
+genTokenPaginationRequestParameters n =
+  TokenPaginationRequestParameters
+    <$> arbitraryReducedMaybe n -- tokenPaginationRequestParametersPageSize :: Maybe Integer
+    <*> arbitraryReducedMaybe n -- tokenPaginationRequestParametersPageToken :: Maybe Text
   
-instance Arbitrary UserinfoResponse where
-  arbitrary = sized genUserinfoResponse
+instance Arbitrary TokenPaginationResponseHeaders where
+  arbitrary = sized genTokenPaginationResponseHeaders
 
-genUserinfoResponse :: Int -> Gen UserinfoResponse
-genUserinfoResponse n =
-  UserinfoResponse
-    <$> arbitraryReducedMaybe n -- userinfoResponseBirthdate :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponseEmail :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponseEmailVerified :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- userinfoResponseFamilyName :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponseGender :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponseGivenName :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponseLocale :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponseMiddleName :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponseName :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponseNickname :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponsePhoneNumber :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponsePhoneNumberVerified :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- userinfoResponsePicture :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponsePreferredUsername :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponseProfile :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponseSub :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponseUpdatedAt :: Maybe Integer
-    <*> arbitraryReducedMaybe n -- userinfoResponseWebsite :: Maybe Text
-    <*> arbitraryReducedMaybe n -- userinfoResponseZoneinfo :: Maybe Text
+genTokenPaginationResponseHeaders :: Int -> Gen TokenPaginationResponseHeaders
+genTokenPaginationResponseHeaders n =
+  TokenPaginationResponseHeaders
+    <$> arbitraryReducedMaybe n -- tokenPaginationResponseHeadersLink :: Maybe Text
+    <*> arbitraryReducedMaybe n -- tokenPaginationResponseHeadersXTotalCount :: Maybe Integer
+  
+instance Arbitrary TrustOAuth2JwtGrantIssuer where
+  arbitrary = sized genTrustOAuth2JwtGrantIssuer
+
+genTrustOAuth2JwtGrantIssuer :: Int -> Gen TrustOAuth2JwtGrantIssuer
+genTrustOAuth2JwtGrantIssuer n =
+  TrustOAuth2JwtGrantIssuer
+    <$> arbitraryReducedMaybe n -- trustOAuth2JwtGrantIssuerAllowAnySubject :: Maybe Bool
+    <*> arbitraryReduced n -- trustOAuth2JwtGrantIssuerExpiresAt :: DateTime
+    <*> arbitrary -- trustOAuth2JwtGrantIssuerIssuer :: Text
+    <*> arbitraryReduced n -- trustOAuth2JwtGrantIssuerJwk :: JsonWebKey
+    <*> arbitrary -- trustOAuth2JwtGrantIssuerScope :: [Text]
+    <*> arbitraryReducedMaybe n -- trustOAuth2JwtGrantIssuerSubject :: Maybe Text
+  
+instance Arbitrary TrustedOAuth2JwtGrantIssuer where
+  arbitrary = sized genTrustedOAuth2JwtGrantIssuer
+
+genTrustedOAuth2JwtGrantIssuer :: Int -> Gen TrustedOAuth2JwtGrantIssuer
+genTrustedOAuth2JwtGrantIssuer n =
+  TrustedOAuth2JwtGrantIssuer
+    <$> arbitraryReducedMaybe n -- trustedOAuth2JwtGrantIssuerAllowAnySubject :: Maybe Bool
+    <*> arbitraryReducedMaybe n -- trustedOAuth2JwtGrantIssuerCreatedAt :: Maybe DateTime
+    <*> arbitraryReducedMaybe n -- trustedOAuth2JwtGrantIssuerExpiresAt :: Maybe DateTime
+    <*> arbitraryReducedMaybe n -- trustedOAuth2JwtGrantIssuerId :: Maybe Text
+    <*> arbitraryReducedMaybe n -- trustedOAuth2JwtGrantIssuerIssuer :: Maybe Text
+    <*> arbitraryReducedMaybe n -- trustedOAuth2JwtGrantIssuerPublicKey :: Maybe TrustedOAuth2JwtGrantJsonWebKey
+    <*> arbitraryReducedMaybe n -- trustedOAuth2JwtGrantIssuerScope :: Maybe [Text]
+    <*> arbitraryReducedMaybe n -- trustedOAuth2JwtGrantIssuerSubject :: Maybe Text
+  
+instance Arbitrary TrustedOAuth2JwtGrantJsonWebKey where
+  arbitrary = sized genTrustedOAuth2JwtGrantJsonWebKey
+
+genTrustedOAuth2JwtGrantJsonWebKey :: Int -> Gen TrustedOAuth2JwtGrantJsonWebKey
+genTrustedOAuth2JwtGrantJsonWebKey n =
+  TrustedOAuth2JwtGrantJsonWebKey
+    <$> arbitraryReducedMaybe n -- trustedOAuth2JwtGrantJsonWebKeyKid :: Maybe Text
+    <*> arbitraryReducedMaybe n -- trustedOAuth2JwtGrantJsonWebKeySet :: Maybe Text
   
 instance Arbitrary Version where
   arbitrary = sized genVersion
@@ -565,64 +640,6 @@ genVersion :: Int -> Gen Version
 genVersion n =
   Version
     <$> arbitraryReducedMaybe n -- versionVersion :: Maybe Text
-  
-instance Arbitrary Volume where
-  arbitrary = sized genVolume
-
-genVolume :: Int -> Gen Volume
-genVolume n =
-  Volume
-    <$> arbitraryReducedMaybe n -- volumeCreatedAt :: Maybe Text
-    <*> arbitrary -- volumeDriver :: Text
-    <*> arbitrary -- volumeLabels :: (Map.Map String Text)
-    <*> arbitrary -- volumeMountpoint :: Text
-    <*> arbitrary -- volumeName :: Text
-    <*> arbitrary -- volumeOptions :: (Map.Map String Text)
-    <*> arbitrary -- volumeScope :: Text
-    <*> arbitraryReducedMaybeValue n -- volumeStatus :: Maybe A.Value
-    <*> arbitraryReducedMaybe n -- volumeUsageData :: Maybe VolumeUsageData
-  
-instance Arbitrary VolumeUsageData where
-  arbitrary = sized genVolumeUsageData
-
-genVolumeUsageData :: Int -> Gen VolumeUsageData
-genVolumeUsageData n =
-  VolumeUsageData
-    <$> arbitrary -- volumeUsageDataRefCount :: Integer
-    <*> arbitrary -- volumeUsageDataSize :: Integer
-  
-instance Arbitrary WellKnown where
-  arbitrary = sized genWellKnown
-
-genWellKnown :: Int -> Gen WellKnown
-genWellKnown n =
-  WellKnown
-    <$> arbitrary -- wellKnownAuthorizationEndpoint :: Text
-    <*> arbitraryReducedMaybe n -- wellKnownBackchannelLogoutSessionSupported :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- wellKnownBackchannelLogoutSupported :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- wellKnownClaimsParameterSupported :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- wellKnownClaimsSupported :: Maybe [Text]
-    <*> arbitraryReducedMaybe n -- wellKnownEndSessionEndpoint :: Maybe Text
-    <*> arbitraryReducedMaybe n -- wellKnownFrontchannelLogoutSessionSupported :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- wellKnownFrontchannelLogoutSupported :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- wellKnownGrantTypesSupported :: Maybe [Text]
-    <*> arbitrary -- wellKnownIdTokenSigningAlgValuesSupported :: [Text]
-    <*> arbitrary -- wellKnownIssuer :: Text
-    <*> arbitrary -- wellKnownJwksUri :: Text
-    <*> arbitraryReducedMaybe n -- wellKnownRegistrationEndpoint :: Maybe Text
-    <*> arbitraryReducedMaybe n -- wellKnownRequestObjectSigningAlgValuesSupported :: Maybe [Text]
-    <*> arbitraryReducedMaybe n -- wellKnownRequestParameterSupported :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- wellKnownRequestUriParameterSupported :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- wellKnownRequireRequestUriRegistration :: Maybe Bool
-    <*> arbitraryReducedMaybe n -- wellKnownResponseModesSupported :: Maybe [Text]
-    <*> arbitrary -- wellKnownResponseTypesSupported :: [Text]
-    <*> arbitraryReducedMaybe n -- wellKnownRevocationEndpoint :: Maybe Text
-    <*> arbitraryReducedMaybe n -- wellKnownScopesSupported :: Maybe [Text]
-    <*> arbitrary -- wellKnownSubjectTypesSupported :: [Text]
-    <*> arbitrary -- wellKnownTokenEndpoint :: Text
-    <*> arbitraryReducedMaybe n -- wellKnownTokenEndpointAuthMethodsSupported :: Maybe [Text]
-    <*> arbitraryReducedMaybe n -- wellKnownUserinfoEndpoint :: Maybe Text
-    <*> arbitraryReducedMaybe n -- wellKnownUserinfoSigningAlgValuesSupported :: Maybe [Text]
   
 
 
