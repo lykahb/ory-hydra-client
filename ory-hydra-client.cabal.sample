@@ -13,10 +13,10 @@ description:    .
                 OpenAPI version: 3.0.1
                 .
 category:       Web, OAuth, Network
-homepage:       https://github.com/lykahb/ory-hydra
-author:         Boris Lykah
+homepage:       https://github.com/lykahb/ory-hydra-client
+author:         Borys Lykah
 maintainer:     lykahb@gmail.com
-copyright:      2021 - Boris Lykah, Mercury
+copyright:      2021 - Borys Lykah, Mercury
 license:        MIT
 license-file:   LICENSE
 build-type:     Simple
