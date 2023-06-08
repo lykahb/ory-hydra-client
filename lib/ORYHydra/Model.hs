@@ -139,6 +139,9 @@ newtype Scope = Scope { unScope :: Text } deriving (P.Eq, P.Show)
 -- ** Set
 newtype Set = Set { unSet :: Text } deriving (P.Eq, P.Show)
 
+-- ** Sid
+newtype Sid = Sid { unSid :: Text } deriving (P.Eq, P.Show)
+
 -- ** Subject
 newtype Subject = Subject { unSubject :: Text } deriving (P.Eq, P.Show)
 
@@ -240,6 +243,7 @@ data AcceptOAuth2LoginRequest = AcceptOAuth2LoginRequest
   { acceptOAuth2LoginRequestAcr :: Maybe Text -- ^ "acr" - ACR sets the Authentication AuthorizationContext Class Reference value for this authentication session. You can use it to express that, for example, a user authenticated using two factor authentication.
   , acceptOAuth2LoginRequestAmr :: Maybe [Text] -- ^ "amr"
   , acceptOAuth2LoginRequestContext :: Maybe A.Value -- ^ "context"
+  , acceptOAuth2LoginRequestExtendSessionLifespan :: Maybe Bool -- ^ "extend_session_lifespan" - Extend OAuth2 authentication session lifespan  If set to &#x60;true&#x60;, the OAuth2 authentication cookie lifespan is extended. This is for example useful if you want the user to be able to use &#x60;prompt&#x3D;none&#x60; continuously.  This value can only be set to &#x60;true&#x60; if the user has an authentication, which is the case if the &#x60;skip&#x60; value is &#x60;true&#x60;.
   , acceptOAuth2LoginRequestForceSubjectIdentifier :: Maybe Text -- ^ "force_subject_identifier" - ForceSubjectIdentifier forces the \&quot;pairwise\&quot; user ID of the end-user that authenticated. The \&quot;pairwise\&quot; user ID refers to the (Pairwise Identifier Algorithm)[http://openid.net/specs/openid-connect-core-1_0.html#PairwiseAlg] of the OpenID Connect specification. It allows you to set an obfuscated subject (\&quot;user\&quot;) identifier that is unique to the client.  Please note that this changes the user ID on endpoint /userinfo and sub claim of the ID Token. It does not change the sub claim in the OAuth 2.0 Introspection.  Per default, ORY Hydra handles this value with its own algorithm. In case you want to set this yourself you can use this field. Please note that setting this field has no effect if &#x60;pairwise&#x60; is not configured in ORY Hydra or the OAuth 2.0 Client does not expect a pairwise identifier (set via &#x60;subject_type&#x60; key in the client&#39;s configuration).  Please also be aware that ORY Hydra is unable to properly compute this value during authentication. This implies that you have to compute this value on every authentication process (probably depending on the client ID or some other unique value).  If you fail to compute the proper value, then authentication processes which have id_token_hint set might fail.
   , acceptOAuth2LoginRequestRemember :: Maybe Bool -- ^ "remember" - Remember, if set to true, tells ORY Hydra to remember this user by telling the user agent (browser) to store a cookie with authentication data. If the same user performs another OAuth 2.0 Authorization Request, he/she will not be asked to log in again.
   , acceptOAuth2LoginRequestRememberFor :: Maybe Integer -- ^ "remember_for" - RememberFor sets how long the authentication should be remembered for in seconds. If set to &#x60;0&#x60;, the authorization will be remembered for the duration of the browser session (using a session cookie).
@@ -253,6 +257,7 @@ instance A.FromJSON AcceptOAuth2LoginRequest where
       <$> (o .:? "acr")
       <*> (o .:? "amr")
       <*> (o .:? "context")
+      <*> (o .:? "extend_session_lifespan")
       <*> (o .:? "force_subject_identifier")
       <*> (o .:? "remember")
       <*> (o .:? "remember_for")
@@ -265,6 +270,7 @@ instance A.ToJSON AcceptOAuth2LoginRequest where
       [ "acr" .= acceptOAuth2LoginRequestAcr
       , "amr" .= acceptOAuth2LoginRequestAmr
       , "context" .= acceptOAuth2LoginRequestContext
+      , "extend_session_lifespan" .= acceptOAuth2LoginRequestExtendSessionLifespan
       , "force_subject_identifier" .= acceptOAuth2LoginRequestForceSubjectIdentifier
       , "remember" .= acceptOAuth2LoginRequestRemember
       , "remember_for" .= acceptOAuth2LoginRequestRememberFor
@@ -281,6 +287,7 @@ mkAcceptOAuth2LoginRequest acceptOAuth2LoginRequestSubject =
   { acceptOAuth2LoginRequestAcr = Nothing
   , acceptOAuth2LoginRequestAmr = Nothing
   , acceptOAuth2LoginRequestContext = Nothing
+  , acceptOAuth2LoginRequestExtendSessionLifespan = Nothing
   , acceptOAuth2LoginRequestForceSubjectIdentifier = Nothing
   , acceptOAuth2LoginRequestRemember = Nothing
   , acceptOAuth2LoginRequestRememberFor = Nothing
@@ -825,7 +832,8 @@ mkJsonWebKeySet =
 -- 
 -- OAuth 2.0 Clients are used to perform OAuth 2.0 and OpenID Connect flows. Usually, OAuth 2.0 clients are generated for applications which want to consume your OAuth 2.0 or OpenID Connect capabilities.
 data OAuth2Client = OAuth2Client
-  { oAuth2ClientAllowedCorsOrigins :: Maybe [Text] -- ^ "allowed_cors_origins"
+  { oAuth2ClientAccessTokenStrategy :: Maybe Text -- ^ "access_token_strategy" - OAuth 2.0 Access Token Strategy  AccessTokenStrategy is the strategy used to generate access tokens. Valid options are &#x60;jwt&#x60; and &#x60;opaque&#x60;. &#x60;jwt&#x60; is a bad idea, see https://www.ory.sh/docs/hydra/advanced#json-web-tokens Setting the stragegy here overrides the global setting in &#x60;strategies.access_token&#x60;.
+  , oAuth2ClientAllowedCorsOrigins :: Maybe [Text] -- ^ "allowed_cors_origins"
   , oAuth2ClientAudience :: Maybe [Text] -- ^ "audience"
   , oAuth2ClientAuthorizationCodeGrantAccessTokenLifespan :: Maybe Text -- ^ "authorization_code_grant_access_token_lifespan" - Specify a time duration in milliseconds, seconds, minutes, hours.
   , oAuth2ClientAuthorizationCodeGrantIdTokenLifespan :: Maybe Text -- ^ "authorization_code_grant_id_token_lifespan" - Specify a time duration in milliseconds, seconds, minutes, hours.
@@ -864,8 +872,9 @@ data OAuth2Client = OAuth2Client
   , oAuth2ClientResponseTypes :: Maybe [Text] -- ^ "response_types"
   , oAuth2ClientScope :: Maybe Text -- ^ "scope" - OAuth 2.0 Client Scope  Scope is a string containing a space-separated list of scope values (as described in Section 3.3 of OAuth 2.0 [RFC6749]) that the client can use when requesting access tokens.
   , oAuth2ClientSectorIdentifierUri :: Maybe Text -- ^ "sector_identifier_uri" - OpenID Connect Sector Identifier URI  URL using the https scheme to be used in calculating Pseudonymous Identifiers by the OP. The URL references a file with a single JSON array of redirect_uri values.
+  , oAuth2ClientSkipConsent :: Maybe Bool -- ^ "skip_consent" - SkipConsent skips the consent screen for this client. This field can only be set from the admin API.
   , oAuth2ClientSubjectType :: Maybe Text -- ^ "subject_type" - OpenID Connect Subject Type  The &#x60;subject_types_supported&#x60; Discovery parameter contains a list of the supported subject_type values for this server. Valid types include &#x60;pairwise&#x60; and &#x60;public&#x60;.
-  , oAuth2ClientTokenEndpointAuthMethod :: Maybe Text -- ^ "token_endpoint_auth_method" - OAuth 2.0 Token Endpoint Authentication Method  Requested Client Authentication method for the Token Endpoint. The options are:  &#x60;client_secret_post&#x60;: (default) Send &#x60;client_id&#x60; and &#x60;client_secret&#x60; as &#x60;application/x-www-form-urlencoded&#x60; in the HTTP body. &#x60;client_secret_basic&#x60;: Send &#x60;client_id&#x60; and &#x60;client_secret&#x60; as &#x60;application/x-www-form-urlencoded&#x60; encoded in the HTTP Authorization header. &#x60;private_key_jwt&#x60;: Use JSON Web Tokens to authenticate the client. &#x60;none&#x60;: Used for public clients (native apps, mobile apps) which can not have secrets.
+  , oAuth2ClientTokenEndpointAuthMethod :: Maybe Text -- ^ "token_endpoint_auth_method" - OAuth 2.0 Token Endpoint Authentication Method  Requested Client Authentication method for the Token Endpoint. The options are:  &#x60;client_secret_basic&#x60;: (default) Send &#x60;client_id&#x60; and &#x60;client_secret&#x60; as &#x60;application/x-www-form-urlencoded&#x60; encoded in the HTTP Authorization header. &#x60;client_secret_post&#x60;: Send &#x60;client_id&#x60; and &#x60;client_secret&#x60; as &#x60;application/x-www-form-urlencoded&#x60; in the HTTP body. &#x60;private_key_jwt&#x60;: Use JSON Web Tokens to authenticate the client. &#x60;none&#x60;: Used for public clients (native apps, mobile apps) which can not have secrets.
   , oAuth2ClientTokenEndpointAuthSigningAlg :: Maybe Text -- ^ "token_endpoint_auth_signing_alg" - OAuth 2.0 Token Endpoint Signing Algorithm  Requested Client Authentication signing algorithm for the Token Endpoint.
   , oAuth2ClientTosUri :: Maybe Text -- ^ "tos_uri" - OAuth 2.0 Client Terms of Service URI  A URL string pointing to a human-readable terms of service document for the client that describes a contractual relationship between the end-user and the client that the end-user accepts when authorizing the client.
   , oAuth2ClientUpdatedAt :: Maybe DateTime -- ^ "updated_at" - OAuth 2.0 Client Last Update Date  UpdatedAt returns the timestamp of the last update.
@@ -876,7 +885,8 @@ data OAuth2Client = OAuth2Client
 instance A.FromJSON OAuth2Client where
   parseJSON = A.withObject "OAuth2Client" $ \o ->
     OAuth2Client
-      <$> (o .:? "allowed_cors_origins")
+      <$> (o .:? "access_token_strategy")
+      <*> (o .:? "allowed_cors_origins")
       <*> (o .:? "audience")
       <*> (o .:? "authorization_code_grant_access_token_lifespan")
       <*> (o .:? "authorization_code_grant_id_token_lifespan")
@@ -915,6 +925,7 @@ instance A.FromJSON OAuth2Client where
       <*> (o .:? "response_types")
       <*> (o .:? "scope")
       <*> (o .:? "sector_identifier_uri")
+      <*> (o .:? "skip_consent")
       <*> (o .:? "subject_type")
       <*> (o .:? "token_endpoint_auth_method")
       <*> (o .:? "token_endpoint_auth_signing_alg")
@@ -926,7 +937,8 @@ instance A.FromJSON OAuth2Client where
 instance A.ToJSON OAuth2Client where
   toJSON OAuth2Client {..} =
    _omitNulls
-      [ "allowed_cors_origins" .= oAuth2ClientAllowedCorsOrigins
+      [ "access_token_strategy" .= oAuth2ClientAccessTokenStrategy
+      , "allowed_cors_origins" .= oAuth2ClientAllowedCorsOrigins
       , "audience" .= oAuth2ClientAudience
       , "authorization_code_grant_access_token_lifespan" .= oAuth2ClientAuthorizationCodeGrantAccessTokenLifespan
       , "authorization_code_grant_id_token_lifespan" .= oAuth2ClientAuthorizationCodeGrantIdTokenLifespan
@@ -965,6 +977,7 @@ instance A.ToJSON OAuth2Client where
       , "response_types" .= oAuth2ClientResponseTypes
       , "scope" .= oAuth2ClientScope
       , "sector_identifier_uri" .= oAuth2ClientSectorIdentifierUri
+      , "skip_consent" .= oAuth2ClientSkipConsent
       , "subject_type" .= oAuth2ClientSubjectType
       , "token_endpoint_auth_method" .= oAuth2ClientTokenEndpointAuthMethod
       , "token_endpoint_auth_signing_alg" .= oAuth2ClientTokenEndpointAuthSigningAlg
@@ -979,7 +992,8 @@ mkOAuth2Client
   :: OAuth2Client
 mkOAuth2Client =
   OAuth2Client
-  { oAuth2ClientAllowedCorsOrigins = Nothing
+  { oAuth2ClientAccessTokenStrategy = Nothing
+  , oAuth2ClientAllowedCorsOrigins = Nothing
   , oAuth2ClientAudience = Nothing
   , oAuth2ClientAuthorizationCodeGrantAccessTokenLifespan = Nothing
   , oAuth2ClientAuthorizationCodeGrantIdTokenLifespan = Nothing
@@ -1018,6 +1032,7 @@ mkOAuth2Client =
   , oAuth2ClientResponseTypes = Nothing
   , oAuth2ClientScope = Nothing
   , oAuth2ClientSectorIdentifierUri = Nothing
+  , oAuth2ClientSkipConsent = Nothing
   , oAuth2ClientSubjectType = Nothing
   , oAuth2ClientTokenEndpointAuthMethod = Nothing
   , oAuth2ClientTokenEndpointAuthSigningAlg = Nothing

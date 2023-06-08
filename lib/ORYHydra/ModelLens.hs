@@ -102,6 +102,11 @@ acceptOAuth2LoginRequestContextL :: Lens_' AcceptOAuth2LoginRequest (Maybe A.Val
 acceptOAuth2LoginRequestContextL f AcceptOAuth2LoginRequest{..} = (\acceptOAuth2LoginRequestContext -> AcceptOAuth2LoginRequest { acceptOAuth2LoginRequestContext, ..} ) <$> f acceptOAuth2LoginRequestContext
 {-# INLINE acceptOAuth2LoginRequestContextL #-}
 
+-- | 'acceptOAuth2LoginRequestExtendSessionLifespan' Lens
+acceptOAuth2LoginRequestExtendSessionLifespanL :: Lens_' AcceptOAuth2LoginRequest (Maybe Bool)
+acceptOAuth2LoginRequestExtendSessionLifespanL f AcceptOAuth2LoginRequest{..} = (\acceptOAuth2LoginRequestExtendSessionLifespan -> AcceptOAuth2LoginRequest { acceptOAuth2LoginRequestExtendSessionLifespan, ..} ) <$> f acceptOAuth2LoginRequestExtendSessionLifespan
+{-# INLINE acceptOAuth2LoginRequestExtendSessionLifespanL #-}
+
 -- | 'acceptOAuth2LoginRequestForceSubjectIdentifier' Lens
 acceptOAuth2LoginRequestForceSubjectIdentifierL :: Lens_' AcceptOAuth2LoginRequest (Maybe Text)
 acceptOAuth2LoginRequestForceSubjectIdentifierL f AcceptOAuth2LoginRequest{..} = (\acceptOAuth2LoginRequestForceSubjectIdentifier -> AcceptOAuth2LoginRequest { acceptOAuth2LoginRequestForceSubjectIdentifier, ..} ) <$> f acceptOAuth2LoginRequestForceSubjectIdentifier
@@ -459,6 +464,11 @@ jsonWebKeySetKeysL f JsonWebKeySet{..} = (\jsonWebKeySetKeys -> JsonWebKeySet { 
 
 -- * OAuth2Client
 
+-- | 'oAuth2ClientAccessTokenStrategy' Lens
+oAuth2ClientAccessTokenStrategyL :: Lens_' OAuth2Client (Maybe Text)
+oAuth2ClientAccessTokenStrategyL f OAuth2Client{..} = (\oAuth2ClientAccessTokenStrategy -> OAuth2Client { oAuth2ClientAccessTokenStrategy, ..} ) <$> f oAuth2ClientAccessTokenStrategy
+{-# INLINE oAuth2ClientAccessTokenStrategyL #-}
+
 -- | 'oAuth2ClientAllowedCorsOrigins' Lens
 oAuth2ClientAllowedCorsOriginsL :: Lens_' OAuth2Client (Maybe [Text])
 oAuth2ClientAllowedCorsOriginsL f OAuth2Client{..} = (\oAuth2ClientAllowedCorsOrigins -> OAuth2Client { oAuth2ClientAllowedCorsOrigins, ..} ) <$> f oAuth2ClientAllowedCorsOrigins
@@ -653,6 +663,11 @@ oAuth2ClientScopeL f OAuth2Client{..} = (\oAuth2ClientScope -> OAuth2Client { oA
 oAuth2ClientSectorIdentifierUriL :: Lens_' OAuth2Client (Maybe Text)
 oAuth2ClientSectorIdentifierUriL f OAuth2Client{..} = (\oAuth2ClientSectorIdentifierUri -> OAuth2Client { oAuth2ClientSectorIdentifierUri, ..} ) <$> f oAuth2ClientSectorIdentifierUri
 {-# INLINE oAuth2ClientSectorIdentifierUriL #-}
+
+-- | 'oAuth2ClientSkipConsent' Lens
+oAuth2ClientSkipConsentL :: Lens_' OAuth2Client (Maybe Bool)
+oAuth2ClientSkipConsentL f OAuth2Client{..} = (\oAuth2ClientSkipConsent -> OAuth2Client { oAuth2ClientSkipConsent, ..} ) <$> f oAuth2ClientSkipConsent
+{-# INLINE oAuth2ClientSkipConsentL #-}
 
 -- | 'oAuth2ClientSubjectType' Lens
 oAuth2ClientSubjectTypeL :: Lens_' OAuth2Client (Maybe Text)

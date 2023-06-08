@@ -144,6 +144,7 @@ genAcceptOAuth2LoginRequest n =
     <$> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestAcr :: Maybe Text
     <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestAmr :: Maybe [Text]
     <*> arbitraryReducedMaybeValue n -- acceptOAuth2LoginRequestContext :: Maybe A.Value
+    <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestExtendSessionLifespan :: Maybe Bool
     <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestForceSubjectIdentifier :: Maybe Text
     <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestRemember :: Maybe Bool
     <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestRememberFor :: Maybe Integer
@@ -296,7 +297,8 @@ instance Arbitrary OAuth2Client where
 genOAuth2Client :: Int -> Gen OAuth2Client
 genOAuth2Client n =
   OAuth2Client
-    <$> arbitraryReducedMaybe n -- oAuth2ClientAllowedCorsOrigins :: Maybe [Text]
+    <$> arbitraryReducedMaybe n -- oAuth2ClientAccessTokenStrategy :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientAllowedCorsOrigins :: Maybe [Text]
     <*> arbitraryReducedMaybe n -- oAuth2ClientAudience :: Maybe [Text]
     <*> arbitraryReducedMaybe n -- oAuth2ClientAuthorizationCodeGrantAccessTokenLifespan :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientAuthorizationCodeGrantIdTokenLifespan :: Maybe Text
@@ -335,6 +337,7 @@ genOAuth2Client n =
     <*> arbitraryReducedMaybe n -- oAuth2ClientResponseTypes :: Maybe [Text]
     <*> arbitraryReducedMaybe n -- oAuth2ClientScope :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientSectorIdentifierUri :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientSkipConsent :: Maybe Bool
     <*> arbitraryReducedMaybe n -- oAuth2ClientSubjectType :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientTokenEndpointAuthMethod :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientTokenEndpointAuthSigningAlg :: Maybe Text

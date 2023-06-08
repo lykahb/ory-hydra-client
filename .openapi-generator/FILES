@@ -1,12 +1,14 @@
 .gitignore
-.openapi-generator-ignore
 .travis.yml
 README.md
 Setup.hs
 git_push.sh
 lib/ORYHydra.hs
-lib/ORYHydra/API/Admin.hs
-lib/ORYHydra/API/Public.hs
+lib/ORYHydra/API/Jwk.hs
+lib/ORYHydra/API/Metadata.hs
+lib/ORYHydra/API/OAuth2.hs
+lib/ORYHydra/API/Oidc.hs
+lib/ORYHydra/API/Wellknown.hs
 lib/ORYHydra/Client.hs
 lib/ORYHydra/Core.hs
 lib/ORYHydra/Logging.hs

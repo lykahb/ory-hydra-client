@@ -1,5 +1,5 @@
 name:           ory-hydra-client
-version:        2.0.3
+version:        2.1.2
 synopsis:       Auto-generated ory-hydra-client API Client
 description:    .
                 Client library for calling the Ory Hydra API API based on http-client.

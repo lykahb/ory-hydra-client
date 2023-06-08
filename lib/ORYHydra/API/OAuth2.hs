@@ -635,18 +635,26 @@ instance Produces RevokeOAuth2ConsentSessions MimeNoContent
 
 -- | @DELETE \/admin\/oauth2\/auth\/sessions\/login@
 -- 
--- Revokes All OAuth 2.0 Login Sessions of a Subject
+-- Revokes OAuth 2.0 Login Sessions by either a Subject or a SessionID
 -- 
--- This endpoint invalidates a subject's authentication session. After revoking the authentication session, the subject has to re-authenticate at the Ory OAuth2 Provider. This endpoint does not invalidate any tokens and does not work with OpenID Connect Front- or Back-channel logout.
+-- This endpoint invalidates authentication sessions. After revoking the authentication session(s), the subject has to re-authenticate at the Ory OAuth2 Provider. This endpoint does not invalidate any tokens.  If you send the subject in a query param, all authentication sessions that belong to that subject are revoked. No OpennID Connect Front- or Back-channel logout is performed in this case.  Alternatively, you can send a SessionID via `sid` query param, in which case, only the session that is connected to that SessionID is revoked. OpenID Connect Back-channel logout is performed in this case.
 -- 
 revokeOAuth2LoginSessions
-  :: Subject -- ^ "subject" -  OAuth 2.0 Subject  The subject to revoke authentication sessions for.
-  -> OryHydraRequest RevokeOAuth2LoginSessions MimeNoContent NoContent MimeNoContent
-revokeOAuth2LoginSessions (Subject subject) =
+  :: OryHydraRequest RevokeOAuth2LoginSessions MimeNoContent NoContent MimeNoContent
+revokeOAuth2LoginSessions =
   _mkRequest "DELETE" ["/admin/oauth2/auth/sessions/login"]
-    `addQuery` toQuery ("subject", Just subject)
 
 data RevokeOAuth2LoginSessions  
+
+-- | /Optional Param/ "subject" - OAuth 2.0 Subject  The subject to revoke authentication sessions for.
+instance HasOptionalParam RevokeOAuth2LoginSessions Subject where
+  applyOptionalParam req (Subject xs) =
+    req `addQuery` toQuery ("subject", Just xs)
+
+-- | /Optional Param/ "sid" - OAuth 2.0 Subject  The subject to revoke authentication sessions for.
+instance HasOptionalParam RevokeOAuth2LoginSessions Sid where
+  applyOptionalParam req (Sid xs) =
+    req `addQuery` toQuery ("sid", Just xs)
 instance Produces RevokeOAuth2LoginSessions MimeNoContent
 
 
