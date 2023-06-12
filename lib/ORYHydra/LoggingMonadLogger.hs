@@ -10,7 +10,7 @@
 -}
 
 {-|
-Module : OryHydra.LoggingMonadLogger
+Module : ORYHydra.LoggingMonadLogger
 monad-logger Logging functions
 -}
 
@@ -18,7 +18,7 @@ monad-logger Logging functions
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module OryHydra.LoggingMonadLogger where
+module ORYHydra.LoggingMonadLogger where
 
 import qualified Control.Exception.Safe as E
 import qualified Control.Monad.IO.Class as P
@@ -90,7 +90,7 @@ nullLogger _ _ _ _ = return ()
 _log :: (P.MonadIO m, LG.MonadLogger m) => Text -> LG.LogLevel -> Text -> m ()
 _log src level msg = do
   now <- P.liftIO (formatTimeLog <$> TI.getCurrentTime)
-  LG.logOtherNS ("OryHydra." <> src) level ("[" <> now <> "] " <> msg)
+  LG.logOtherNS ("ORYHydra." <> src) level ("[" <> now <> "] " <> msg)
  where
   formatTimeLog =
     T.pack . TI.formatTime TI.defaultTimeLocale "%Y-%m-%dT%H:%M:%S%Z"

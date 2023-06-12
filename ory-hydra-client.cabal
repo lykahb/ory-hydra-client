@@ -63,27 +63,27 @@ library
   other-modules:
       Paths_ory_hydra_client
   exposed-modules:
-      OryHydra
-      OryHydra.API.Jwk
-      OryHydra.API.Metadata
-      OryHydra.API.OAuth2
-      OryHydra.API.Oidc
-      OryHydra.API.Wellknown
-      OryHydra.Client
-      OryHydra.Core
-      OryHydra.Logging
-      OryHydra.MimeTypes
-      OryHydra.Model
-      OryHydra.ModelLens
+      ORYHydra
+      ORYHydra.API.Jwk
+      ORYHydra.API.Metadata
+      ORYHydra.API.OAuth2
+      ORYHydra.API.Oidc
+      ORYHydra.API.Wellknown
+      ORYHydra.Client
+      ORYHydra.Core
+      ORYHydra.Logging
+      ORYHydra.MimeTypes
+      ORYHydra.Model
+      ORYHydra.ModelLens
   default-language: Haskell2010
 
   if flag(UseKatip)
       build-depends: katip >=0.8 && < 1.0
-      other-modules: OryHydra.LoggingKatip
+      other-modules: ORYHydra.LoggingKatip
       cpp-options: -DUSE_KATIP
   else
       build-depends: monad-logger >=0.3 && <0.4
-      other-modules: OryHydra.LoggingMonadLogger
+      other-modules: ORYHydra.LoggingMonadLogger
       cpp-options: -DUSE_MONAD_LOGGER
 
 test-suite tests

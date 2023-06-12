@@ -10,7 +10,7 @@
 -}
 
 {-|
-Module : OryHydra.Core
+Module : ORYHydra.Core
 -}
 
 {-# LANGUAGE DeriveDataTypeable #-}
@@ -27,10 +27,10 @@ Module : OryHydra.Core
 {-# LANGUAGE CPP #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing -fno-warn-unused-binds -fno-warn-unused-imports #-}
 
-module OryHydra.Core where
+module ORYHydra.Core where
 
-import OryHydra.MimeTypes
-import OryHydra.Logging
+import ORYHydra.MimeTypes
+import ORYHydra.Logging
 
 import qualified Control.Arrow as P (left)
 import qualified Control.DeepSeq as NF
@@ -71,10 +71,10 @@ import Data.Monoid ((<>))
 import Data.Text (Text)
 import Prelude (($), (.), (&&), (<$>), (<*>), Maybe(..), Bool(..), Char, String, fmap, mempty, pure, return, show, IO, Monad, Functor, maybe)
 
--- * OryHydraConfig
+-- * ORYHydraConfig
 
 -- |
-data OryHydraConfig = OryHydraConfig
+data ORYHydraConfig = ORYHydraConfig
   { configHost  :: BCL.ByteString -- ^ host supplied in the Request
   , configUserAgent :: Text -- ^ user-agent supplied in the Request
   , configLogExecWithContext :: LogExecWithContext -- ^ Run a block using a Logger instance
@@ -85,14 +85,14 @@ data OryHydraConfig = OryHydraConfig
   }
 
 -- | display the config
-instance P.Show OryHydraConfig where
+instance P.Show ORYHydraConfig where
   show c =
     T.printf
       "{ configHost = %v, configUserAgent = %v, ..}"
       (show (configHost c))
       (show (configUserAgent c))
 
--- | constructs a default OryHydraConfig
+-- | constructs a default ORYHydraConfig
 --
 -- configHost:
 --
@@ -102,10 +102,10 @@ instance P.Show OryHydraConfig where
 --
 -- @"ory-hydra-client/0.1.0.0"@
 --
-newConfig :: IO OryHydraConfig
+newConfig :: IO ORYHydraConfig
 newConfig = do
     logCxt <- initLogContext
-    return $ OryHydraConfig
+    return $ ORYHydraConfig
         { configHost = "http://localhost"
         , configUserAgent = "ory-hydra-client/0.1.0.0"
         , configLogExecWithContext = runDefaultLogExecWithContext
@@ -116,27 +116,27 @@ newConfig = do
         }
 
 -- | updates config use AuthMethod on matching requests
-addAuthMethod :: AuthMethod auth => OryHydraConfig -> auth -> OryHydraConfig
-addAuthMethod config@OryHydraConfig {configAuthMethods = as} a =
+addAuthMethod :: AuthMethod auth => ORYHydraConfig -> auth -> ORYHydraConfig
+addAuthMethod config@ORYHydraConfig {configAuthMethods = as} a =
   config { configAuthMethods = AnyAuthMethod a : as}
 
 -- | updates the config to use stdout logging
-withStdoutLogging :: OryHydraConfig -> IO OryHydraConfig
+withStdoutLogging :: ORYHydraConfig -> IO ORYHydraConfig
 withStdoutLogging p = do
     logCxt <- stdoutLoggingContext (configLogContext p)
     return $ p { configLogExecWithContext = stdoutLoggingExec, configLogContext = logCxt }
 
 -- | updates the config to use stderr logging
-withStderrLogging :: OryHydraConfig -> IO OryHydraConfig
+withStderrLogging :: ORYHydraConfig -> IO ORYHydraConfig
 withStderrLogging p = do
     logCxt <- stderrLoggingContext (configLogContext p)
     return $ p { configLogExecWithContext = stderrLoggingExec, configLogContext = logCxt }
 
 -- | updates the config to disable logging
-withNoLogging :: OryHydraConfig -> OryHydraConfig
+withNoLogging :: ORYHydraConfig -> ORYHydraConfig
 withNoLogging p = p { configLogExecWithContext =  runNullLogExec}
 
--- * OryHydraRequest
+-- * ORYHydraRequest
 
 -- | Represents a request.
 --
@@ -146,39 +146,39 @@ withNoLogging p = p { configLogExecWithContext =  runNullLogExec}
 --   * contentType - 'MimeType' associated with request body
 --   * res - response model
 --   * accept - 'MimeType' associated with response body
-data OryHydraRequest req contentType res accept = OryHydraRequest
-  { rMethod  :: NH.Method   -- ^ Method of OryHydraRequest
-  , rUrlPath :: [BCL.ByteString] -- ^ Endpoint of OryHydraRequest
-  , rParams   :: Params -- ^ params of OryHydraRequest
+data ORYHydraRequest req contentType res accept = ORYHydraRequest
+  { rMethod  :: NH.Method   -- ^ Method of ORYHydraRequest
+  , rUrlPath :: [BCL.ByteString] -- ^ Endpoint of ORYHydraRequest
+  , rParams   :: Params -- ^ params of ORYHydraRequest
   , rAuthTypes :: [P.TypeRep] -- ^ types of auth methods
   }
   deriving (P.Show)
 
 -- | 'rMethod' Lens
-rMethodL :: Lens_' (OryHydraRequest req contentType res accept) NH.Method
-rMethodL f OryHydraRequest{..} = (\rMethod -> OryHydraRequest { rMethod, ..} ) <$> f rMethod
+rMethodL :: Lens_' (ORYHydraRequest req contentType res accept) NH.Method
+rMethodL f ORYHydraRequest{..} = (\rMethod -> ORYHydraRequest { rMethod, ..} ) <$> f rMethod
 {-# INLINE rMethodL #-}
 
 -- | 'rUrlPath' Lens
-rUrlPathL :: Lens_' (OryHydraRequest req contentType res accept) [BCL.ByteString]
-rUrlPathL f OryHydraRequest{..} = (\rUrlPath -> OryHydraRequest { rUrlPath, ..} ) <$> f rUrlPath
+rUrlPathL :: Lens_' (ORYHydraRequest req contentType res accept) [BCL.ByteString]
+rUrlPathL f ORYHydraRequest{..} = (\rUrlPath -> ORYHydraRequest { rUrlPath, ..} ) <$> f rUrlPath
 {-# INLINE rUrlPathL #-}
 
 -- | 'rParams' Lens
-rParamsL :: Lens_' (OryHydraRequest req contentType res accept) Params
-rParamsL f OryHydraRequest{..} = (\rParams -> OryHydraRequest { rParams, ..} ) <$> f rParams
+rParamsL :: Lens_' (ORYHydraRequest req contentType res accept) Params
+rParamsL f ORYHydraRequest{..} = (\rParams -> ORYHydraRequest { rParams, ..} ) <$> f rParams
 {-# INLINE rParamsL #-}
 
 -- | 'rParams' Lens
-rAuthTypesL :: Lens_' (OryHydraRequest req contentType res accept) [P.TypeRep]
-rAuthTypesL f OryHydraRequest{..} = (\rAuthTypes -> OryHydraRequest { rAuthTypes, ..} ) <$> f rAuthTypes
+rAuthTypesL :: Lens_' (ORYHydraRequest req contentType res accept) [P.TypeRep]
+rAuthTypesL f ORYHydraRequest{..} = (\rAuthTypes -> ORYHydraRequest { rAuthTypes, ..} ) <$> f rAuthTypes
 {-# INLINE rAuthTypesL #-}
 
 -- * HasBodyParam
 
 -- | Designates the body parameter of a request
 class HasBodyParam req param where
-  setBodyParam :: forall contentType res accept. (Consumes req contentType, MimeRender contentType param) => OryHydraRequest req contentType res accept -> param -> OryHydraRequest req contentType res accept
+  setBodyParam :: forall contentType res accept. (Consumes req contentType, MimeRender contentType param) => ORYHydraRequest req contentType res accept -> param -> ORYHydraRequest req contentType res accept
   setBodyParam req xs =
     req `_setBodyLBS` mimeRender (P.Proxy :: P.Proxy contentType) xs & _setContentTypeHeader
 
@@ -189,12 +189,12 @@ class HasOptionalParam req param where
   {-# MINIMAL applyOptionalParam | (-&-) #-}
 
   -- | Apply an optional parameter to a request
-  applyOptionalParam :: OryHydraRequest req contentType res accept -> param -> OryHydraRequest req contentType res accept
+  applyOptionalParam :: ORYHydraRequest req contentType res accept -> param -> ORYHydraRequest req contentType res accept
   applyOptionalParam = (-&-)
   {-# INLINE applyOptionalParam #-}
 
   -- | infix operator \/ alias for 'addOptionalParam'
-  (-&-) :: OryHydraRequest req contentType res accept -> param -> OryHydraRequest req contentType res accept
+  (-&-) :: ORYHydraRequest req contentType res accept -> param -> ORYHydraRequest req contentType res accept
   (-&-) = applyOptionalParam
   {-# INLINE (-&-) #-}
 
@@ -232,31 +232,31 @@ data ParamBody
   | ParamBodyMultipartFormData [NH.Part]
   deriving (P.Show)
 
--- ** OryHydraRequest Utils
+-- ** ORYHydraRequest Utils
 
 _mkRequest :: NH.Method -- ^ Method
           -> [BCL.ByteString] -- ^ Endpoint
-          -> OryHydraRequest req contentType res accept -- ^ req: Request Type, res: Response Type
-_mkRequest m u = OryHydraRequest m u _mkParams []
+          -> ORYHydraRequest req contentType res accept -- ^ req: Request Type, res: Response Type
+_mkRequest m u = ORYHydraRequest m u _mkParams []
 
 _mkParams :: Params
 _mkParams = Params [] [] ParamBodyNone
 
 setHeader ::
-     OryHydraRequest req contentType res accept
+     ORYHydraRequest req contentType res accept
   -> [NH.Header]
-  -> OryHydraRequest req contentType res accept
+  -> ORYHydraRequest req contentType res accept
 setHeader req header =
   req `removeHeader` P.fmap P.fst header
   & (`addHeader` header)
 
 addHeader ::
-     OryHydraRequest req contentType res accept
+     ORYHydraRequest req contentType res accept
   -> [NH.Header]
-  -> OryHydraRequest req contentType res accept
+  -> ORYHydraRequest req contentType res accept
 addHeader req header = L.over (rParamsL . paramsHeadersL) (header P.++) req
 
-removeHeader :: OryHydraRequest req contentType res accept -> [NH.HeaderName] -> OryHydraRequest req contentType res accept
+removeHeader :: ORYHydraRequest req contentType res accept -> [NH.HeaderName] -> ORYHydraRequest req contentType res accept
 removeHeader req header =
   req &
   L.over
@@ -266,22 +266,22 @@ removeHeader req header =
     cifst = CI.mk . P.fst
 
 
-_setContentTypeHeader :: forall req contentType res accept. MimeType contentType => OryHydraRequest req contentType res accept -> OryHydraRequest req contentType res accept
+_setContentTypeHeader :: forall req contentType res accept. MimeType contentType => ORYHydraRequest req contentType res accept -> ORYHydraRequest req contentType res accept
 _setContentTypeHeader req =
     case mimeType (P.Proxy :: P.Proxy contentType) of
         Just m -> req `setHeader` [("content-type", BC.pack $ P.show m)]
         Nothing -> req `removeHeader` ["content-type"]
 
-_setAcceptHeader :: forall req contentType res accept. MimeType accept => OryHydraRequest req contentType res accept -> OryHydraRequest req contentType res accept
+_setAcceptHeader :: forall req contentType res accept. MimeType accept => ORYHydraRequest req contentType res accept -> ORYHydraRequest req contentType res accept
 _setAcceptHeader req =
     case mimeType (P.Proxy :: P.Proxy accept) of
         Just m -> req `setHeader` [("accept", BC.pack $ P.show m)]
         Nothing -> req `removeHeader` ["accept"]
 
 setQuery ::
-     OryHydraRequest req contentType res accept
+     ORYHydraRequest req contentType res accept
   -> [NH.QueryItem]
-  -> OryHydraRequest req contentType res accept
+  -> ORYHydraRequest req contentType res accept
 setQuery req query =
   req &
   L.over
@@ -292,34 +292,34 @@ setQuery req query =
     cifst = CI.mk . P.fst
 
 addQuery ::
-     OryHydraRequest req contentType res accept
+     ORYHydraRequest req contentType res accept
   -> [NH.QueryItem]
-  -> OryHydraRequest req contentType res accept
+  -> ORYHydraRequest req contentType res accept
 addQuery req query = req & L.over (rParamsL . paramsQueryL) (query P.++)
 
-addForm :: OryHydraRequest req contentType res accept -> WH.Form -> OryHydraRequest req contentType res accept
+addForm :: ORYHydraRequest req contentType res accept -> WH.Form -> ORYHydraRequest req contentType res accept
 addForm req newform =
     let form = case paramsBody (rParams req) of
             ParamBodyFormUrlEncoded _form -> _form
             _ -> mempty
     in req & L.set (rParamsL . paramsBodyL) (ParamBodyFormUrlEncoded (newform <> form))
 
-_addMultiFormPart :: OryHydraRequest req contentType res accept -> NH.Part -> OryHydraRequest req contentType res accept
+_addMultiFormPart :: ORYHydraRequest req contentType res accept -> NH.Part -> ORYHydraRequest req contentType res accept
 _addMultiFormPart req newpart =
     let parts = case paramsBody (rParams req) of
             ParamBodyMultipartFormData _parts -> _parts
             _ -> []
     in req & L.set (rParamsL . paramsBodyL) (ParamBodyMultipartFormData (newpart : parts))
 
-_setBodyBS :: OryHydraRequest req contentType res accept -> B.ByteString -> OryHydraRequest req contentType res accept
+_setBodyBS :: ORYHydraRequest req contentType res accept -> B.ByteString -> ORYHydraRequest req contentType res accept
 _setBodyBS req body =
     req & L.set (rParamsL . paramsBodyL) (ParamBodyB body)
 
-_setBodyLBS :: OryHydraRequest req contentType res accept -> BL.ByteString -> OryHydraRequest req contentType res accept
+_setBodyLBS :: ORYHydraRequest req contentType res accept -> BL.ByteString -> ORYHydraRequest req contentType res accept
 _setBodyLBS req body =
     req & L.set (rParamsL . paramsBodyL) (ParamBodyBL body)
 
-_hasAuthType :: AuthMethod authMethod => OryHydraRequest req contentType res accept -> P.Proxy authMethod -> OryHydraRequest req contentType res accept
+_hasAuthType :: AuthMethod authMethod => ORYHydraRequest req contentType res accept -> P.Proxy authMethod -> ORYHydraRequest req contentType res accept
 _hasAuthType req proxy =
   req & L.over rAuthTypesL (P.typeRep proxy :)
 
@@ -402,10 +402,10 @@ _toCollA' c encode one xs = case c of
 class P.Typeable a =>
       AuthMethod a  where
   applyAuthMethod
-    :: OryHydraConfig
+    :: ORYHydraConfig
     -> a
-    -> OryHydraRequest req contentType res accept
-    -> IO (OryHydraRequest req contentType res accept)
+    -> ORYHydraRequest req contentType res accept
+    -> IO (ORYHydraRequest req contentType res accept)
 
 -- | An existential wrapper for any AuthMethod
 data AnyAuthMethod = forall a. AuthMethod a => AnyAuthMethod a deriving (P.Typeable)
@@ -419,10 +419,10 @@ instance E.Exception AuthMethodException
 
 -- | apply all matching AuthMethods in config to request
 _applyAuthMethods
-  :: OryHydraRequest req contentType res accept
-  -> OryHydraConfig
-  -> IO (OryHydraRequest req contentType res accept)
-_applyAuthMethods req config@(OryHydraConfig {configAuthMethods = as}) =
+  :: ORYHydraRequest req contentType res accept
+  -> ORYHydraConfig
+  -> IO (ORYHydraRequest req contentType res accept)
+_applyAuthMethods req config@(ORYHydraConfig {configAuthMethods = as}) =
   foldlM go req as
   where
     go r (AnyAuthMethod a) = applyAuthMethod config a r

@@ -10,7 +10,7 @@
 -}
 
 {-|
-Module : OryHydra.API.Jwk
+Module : ORYHydra.API.Jwk
 -}
 
 {-# LANGUAGE FlexibleContexts #-}
@@ -20,11 +20,11 @@ Module : OryHydra.API.Jwk
 {-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing -fno-warn-unused-binds -fno-warn-unused-imports #-}
 
-module OryHydra.API.Jwk where
+module ORYHydra.API.Jwk where
 
-import OryHydra.Core
-import OryHydra.MimeTypes
-import OryHydra.Model as M
+import ORYHydra.Core
+import ORYHydra.MimeTypes
+import ORYHydra.Model as M
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString as B
@@ -70,7 +70,7 @@ createJsonWebKeySet0
   :: (Consumes CreateJsonWebKeySet0 MimeJSON, MimeRender MimeJSON CreateJsonWebKeySet)
   => CreateJsonWebKeySet -- ^ "createJsonWebKeySet"
   -> Set -- ^ "set" -  The JSON Web Key Set ID
-  -> OryHydraRequest CreateJsonWebKeySet0 MimeJSON JsonWebKeySet MimeJSON
+  -> ORYHydraRequest CreateJsonWebKeySet0 MimeJSON JsonWebKeySet MimeJSON
 createJsonWebKeySet0 createJsonWebKeySet (Set set) =
   _mkRequest "POST" ["/admin/keys/",toPath set]
     `setBodyParam` createJsonWebKeySet
@@ -96,7 +96,7 @@ instance Produces CreateJsonWebKeySet0 MimeJSON
 deleteJsonWebKey
   :: Set -- ^ "set" -  The JSON Web Key Set
   -> Kid -- ^ "kid" -  The JSON Web Key ID (kid)
-  -> OryHydraRequest DeleteJsonWebKey MimeNoContent NoContent MimeNoContent
+  -> ORYHydraRequest DeleteJsonWebKey MimeNoContent NoContent MimeNoContent
 deleteJsonWebKey (Set set) (Kid kid) =
   _mkRequest "DELETE" ["/admin/keys/",toPath set,"/",toPath kid]
 
@@ -114,7 +114,7 @@ instance Produces DeleteJsonWebKey MimeNoContent
 -- 
 deleteJsonWebKeySet
   :: Set -- ^ "set" -  The JSON Web Key Set
-  -> OryHydraRequest DeleteJsonWebKeySet MimeNoContent NoContent MimeNoContent
+  -> ORYHydraRequest DeleteJsonWebKeySet MimeNoContent NoContent MimeNoContent
 deleteJsonWebKeySet (Set set) =
   _mkRequest "DELETE" ["/admin/keys/",toPath set]
 
@@ -133,7 +133,7 @@ instance Produces DeleteJsonWebKeySet MimeNoContent
 getJsonWebKey
   :: Set -- ^ "set" -  JSON Web Key Set ID
   -> Kid -- ^ "kid" -  JSON Web Key ID
-  -> OryHydraRequest GetJsonWebKey MimeNoContent JsonWebKeySet MimeJSON
+  -> ORYHydraRequest GetJsonWebKey MimeNoContent JsonWebKeySet MimeJSON
 getJsonWebKey (Set set) (Kid kid) =
   _mkRequest "GET" ["/admin/keys/",toPath set,"/",toPath kid]
 
@@ -152,7 +152,7 @@ instance Produces GetJsonWebKey MimeJSON
 -- 
 getJsonWebKeySet
   :: Set -- ^ "set" -  JSON Web Key Set ID
-  -> OryHydraRequest GetJsonWebKeySet MimeNoContent JsonWebKeySet MimeJSON
+  -> ORYHydraRequest GetJsonWebKeySet MimeNoContent JsonWebKeySet MimeJSON
 getJsonWebKeySet (Set set) =
   _mkRequest "GET" ["/admin/keys/",toPath set]
 
@@ -173,7 +173,7 @@ setJsonWebKey
   :: (Consumes SetJsonWebKey MimeJSON)
   => Set -- ^ "set" -  The JSON Web Key Set ID
   -> Kid -- ^ "kid" -  JSON Web Key ID
-  -> OryHydraRequest SetJsonWebKey MimeJSON JsonWebKey MimeJSON
+  -> ORYHydraRequest SetJsonWebKey MimeJSON JsonWebKey MimeJSON
 setJsonWebKey (Set set) (Kid kid) =
   _mkRequest "PUT" ["/admin/keys/",toPath set,"/",toPath kid]
 
@@ -198,7 +198,7 @@ instance Produces SetJsonWebKey MimeJSON
 setJsonWebKeySet
   :: (Consumes SetJsonWebKeySet MimeJSON)
   => Set -- ^ "set" -  The JSON Web Key Set ID
-  -> OryHydraRequest SetJsonWebKeySet MimeJSON JsonWebKeySet MimeJSON
+  -> ORYHydraRequest SetJsonWebKeySet MimeJSON JsonWebKeySet MimeJSON
 setJsonWebKeySet (Set set) =
   _mkRequest "PUT" ["/admin/keys/",toPath set]
 

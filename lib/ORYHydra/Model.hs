@@ -10,7 +10,7 @@
 -}
 
 {-|
-Module : OryHydra.Model
+Module : ORYHydra.Model
 -}
 
 {-# LANGUAGE DeriveDataTypeable #-}
@@ -27,10 +27,10 @@ Module : OryHydra.Model
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -fno-warn-unused-matches -fno-warn-unused-binds -fno-warn-unused-imports #-}
 
-module OryHydra.Model where
+module ORYHydra.Model where
 
-import OryHydra.Core
-import OryHydra.MimeTypes
+import ORYHydra.Core
+import ORYHydra.MimeTypes
 
 import Data.Aeson ((.:),(.:!),(.:?),(.=))
 

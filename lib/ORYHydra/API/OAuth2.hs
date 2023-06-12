@@ -10,7 +10,7 @@
 -}
 
 {-|
-Module : OryHydra.API.OAuth2
+Module : ORYHydra.API.OAuth2
 -}
 
 {-# LANGUAGE FlexibleContexts #-}
@@ -20,11 +20,11 @@ Module : OryHydra.API.OAuth2
 {-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing -fno-warn-unused-binds -fno-warn-unused-imports #-}
 
-module OryHydra.API.OAuth2 where
+module ORYHydra.API.OAuth2 where
 
-import OryHydra.Core
-import OryHydra.MimeTypes
-import OryHydra.Model as M
+import ORYHydra.Core
+import ORYHydra.MimeTypes
+import ORYHydra.Model as M
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString as B
@@ -69,7 +69,7 @@ import qualified Prelude as P
 acceptOAuth2ConsentRequest0
   :: (Consumes AcceptOAuth2ConsentRequest0 MimeJSON)
   => ConsentChallenge -- ^ "consentChallenge" -  OAuth 2.0 Consent Request Challenge
-  -> OryHydraRequest AcceptOAuth2ConsentRequest0 MimeJSON OAuth2RedirectTo MimeJSON
+  -> ORYHydraRequest AcceptOAuth2ConsentRequest0 MimeJSON OAuth2RedirectTo MimeJSON
 acceptOAuth2ConsentRequest0 (ConsentChallenge consentChallenge) =
   _mkRequest "PUT" ["/admin/oauth2/auth/requests/consent/accept"]
     `addQuery` toQuery ("consent_challenge", Just consentChallenge)
@@ -95,7 +95,7 @@ instance Produces AcceptOAuth2ConsentRequest0 MimeJSON
 acceptOAuth2LoginRequest0
   :: (Consumes AcceptOAuth2LoginRequest0 MimeJSON)
   => LoginChallenge -- ^ "loginChallenge" -  OAuth 2.0 Login Request Challenge
-  -> OryHydraRequest AcceptOAuth2LoginRequest0 MimeJSON OAuth2RedirectTo MimeJSON
+  -> ORYHydraRequest AcceptOAuth2LoginRequest0 MimeJSON OAuth2RedirectTo MimeJSON
 acceptOAuth2LoginRequest0 (LoginChallenge loginChallenge) =
   _mkRequest "PUT" ["/admin/oauth2/auth/requests/login/accept"]
     `addQuery` toQuery ("login_challenge", Just loginChallenge)
@@ -120,7 +120,7 @@ instance Produces AcceptOAuth2LoginRequest0 MimeJSON
 -- 
 acceptOAuth2LogoutRequest
   :: LogoutChallenge -- ^ "logoutChallenge" -  OAuth 2.0 Logout Request Challenge
-  -> OryHydraRequest AcceptOAuth2LogoutRequest MimeNoContent OAuth2RedirectTo MimeJSON
+  -> ORYHydraRequest AcceptOAuth2LogoutRequest MimeNoContent OAuth2RedirectTo MimeJSON
 acceptOAuth2LogoutRequest (LogoutChallenge logoutChallenge) =
   _mkRequest "PUT" ["/admin/oauth2/auth/requests/logout/accept"]
     `addQuery` toQuery ("logout_challenge", Just logoutChallenge)
@@ -141,7 +141,7 @@ instance Produces AcceptOAuth2LogoutRequest MimeJSON
 createOAuth2Client
   :: (Consumes CreateOAuth2Client MimeJSON, MimeRender MimeJSON OAuth2Client)
   => OAuth2Client -- ^ "oAuth2Client" -  OAuth 2.0 Client Request Body
-  -> OryHydraRequest CreateOAuth2Client MimeJSON OAuth2Client MimeJSON
+  -> ORYHydraRequest CreateOAuth2Client MimeJSON OAuth2Client MimeJSON
 createOAuth2Client oAuth2Client =
   _mkRequest "POST" ["/admin/clients"]
     `setBodyParam` oAuth2Client
@@ -168,7 +168,7 @@ instance Produces CreateOAuth2Client MimeJSON
 -- 
 deleteOAuth2Client
   :: Id -- ^ "id" -  The id of the OAuth 2.0 Client.
-  -> OryHydraRequest DeleteOAuth2Client MimeNoContent NoContent MimeNoContent
+  -> ORYHydraRequest DeleteOAuth2Client MimeNoContent NoContent MimeNoContent
 deleteOAuth2Client (Id id) =
   _mkRequest "DELETE" ["/admin/clients/",toPath id]
 
@@ -186,7 +186,7 @@ instance Produces DeleteOAuth2Client MimeNoContent
 -- 
 deleteOAuth2Token
   :: ClientId -- ^ "clientId" -  OAuth 2.0 Client ID
-  -> OryHydraRequest DeleteOAuth2Token MimeNoContent NoContent MimeNoContent
+  -> ORYHydraRequest DeleteOAuth2Token MimeNoContent NoContent MimeNoContent
 deleteOAuth2Token (ClientId clientId) =
   _mkRequest "DELETE" ["/admin/oauth2/tokens"]
     `addQuery` toQuery ("client_id", Just clientId)
@@ -205,7 +205,7 @@ instance Produces DeleteOAuth2Token MimeNoContent
 -- 
 deleteTrustedOAuth2JwtGrantIssuer
   :: Id -- ^ "id" -  The id of the desired grant
-  -> OryHydraRequest DeleteTrustedOAuth2JwtGrantIssuer MimeNoContent NoContent MimeNoContent
+  -> ORYHydraRequest DeleteTrustedOAuth2JwtGrantIssuer MimeNoContent NoContent MimeNoContent
 deleteTrustedOAuth2JwtGrantIssuer (Id id) =
   _mkRequest "DELETE" ["/admin/trust/grants/jwt-bearer/issuers/",toPath id]
 
@@ -223,7 +223,7 @@ instance Produces DeleteTrustedOAuth2JwtGrantIssuer MimeNoContent
 -- 
 getOAuth2Client
   :: Id -- ^ "id" -  The id of the OAuth 2.0 Client.
-  -> OryHydraRequest GetOAuth2Client MimeNoContent OAuth2Client MimeJSON
+  -> ORYHydraRequest GetOAuth2Client MimeNoContent OAuth2Client MimeJSON
 getOAuth2Client (Id id) =
   _mkRequest "GET" ["/admin/clients/",toPath id]
 
@@ -242,7 +242,7 @@ instance Produces GetOAuth2Client MimeJSON
 -- 
 getOAuth2ConsentRequest
   :: ConsentChallenge -- ^ "consentChallenge" -  OAuth 2.0 Consent Request Challenge
-  -> OryHydraRequest GetOAuth2ConsentRequest MimeNoContent OAuth2ConsentRequest MimeJSON
+  -> ORYHydraRequest GetOAuth2ConsentRequest MimeNoContent OAuth2ConsentRequest MimeJSON
 getOAuth2ConsentRequest (ConsentChallenge consentChallenge) =
   _mkRequest "GET" ["/admin/oauth2/auth/requests/consent"]
     `addQuery` toQuery ("consent_challenge", Just consentChallenge)
@@ -262,7 +262,7 @@ instance Produces GetOAuth2ConsentRequest MimeJSON
 -- 
 getOAuth2LoginRequest
   :: LoginChallenge -- ^ "loginChallenge" -  OAuth 2.0 Login Request Challenge
-  -> OryHydraRequest GetOAuth2LoginRequest MimeNoContent OAuth2LoginRequest MimeJSON
+  -> ORYHydraRequest GetOAuth2LoginRequest MimeNoContent OAuth2LoginRequest MimeJSON
 getOAuth2LoginRequest (LoginChallenge loginChallenge) =
   _mkRequest "GET" ["/admin/oauth2/auth/requests/login"]
     `addQuery` toQuery ("login_challenge", Just loginChallenge)
@@ -282,7 +282,7 @@ instance Produces GetOAuth2LoginRequest MimeJSON
 -- 
 getOAuth2LogoutRequest
   :: LogoutChallenge -- ^ "logoutChallenge"
-  -> OryHydraRequest GetOAuth2LogoutRequest MimeNoContent OAuth2LogoutRequest MimeJSON
+  -> ORYHydraRequest GetOAuth2LogoutRequest MimeNoContent OAuth2LogoutRequest MimeJSON
 getOAuth2LogoutRequest (LogoutChallenge logoutChallenge) =
   _mkRequest "GET" ["/admin/oauth2/auth/requests/logout"]
     `addQuery` toQuery ("logout_challenge", Just logoutChallenge)
@@ -302,7 +302,7 @@ instance Produces GetOAuth2LogoutRequest MimeJSON
 -- 
 getTrustedOAuth2JwtGrantIssuer
   :: Id -- ^ "id" -  The id of the desired grant
-  -> OryHydraRequest GetTrustedOAuth2JwtGrantIssuer MimeNoContent TrustedOAuth2JwtGrantIssuer MimeJSON
+  -> ORYHydraRequest GetTrustedOAuth2JwtGrantIssuer MimeNoContent TrustedOAuth2JwtGrantIssuer MimeJSON
 getTrustedOAuth2JwtGrantIssuer (Id id) =
   _mkRequest "GET" ["/admin/trust/grants/jwt-bearer/issuers/",toPath id]
 
@@ -322,7 +322,7 @@ instance Produces GetTrustedOAuth2JwtGrantIssuer MimeJSON
 introspectOAuth2Token
   :: (Consumes IntrospectOAuth2Token MimeFormUrlEncoded)
   => Token -- ^ "token" -  The string value of the token. For access tokens, this is the \\\"access_token\\\" value returned from the token endpoint defined in OAuth 2.0. For refresh tokens, this is the \\\"refresh_token\\\" value returned.
-  -> OryHydraRequest IntrospectOAuth2Token MimeFormUrlEncoded IntrospectedOAuth2Token MimeJSON
+  -> ORYHydraRequest IntrospectOAuth2Token MimeFormUrlEncoded IntrospectedOAuth2Token MimeJSON
 introspectOAuth2Token (Token token) =
   _mkRequest "POST" ["/admin/oauth2/introspect"]
     `addForm` toForm ("token", token)
@@ -350,7 +350,7 @@ instance Produces IntrospectOAuth2Token MimeJSON
 -- This endpoint lists all clients in the database, and never returns client secrets. As a default it lists the first 100 clients.
 -- 
 listOAuth2Clients
-  :: OryHydraRequest ListOAuth2Clients MimeNoContent [OAuth2Client] MimeJSON
+  :: ORYHydraRequest ListOAuth2Clients MimeNoContent [OAuth2Client] MimeJSON
 listOAuth2Clients =
   _mkRequest "GET" ["/admin/clients"]
 
@@ -389,7 +389,7 @@ instance Produces ListOAuth2Clients MimeJSON
 -- 
 listOAuth2ConsentSessions
   :: Subject -- ^ "subject" -  The subject to list the consent sessions for.
-  -> OryHydraRequest ListOAuth2ConsentSessions MimeNoContent [OAuth2ConsentSession] MimeJSON
+  -> ORYHydraRequest ListOAuth2ConsentSessions MimeNoContent [OAuth2ConsentSession] MimeJSON
 listOAuth2ConsentSessions (Subject subject) =
   _mkRequest "GET" ["/admin/oauth2/auth/sessions/consent"]
     `addQuery` toQuery ("subject", Just subject)
@@ -423,7 +423,7 @@ instance Produces ListOAuth2ConsentSessions MimeJSON
 -- Use this endpoint to list all trusted JWT Bearer Grant Type Issuers.
 -- 
 listTrustedOAuth2JwtGrantIssuers
-  :: OryHydraRequest ListTrustedOAuth2JwtGrantIssuers MimeNoContent [TrustedOAuth2JwtGrantIssuer] MimeJSON
+  :: ORYHydraRequest ListTrustedOAuth2JwtGrantIssuers MimeNoContent [TrustedOAuth2JwtGrantIssuer] MimeJSON
 listTrustedOAuth2JwtGrantIssuers =
   _mkRequest "GET" ["/admin/trust/grants/jwt-bearer/issuers"]
 
@@ -452,7 +452,7 @@ instance Produces ListTrustedOAuth2JwtGrantIssuers MimeJSON
 -- Use open source libraries to perform OAuth 2.0 and OpenID Connect available for any programming language. You can find a list of libraries at https://oauth.net/code/  The Ory SDK is not yet able to this endpoint properly.
 -- 
 oAuth2Authorize
-  :: OryHydraRequest OAuth2Authorize MimeNoContent ErrorOAuth2 MimeJSON
+  :: ORYHydraRequest OAuth2Authorize MimeNoContent ErrorOAuth2 MimeJSON
 oAuth2Authorize =
   _mkRequest "GET" ["/oauth2/auth"]
 
@@ -474,7 +474,7 @@ instance Produces OAuth2Authorize MimeJSON
 oauth2TokenExchange
   :: (Consumes Oauth2TokenExchange MimeFormUrlEncoded)
   => GrantType -- ^ "grantType"
-  -> OryHydraRequest Oauth2TokenExchange MimeFormUrlEncoded OAuth2TokenExchange MimeJSON
+  -> ORYHydraRequest Oauth2TokenExchange MimeFormUrlEncoded OAuth2TokenExchange MimeJSON
 oauth2TokenExchange (GrantType grantType) =
   _mkRequest "POST" ["/oauth2/token"]
     `_hasAuthType` (P.Proxy :: P.Proxy AuthBasicBasic)
@@ -514,7 +514,7 @@ patchOAuth2Client
   :: (Consumes PatchOAuth2Client MimeJSON, MimeRender MimeJSON JsonPatch2)
   => JsonPatch2 -- ^ "jsonPatch" -  OAuth 2.0 Client JSON Patch Body
   -> Id -- ^ "id" -  The id of the OAuth 2.0 Client.
-  -> OryHydraRequest PatchOAuth2Client MimeJSON OAuth2Client MimeJSON
+  -> ORYHydraRequest PatchOAuth2Client MimeJSON OAuth2Client MimeJSON
 patchOAuth2Client jsonPatch (Id id) =
   _mkRequest "PATCH" ["/admin/clients/",toPath id]
     `setBodyParam` jsonPatch
@@ -542,7 +542,7 @@ instance Produces PatchOAuth2Client MimeJSON
 rejectOAuth2ConsentRequest
   :: (Consumes RejectOAuth2ConsentRequest MimeJSON)
   => ConsentChallenge -- ^ "consentChallenge" -  OAuth 2.0 Consent Request Challenge
-  -> OryHydraRequest RejectOAuth2ConsentRequest MimeJSON OAuth2RedirectTo MimeJSON
+  -> ORYHydraRequest RejectOAuth2ConsentRequest MimeJSON OAuth2RedirectTo MimeJSON
 rejectOAuth2ConsentRequest (ConsentChallenge consentChallenge) =
   _mkRequest "PUT" ["/admin/oauth2/auth/requests/consent/reject"]
     `addQuery` toQuery ("consent_challenge", Just consentChallenge)
@@ -568,7 +568,7 @@ instance Produces RejectOAuth2ConsentRequest MimeJSON
 rejectOAuth2LoginRequest
   :: (Consumes RejectOAuth2LoginRequest MimeJSON)
   => LoginChallenge -- ^ "loginChallenge" -  OAuth 2.0 Login Request Challenge
-  -> OryHydraRequest RejectOAuth2LoginRequest MimeJSON OAuth2RedirectTo MimeJSON
+  -> ORYHydraRequest RejectOAuth2LoginRequest MimeJSON OAuth2RedirectTo MimeJSON
 rejectOAuth2LoginRequest (LoginChallenge loginChallenge) =
   _mkRequest "PUT" ["/admin/oauth2/auth/requests/login/reject"]
     `addQuery` toQuery ("login_challenge", Just loginChallenge)
@@ -593,7 +593,7 @@ instance Produces RejectOAuth2LoginRequest MimeJSON
 -- 
 rejectOAuth2LogoutRequest
   :: LogoutChallenge -- ^ "logoutChallenge"
-  -> OryHydraRequest RejectOAuth2LogoutRequest MimeNoContent NoContent MimeNoContent
+  -> ORYHydraRequest RejectOAuth2LogoutRequest MimeNoContent NoContent MimeNoContent
 rejectOAuth2LogoutRequest (LogoutChallenge logoutChallenge) =
   _mkRequest "PUT" ["/admin/oauth2/auth/requests/logout/reject"]
     `addQuery` toQuery ("logout_challenge", Just logoutChallenge)
@@ -612,7 +612,7 @@ instance Produces RejectOAuth2LogoutRequest MimeNoContent
 -- 
 revokeOAuth2ConsentSessions
   :: Subject -- ^ "subject" -  OAuth 2.0 Consent Subject  The subject whose consent sessions should be deleted.
-  -> OryHydraRequest RevokeOAuth2ConsentSessions MimeNoContent NoContent MimeNoContent
+  -> ORYHydraRequest RevokeOAuth2ConsentSessions MimeNoContent NoContent MimeNoContent
 revokeOAuth2ConsentSessions (Subject subject) =
   _mkRequest "DELETE" ["/admin/oauth2/auth/sessions/consent"]
     `addQuery` toQuery ("subject", Just subject)
@@ -640,7 +640,7 @@ instance Produces RevokeOAuth2ConsentSessions MimeNoContent
 -- This endpoint invalidates authentication sessions. After revoking the authentication session(s), the subject has to re-authenticate at the Ory OAuth2 Provider. This endpoint does not invalidate any tokens.  If you send the subject in a query param, all authentication sessions that belong to that subject are revoked. No OpennID Connect Front- or Back-channel logout is performed in this case.  Alternatively, you can send a SessionID via `sid` query param, in which case, only the session that is connected to that SessionID is revoked. OpenID Connect Back-channel logout is performed in this case.
 -- 
 revokeOAuth2LoginSessions
-  :: OryHydraRequest RevokeOAuth2LoginSessions MimeNoContent NoContent MimeNoContent
+  :: ORYHydraRequest RevokeOAuth2LoginSessions MimeNoContent NoContent MimeNoContent
 revokeOAuth2LoginSessions =
   _mkRequest "DELETE" ["/admin/oauth2/auth/sessions/login"]
 
@@ -671,7 +671,7 @@ instance Produces RevokeOAuth2LoginSessions MimeNoContent
 revokeOAuth2Token
   :: (Consumes RevokeOAuth2Token MimeFormUrlEncoded)
   => Token -- ^ "token"
-  -> OryHydraRequest RevokeOAuth2Token MimeFormUrlEncoded NoContent MimeNoContent
+  -> ORYHydraRequest RevokeOAuth2Token MimeFormUrlEncoded NoContent MimeNoContent
 revokeOAuth2Token (Token token) =
   _mkRequest "POST" ["/oauth2/revoke"]
     `_hasAuthType` (P.Proxy :: P.Proxy AuthBasicBasic)
@@ -704,7 +704,7 @@ setOAuth2Client
   :: (Consumes SetOAuth2Client MimeJSON, MimeRender MimeJSON OAuth2Client)
   => OAuth2Client -- ^ "oAuth2Client" -  OAuth 2.0 Client Request Body
   -> Id -- ^ "id" -  OAuth 2.0 Client ID
-  -> OryHydraRequest SetOAuth2Client MimeJSON OAuth2Client MimeJSON
+  -> ORYHydraRequest SetOAuth2Client MimeJSON OAuth2Client MimeJSON
 setOAuth2Client oAuth2Client (Id id) =
   _mkRequest "PUT" ["/admin/clients/",toPath id]
     `setBodyParam` oAuth2Client
@@ -732,7 +732,7 @@ instance Produces SetOAuth2Client MimeJSON
 setOAuth2ClientLifespans
   :: (Consumes SetOAuth2ClientLifespans MimeJSON)
   => Id -- ^ "id" -  OAuth 2.0 Client ID
-  -> OryHydraRequest SetOAuth2ClientLifespans MimeJSON OAuth2Client MimeJSON
+  -> ORYHydraRequest SetOAuth2ClientLifespans MimeJSON OAuth2Client MimeJSON
 setOAuth2ClientLifespans (Id id) =
   _mkRequest "PUT" ["/admin/clients/",toPath id,"/lifespans"]
 
@@ -756,7 +756,7 @@ instance Produces SetOAuth2ClientLifespans MimeJSON
 -- 
 trustOAuth2JwtGrantIssuer0
   :: (Consumes TrustOAuth2JwtGrantIssuer0 MimeJSON)
-  => OryHydraRequest TrustOAuth2JwtGrantIssuer0 MimeJSON TrustedOAuth2JwtGrantIssuer MimeJSON
+  => ORYHydraRequest TrustOAuth2JwtGrantIssuer0 MimeJSON TrustedOAuth2JwtGrantIssuer MimeJSON
 trustOAuth2JwtGrantIssuer0 =
   _mkRequest "POST" ["/admin/trust/grants/jwt-bearer/issuers"]
 

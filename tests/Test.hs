@@ -12,8 +12,8 @@ import Test.Hspec.QuickCheck
 import PropMime
 import Instances ()
 
-import OryHydra.Model
-import OryHydra.MimeTypes
+import ORYHydra.Model
+import ORYHydra.MimeTypes
 
 main :: IO ()
 main =

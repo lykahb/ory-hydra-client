@@ -3,8 +3,8 @@
 
 module Instances where
 
-import OryHydra.Model
-import OryHydra.Core
+import ORYHydra.Model
+import ORYHydra.Core
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Lazy as BL

@@ -10,22 +10,22 @@
 -}
 
 {-|
-Module : OryHydra
+Module : ORYHydra
 -}
 
-module OryHydra
-  (  module OryHydra.Client
-  , module OryHydra.Core
-  , module OryHydra.Logging
-  , module OryHydra.MimeTypes
-  , module OryHydra.Model
-  , module OryHydra.ModelLens
+module ORYHydra
+  (  module ORYHydra.Client
+  , module ORYHydra.Core
+  , module ORYHydra.Logging
+  , module ORYHydra.MimeTypes
+  , module ORYHydra.Model
+  , module ORYHydra.ModelLens
   ) where
 
 
-import OryHydra.Client
-import OryHydra.Core
-import OryHydra.Logging
-import OryHydra.MimeTypes
-import OryHydra.Model
-import OryHydra.ModelLens
+import ORYHydra.Client
+import ORYHydra.Core
+import ORYHydra.Logging
+import ORYHydra.MimeTypes
+import ORYHydra.Model
+import ORYHydra.ModelLens

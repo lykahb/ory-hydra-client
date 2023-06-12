@@ -10,7 +10,7 @@
 -}
 
 {-|
-Module : OryHydra.API.Wellknown
+Module : ORYHydra.API.Wellknown
 -}
 
 {-# LANGUAGE FlexibleContexts #-}
@@ -20,11 +20,11 @@ Module : OryHydra.API.Wellknown
 {-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing -fno-warn-unused-binds -fno-warn-unused-imports #-}
 
-module OryHydra.API.Wellknown where
+module ORYHydra.API.Wellknown where
 
-import OryHydra.Core
-import OryHydra.MimeTypes
-import OryHydra.Model as M
+import ORYHydra.Core
+import ORYHydra.MimeTypes
+import ORYHydra.Model as M
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString as B
@@ -67,7 +67,7 @@ import qualified Prelude as P
 -- This endpoint returns JSON Web Keys required to verifying OpenID Connect ID Tokens and, if enabled, OAuth 2.0 JWT Access Tokens. This endpoint can be used with client libraries like [node-jwks-rsa](https://github.com/auth0/node-jwks-rsa) among others.
 -- 
 discoverJsonWebKeys
-  :: OryHydraRequest DiscoverJsonWebKeys MimeNoContent JsonWebKeySet MimeJSON
+  :: ORYHydraRequest DiscoverJsonWebKeys MimeNoContent JsonWebKeySet MimeJSON
 discoverJsonWebKeys =
   _mkRequest "GET" ["/.well-known/jwks.json"]
 
