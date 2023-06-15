@@ -4,4 +4,5 @@ cabalPackage: ory-hydra-client
 baseModule: ORYHydra
 requestType: ORYHydraRequest 
 configType: ORYHydraConfig
-type-mappings: "AnyType=A.Value" 
+typeMappings:
+  AnyType: A.Value

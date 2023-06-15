@@ -74,12 +74,12 @@ acceptOAuth2ConsentRequestSessionL f AcceptOAuth2ConsentRequest{..} = (\acceptOA
 -- * AcceptOAuth2ConsentRequestSession
 
 -- | 'acceptOAuth2ConsentRequestSessionAccessToken' Lens
-acceptOAuth2ConsentRequestSessionAccessTokenL :: Lens_' AcceptOAuth2ConsentRequestSession (Maybe AnyType)
+acceptOAuth2ConsentRequestSessionAccessTokenL :: Lens_' AcceptOAuth2ConsentRequestSession (Maybe A.Value)
 acceptOAuth2ConsentRequestSessionAccessTokenL f AcceptOAuth2ConsentRequestSession{..} = (\acceptOAuth2ConsentRequestSessionAccessToken -> AcceptOAuth2ConsentRequestSession { acceptOAuth2ConsentRequestSessionAccessToken, ..} ) <$> f acceptOAuth2ConsentRequestSessionAccessToken
 {-# INLINE acceptOAuth2ConsentRequestSessionAccessTokenL #-}
 
 -- | 'acceptOAuth2ConsentRequestSessionIdToken' Lens
-acceptOAuth2ConsentRequestSessionIdTokenL :: Lens_' AcceptOAuth2ConsentRequestSession (Maybe AnyType)
+acceptOAuth2ConsentRequestSessionIdTokenL :: Lens_' AcceptOAuth2ConsentRequestSession (Maybe A.Value)
 acceptOAuth2ConsentRequestSessionIdTokenL f AcceptOAuth2ConsentRequestSession{..} = (\acceptOAuth2ConsentRequestSessionIdToken -> AcceptOAuth2ConsentRequestSession { acceptOAuth2ConsentRequestSessionIdToken, ..} ) <$> f acceptOAuth2ConsentRequestSessionIdToken
 {-# INLINE acceptOAuth2ConsentRequestSessionIdTokenL #-}
 
@@ -98,7 +98,7 @@ acceptOAuth2LoginRequestAmrL f AcceptOAuth2LoginRequest{..} = (\acceptOAuth2Logi
 {-# INLINE acceptOAuth2LoginRequestAmrL #-}
 
 -- | 'acceptOAuth2LoginRequestContext' Lens
-acceptOAuth2LoginRequestContextL :: Lens_' AcceptOAuth2LoginRequest (Maybe AnyType)
+acceptOAuth2LoginRequestContextL :: Lens_' AcceptOAuth2LoginRequest (Maybe A.Value)
 acceptOAuth2LoginRequestContextL f AcceptOAuth2LoginRequest{..} = (\acceptOAuth2LoginRequestContext -> AcceptOAuth2LoginRequest { acceptOAuth2LoginRequestContext, ..} ) <$> f acceptOAuth2LoginRequestContext
 {-# INLINE acceptOAuth2LoginRequestContextL #-}
 
@@ -190,7 +190,7 @@ genericErrorDebugL f GenericError{..} = (\genericErrorDebug -> GenericError { ge
 {-# INLINE genericErrorDebugL #-}
 
 -- | 'genericErrorDetails' Lens
-genericErrorDetailsL :: Lens_' GenericError (Maybe AnyType)
+genericErrorDetailsL :: Lens_' GenericError (Maybe A.Value)
 genericErrorDetailsL f GenericError{..} = (\genericErrorDetails -> GenericError { genericErrorDetails, ..} ) <$> f genericErrorDetails
 {-# INLINE genericErrorDetailsL #-}
 
@@ -271,7 +271,7 @@ introspectedOAuth2TokenExpL f IntrospectedOAuth2Token{..} = (\introspectedOAuth2
 {-# INLINE introspectedOAuth2TokenExpL #-}
 
 -- | 'introspectedOAuth2TokenExt' Lens
-introspectedOAuth2TokenExtL :: Lens_' IntrospectedOAuth2Token (Maybe (Map.Map String AnyType))
+introspectedOAuth2TokenExtL :: Lens_' IntrospectedOAuth2Token (Maybe (Map.Map String A.Value))
 introspectedOAuth2TokenExtL f IntrospectedOAuth2Token{..} = (\introspectedOAuth2TokenExt -> IntrospectedOAuth2Token { introspectedOAuth2TokenExt, ..} ) <$> f introspectedOAuth2TokenExt
 {-# INLINE introspectedOAuth2TokenExtL #-}
 
@@ -358,7 +358,7 @@ jsonPatchPathL f JsonPatch{..} = (\jsonPatchPath -> JsonPatch { jsonPatchPath, .
 {-# INLINE jsonPatchPathL #-}
 
 -- | 'jsonPatchValue' Lens
-jsonPatchValueL :: Lens_' JsonPatch (Maybe AnyType)
+jsonPatchValueL :: Lens_' JsonPatch (Maybe A.Value)
 jsonPatchValueL f JsonPatch{..} = (\jsonPatchValue -> JsonPatch { jsonPatchValue, ..} ) <$> f jsonPatchValue
 {-# INLINE jsonPatchValueL #-}
 
@@ -570,7 +570,7 @@ oAuth2ClientImplicitGrantIdTokenLifespanL f OAuth2Client{..} = (\oAuth2ClientImp
 {-# INLINE oAuth2ClientImplicitGrantIdTokenLifespanL #-}
 
 -- | 'oAuth2ClientJwks' Lens
-oAuth2ClientJwksL :: Lens_' OAuth2Client (Maybe AnyType)
+oAuth2ClientJwksL :: Lens_' OAuth2Client (Maybe A.Value)
 oAuth2ClientJwksL f OAuth2Client{..} = (\oAuth2ClientJwks -> OAuth2Client { oAuth2ClientJwks, ..} ) <$> f oAuth2ClientJwks
 {-# INLINE oAuth2ClientJwksL #-}
 
@@ -590,7 +590,7 @@ oAuth2ClientLogoUriL f OAuth2Client{..} = (\oAuth2ClientLogoUri -> OAuth2Client 
 {-# INLINE oAuth2ClientLogoUriL #-}
 
 -- | 'oAuth2ClientMetadata' Lens
-oAuth2ClientMetadataL :: Lens_' OAuth2Client (Maybe AnyType)
+oAuth2ClientMetadataL :: Lens_' OAuth2Client (Maybe A.Value)
 oAuth2ClientMetadataL f OAuth2Client{..} = (\oAuth2ClientMetadata -> OAuth2Client { oAuth2ClientMetadata, ..} ) <$> f oAuth2ClientMetadata
 {-# INLINE oAuth2ClientMetadataL #-}
 
@@ -778,7 +778,7 @@ oAuth2ConsentRequestClientL f OAuth2ConsentRequest{..} = (\oAuth2ConsentRequestC
 {-# INLINE oAuth2ConsentRequestClientL #-}
 
 -- | 'oAuth2ConsentRequestContext' Lens
-oAuth2ConsentRequestContextL :: Lens_' OAuth2ConsentRequest (Maybe AnyType)
+oAuth2ConsentRequestContextL :: Lens_' OAuth2ConsentRequest (Maybe A.Value)
 oAuth2ConsentRequestContextL f OAuth2ConsentRequest{..} = (\oAuth2ConsentRequestContext -> OAuth2ConsentRequest { oAuth2ConsentRequestContext, ..} ) <$> f oAuth2ConsentRequestContext
 {-# INLINE oAuth2ConsentRequestContextL #-}
 
@@ -837,7 +837,7 @@ oAuth2ConsentRequestOpenIDConnectContextDisplayL f OAuth2ConsentRequestOpenIDCon
 {-# INLINE oAuth2ConsentRequestOpenIDConnectContextDisplayL #-}
 
 -- | 'oAuth2ConsentRequestOpenIDConnectContextIdTokenHintClaims' Lens
-oAuth2ConsentRequestOpenIDConnectContextIdTokenHintClaimsL :: Lens_' OAuth2ConsentRequestOpenIDConnectContext (Maybe (Map.Map String AnyType))
+oAuth2ConsentRequestOpenIDConnectContextIdTokenHintClaimsL :: Lens_' OAuth2ConsentRequestOpenIDConnectContext (Maybe (Map.Map String A.Value))
 oAuth2ConsentRequestOpenIDConnectContextIdTokenHintClaimsL f OAuth2ConsentRequestOpenIDConnectContext{..} = (\oAuth2ConsentRequestOpenIDConnectContextIdTokenHintClaims -> OAuth2ConsentRequestOpenIDConnectContext { oAuth2ConsentRequestOpenIDConnectContextIdTokenHintClaims, ..} ) <$> f oAuth2ConsentRequestOpenIDConnectContextIdTokenHintClaims
 {-# INLINE oAuth2ConsentRequestOpenIDConnectContextIdTokenHintClaimsL #-}
 
