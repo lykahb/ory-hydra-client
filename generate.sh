@@ -9,9 +9,10 @@ if [ "$TAG" = "" ]; then
     echo "Tag name is missing"
     exit 1
 fi
+TEMP_FILE=`mktemp /tmp/api.swagger.XXXX.json`
 
-curl --fail https://raw.githubusercontent.com/ory/hydra/$TAG/spec/api.json > api.swagger.json
+curl --fail https://raw.githubusercontent.com/ory/hydra/$TAG/spec/api.json > $TEMP_FILE
 
-openapi-generator-cli generate -i api.swagger.json -g haskell-http-client -o $OUT -c config.yml
+openapi-generator-cli generate -i $TEMP_FILE -g haskell-http-client -o $OUT -c config.yml
 
 cp LICENSE $OUT/
