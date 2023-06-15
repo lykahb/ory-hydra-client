@@ -10,7 +10,7 @@
 -}
 
 {-|
-Module : OryHydra.Client
+Module : ORYHydra.Client
 -}
 
 {-# LANGUAGE OverloadedStrings #-}
@@ -23,11 +23,11 @@ Module : OryHydra.Client
 {-# LANGUAGE DeriveTraversable #-}
 {-# OPTIONS_GHC -fno-warn-unused-binds -fno-warn-unused-imports #-}
 
-module OryHydra.Client where
+module ORYHydra.Client where
 
-import OryHydra.Core
-import OryHydra.Logging
-import OryHydra.MimeTypes
+import ORYHydra.Core
+import ORYHydra.Logging
+import ORYHydra.MimeTypes
 
 import qualified Control.Exception.Safe as E
 import qualified Control.Monad.IO.Class as P
@@ -59,8 +59,8 @@ import GHC.Exts (IsString(..))
 dispatchLbs
   :: (Produces req accept, MimeType contentType)
   => NH.Manager -- ^ http-client Connection manager
-  -> OryHydraConfig -- ^ config
-  -> OryHydraRequest req contentType res accept -- ^ request
+  -> ORYHydraConfig -- ^ config
+  -> ORYHydraRequest req contentType res accept -- ^ request
   -> IO (NH.Response BCL.ByteString) -- ^ response
 dispatchLbs manager config request  = do
   initReq <- _toInitRequest config request
@@ -86,8 +86,8 @@ data MimeError =
 dispatchMime
   :: forall req contentType res accept. (Produces req accept, MimeUnrender accept res, MimeType contentType)
   => NH.Manager -- ^ http-client Connection manager
-  -> OryHydraConfig -- ^ config
-  -> OryHydraRequest req contentType res accept -- ^ request
+  -> ORYHydraConfig -- ^ config
+  -> ORYHydraRequest req contentType res accept -- ^ request
   -> IO (MimeResult res) -- ^ response
 dispatchMime manager config request = do
   httpResponse <- dispatchLbs manager config request
@@ -110,8 +110,8 @@ dispatchMime manager config request = do
 dispatchMime'
   :: (Produces req accept, MimeUnrender accept res, MimeType contentType)
   => NH.Manager -- ^ http-client Connection manager
-  -> OryHydraConfig -- ^ config
-  -> OryHydraRequest req contentType res accept -- ^ request
+  -> ORYHydraConfig -- ^ config
+  -> ORYHydraRequest req contentType res accept -- ^ request
   -> IO (Either MimeError res) -- ^ response
 dispatchMime' manager config request  = do
     MimeResult parsedResult _ <- dispatchMime manager config request
@@ -123,8 +123,8 @@ dispatchMime' manager config request  = do
 dispatchLbsUnsafe
   :: (MimeType accept, MimeType contentType)
   => NH.Manager -- ^ http-client Connection manager
-  -> OryHydraConfig -- ^ config
-  -> OryHydraRequest req contentType res accept -- ^ request
+  -> ORYHydraConfig -- ^ config
+  -> ORYHydraRequest req contentType res accept -- ^ request
   -> IO (NH.Response BCL.ByteString) -- ^ response
 dispatchLbsUnsafe manager config request  = do
   initReq <- _toInitRequest config request
@@ -133,7 +133,7 @@ dispatchLbsUnsafe manager config request  = do
 -- | dispatch an InitRequest
 dispatchInitUnsafe
   :: NH.Manager -- ^ http-client Connection manager
-  -> OryHydraConfig -- ^ config
+  -> ORYHydraConfig -- ^ config
   -> InitRequest req contentType res accept -- ^ init request
   -> IO (NH.Response BCL.ByteString) -- ^ response
 dispatchInitUnsafe manager config (InitRequest req) = do
@@ -170,8 +170,8 @@ newtype InitRequest req contentType res accept = InitRequest
 -- |  Build an http-client 'Request' record from the supplied config and request
 _toInitRequest
   :: (MimeType accept, MimeType contentType)
-  => OryHydraConfig -- ^ config
-  -> OryHydraRequest req contentType res accept -- ^ request
+  => ORYHydraConfig -- ^ config
+  -> ORYHydraRequest req contentType res accept -- ^ request
   -> IO (InitRequest req contentType res accept) -- ^ initialized request
 _toInitRequest config req0  =
   runConfigLogWithExceptions "Client" config $ do
@@ -214,11 +214,11 @@ modifyInitRequestM (InitRequest req) f = fmap InitRequest (f req)
 -- | Run a block using the configured logger instance
 runConfigLog
   :: P.MonadIO m
-  => OryHydraConfig -> LogExec m a
+  => ORYHydraConfig -> LogExec m a
 runConfigLog config = configLogExecWithContext config (configLogContext config)
 
 -- | Run a block using the configured logger instance (logs exceptions)
 runConfigLogWithExceptions
   :: (E.MonadCatch m, P.MonadIO m)
-  => T.Text -> OryHydraConfig -> LogExec m a
+  => T.Text -> ORYHydraConfig -> LogExec m a
 runConfigLogWithExceptions src config = runConfigLog config . logExceptions src

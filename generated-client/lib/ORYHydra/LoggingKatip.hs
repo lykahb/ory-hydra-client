@@ -10,7 +10,7 @@
 -}
 
 {-|
-Module : OryHydra.LoggingKatip
+Module : ORYHydra.LoggingKatip
 Katip Logging functions
 -}
 
@@ -18,7 +18,7 @@ Katip Logging functions
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
-module OryHydra.LoggingKatip where
+module ORYHydra.LoggingKatip where
 
 import qualified Control.Exception.Safe as E
 import qualified Control.Monad.IO.Class as P
@@ -51,7 +51,7 @@ type LogLevel = LG.Severity
 
 -- | the default log environment
 initLogContext :: IO LogContext
-initLogContext = LG.initLogEnv "OryHydra" "dev"
+initLogContext = LG.initLogEnv "ORYHydra" "dev"
 
 -- | Runs a Katip logging block with the Log environment
 runDefaultLogExecWithContext :: LogExecWithContext

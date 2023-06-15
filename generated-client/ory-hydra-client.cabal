@@ -1,16 +1,16 @@
 name:           ory-hydra-client
-version:        2.0.3
-synopsis:       Auto-generated ory-hydra-client API Client
+version:        2.1.2
+synopsis:       Auto-generated ory-hydra API Client
 description:    .
-                Client library for calling the Ory Hydra API API based on http-client.
+                Client library for calling the ORY Hydra API based on http-client.
                 .
                 host: localhost
                 .
                 base path: http://localhost
                 .
-                Ory Hydra API API version: 
+                ORY Hydra API version: 2.1.2
                 .
-                OpenAPI version: 3.0.3
+                OpenAPI version: 6.6.0
                 .
 category:       Web, OAuth, Network
 homepage:       https://github.com/lykahb/ory-hydra-client
@@ -55,7 +55,7 @@ library
     , network >=2.6.2 && <3.9
     , random >=1.1
     , safe-exceptions <0.2
-    , text >=0.11 && <3
+    , text >=0.11 && <1.3
     , time >=1.5
     , transformers >=0.4.0.0
     , unordered-containers
@@ -63,27 +63,27 @@ library
   other-modules:
       Paths_ory_hydra_client
   exposed-modules:
-      OryHydra
-      OryHydra.API.Jwk
-      OryHydra.API.Metadata
-      OryHydra.API.OAuth2
-      OryHydra.API.Oidc
-      OryHydra.API.Wellknown
-      OryHydra.Client
-      OryHydra.Core
-      OryHydra.Logging
-      OryHydra.MimeTypes
-      OryHydra.Model
-      OryHydra.ModelLens
+      ORYHydra
+      ORYHydra.API.Jwk
+      ORYHydra.API.Metadata
+      ORYHydra.API.OAuth2
+      ORYHydra.API.Oidc
+      ORYHydra.API.Wellknown
+      ORYHydra.Client
+      ORYHydra.Core
+      ORYHydra.Logging
+      ORYHydra.MimeTypes
+      ORYHydra.Model
+      ORYHydra.ModelLens
   default-language: Haskell2010
 
   if flag(UseKatip)
       build-depends: katip >=0.8 && < 1.0
-      other-modules: OryHydra.LoggingKatip
+      other-modules: ORYHydra.LoggingKatip
       cpp-options: -DUSE_KATIP
   else
       build-depends: monad-logger >=0.3 && <0.4
-      other-modules: OryHydra.LoggingMonadLogger
+      other-modules: ORYHydra.LoggingMonadLogger
       cpp-options: -DUSE_MONAD_LOGGER
 
 test-suite tests

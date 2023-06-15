@@ -10,7 +10,7 @@
 -}
 
 {-|
-Module : OryHydra.MimeTypes
+Module : ORYHydra.MimeTypes
 -}
 
 {-# LANGUAGE ConstraintKinds #-}
@@ -22,7 +22,7 @@ Module : OryHydra.MimeTypes
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# OPTIONS_GHC -fno-warn-unused-binds -fno-warn-unused-imports #-}
 
-module OryHydra.MimeTypes where
+module ORYHydra.MimeTypes where
 
 import qualified Control.Arrow as P (left)
 import qualified Data.Aeson as A

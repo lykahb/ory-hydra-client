@@ -10,25 +10,25 @@
 -}
 
 {-|
-Module : OryHydra.Logging
+Module : ORYHydra.Logging
 Logging functions
 -}
 {-# LANGUAGE CPP #-}
 
 #ifdef USE_KATIP
 
-module OryHydra.Logging
-  ( module OryHydra.LoggingKatip
+module ORYHydra.Logging
+  ( module ORYHydra.LoggingKatip
   ) where
 
-import OryHydra.LoggingKatip
+import ORYHydra.LoggingKatip
 
 #else
 
-module OryHydra.Logging
-  ( module OryHydra.LoggingMonadLogger
+module ORYHydra.Logging
+  ( module ORYHydra.LoggingMonadLogger
   ) where
 
-import OryHydra.LoggingMonadLogger
+import ORYHydra.LoggingMonadLogger
 
 #endif

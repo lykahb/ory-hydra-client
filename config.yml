@@ -1,0 +1,7 @@
+allowNonUniqueOperationIds: true
+strictFields: false
+cabalPackage: ory-hydra-client
+baseModule: ORYHydra
+requestType: ORYHydraRequest 
+configType: ORYHydraConfig
+type-mappings: "AnyType=A.Value" 

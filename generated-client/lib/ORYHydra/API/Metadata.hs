@@ -10,7 +10,7 @@
 -}
 
 {-|
-Module : OryHydra.API.Metadata
+Module : ORYHydra.API.Metadata
 -}
 
 {-# LANGUAGE FlexibleContexts #-}
@@ -20,11 +20,11 @@ Module : OryHydra.API.Metadata
 {-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing -fno-warn-unused-binds -fno-warn-unused-imports #-}
 
-module OryHydra.API.Metadata where
+module ORYHydra.API.Metadata where
 
-import OryHydra.Core
-import OryHydra.MimeTypes
-import OryHydra.Model as M
+import ORYHydra.Core
+import ORYHydra.MimeTypes
+import ORYHydra.Model as M
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString as B
@@ -67,7 +67,7 @@ import qualified Prelude as P
 -- This endpoint returns the version of Ory Hydra.  If the service supports TLS Edge Termination, this endpoint does not require the `X-Forwarded-Proto` header to be set.  Be aware that if you are running multiple nodes of this service, the version will never refer to the cluster state, only to a single instance.
 -- 
 getVersion
-  :: OryHydraRequest GetVersion MimeNoContent GetVersion200Response MimeJSON
+  :: ORYHydraRequest GetVersion MimeNoContent GetVersion200Response MimeJSON
 getVersion =
   _mkRequest "GET" ["/version"]
 
@@ -85,7 +85,7 @@ instance Produces GetVersion MimeJSON
 -- This endpoint returns a HTTP 200 status code when Ory Hydra is accepting incoming HTTP requests. This status does currently not include checks whether the database connection is working.  If the service supports TLS Edge Termination, this endpoint does not require the `X-Forwarded-Proto` header to be set.  Be aware that if you are running multiple nodes of this service, the health status will never refer to the cluster state, only to a single instance.
 -- 
 isAlive
-  :: OryHydraRequest IsAlive MimeNoContent HealthStatus MimeJSON
+  :: ORYHydraRequest IsAlive MimeNoContent HealthStatus MimeJSON
 isAlive =
   _mkRequest "GET" ["/health/alive"]
 
@@ -103,7 +103,7 @@ instance Produces IsAlive MimeJSON
 -- This endpoint returns a HTTP 200 status code when Ory Hydra is up running and the environment dependencies (e.g. the database) are responsive as well.  If the service supports TLS Edge Termination, this endpoint does not require the `X-Forwarded-Proto` header to be set.  Be aware that if you are running multiple nodes of Ory Hydra, the health status will never refer to the cluster state, only to a single instance.
 -- 
 isReady
-  :: OryHydraRequest IsReady MimeNoContent IsReady200Response MimeJSON
+  :: ORYHydraRequest IsReady MimeNoContent IsReady200Response MimeJSON
 isReady =
   _mkRequest "GET" ["/health/ready"]
 

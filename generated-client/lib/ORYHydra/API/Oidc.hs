@@ -10,7 +10,7 @@
 -}
 
 {-|
-Module : OryHydra.API.Oidc
+Module : ORYHydra.API.Oidc
 -}
 
 {-# LANGUAGE FlexibleContexts #-}
@@ -20,11 +20,11 @@ Module : OryHydra.API.Oidc
 {-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -fno-warn-name-shadowing -fno-warn-unused-binds -fno-warn-unused-imports #-}
 
-module OryHydra.API.Oidc where
+module ORYHydra.API.Oidc where
 
-import OryHydra.Core
-import OryHydra.MimeTypes
-import OryHydra.Model as M
+import ORYHydra.Core
+import ORYHydra.MimeTypes
+import ORYHydra.Model as M
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString as B
@@ -69,7 +69,7 @@ import qualified Prelude as P
 createOidcDynamicClient
   :: (Consumes CreateOidcDynamicClient MimeJSON, MimeRender MimeJSON OAuth2Client)
   => OAuth2Client -- ^ "oAuth2Client" -  Dynamic Client Registration Request Body
-  -> OryHydraRequest CreateOidcDynamicClient MimeJSON OAuth2Client MimeJSON
+  -> ORYHydraRequest CreateOidcDynamicClient MimeJSON OAuth2Client MimeJSON
 createOidcDynamicClient oAuth2Client =
   _mkRequest "POST" ["/oauth2/register"]
     `setBodyParam` oAuth2Client
@@ -98,7 +98,7 @@ instance Produces CreateOidcDynamicClient MimeJSON
 -- 
 deleteOidcDynamicClient
   :: Id -- ^ "id" -  The id of the OAuth 2.0 Client.
-  -> OryHydraRequest DeleteOidcDynamicClient MimeNoContent NoContent MimeNoContent
+  -> ORYHydraRequest DeleteOidcDynamicClient MimeNoContent NoContent MimeNoContent
 deleteOidcDynamicClient (Id id) =
   _mkRequest "DELETE" ["/oauth2/register/",toPath id]
     `_hasAuthType` (P.Proxy :: P.Proxy AuthBasicBearer)
@@ -116,7 +116,7 @@ instance Produces DeleteOidcDynamicClient MimeNoContent
 -- A mechanism for an OpenID Connect Relying Party to discover the End-User's OpenID Provider and obtain information needed to interact with it, including its OAuth 2.0 endpoint locations.  Popular libraries for OpenID Connect clients include oidc-client-js (JavaScript), go-oidc (Golang), and others. For a full list of clients go here: https://openid.net/developers/certified/
 -- 
 discoverOidcConfiguration
-  :: OryHydraRequest DiscoverOidcConfiguration MimeNoContent OidcConfiguration MimeJSON
+  :: ORYHydraRequest DiscoverOidcConfiguration MimeNoContent OidcConfiguration MimeJSON
 discoverOidcConfiguration =
   _mkRequest "GET" ["/.well-known/openid-configuration"]
 
@@ -137,7 +137,7 @@ instance Produces DiscoverOidcConfiguration MimeJSON
 -- 
 getOidcDynamicClient
   :: Id -- ^ "id" -  The id of the OAuth 2.0 Client.
-  -> OryHydraRequest GetOidcDynamicClient MimeNoContent OAuth2Client MimeJSON
+  -> ORYHydraRequest GetOidcDynamicClient MimeNoContent OAuth2Client MimeJSON
 getOidcDynamicClient (Id id) =
   _mkRequest "GET" ["/oauth2/register/",toPath id]
     `_hasAuthType` (P.Proxy :: P.Proxy AuthBasicBearer)
@@ -158,7 +158,7 @@ instance Produces GetOidcDynamicClient MimeJSON
 -- AuthMethod: 'AuthOAuthOauth2'
 -- 
 getOidcUserInfo
-  :: OryHydraRequest GetOidcUserInfo MimeNoContent OidcUserInfo MimeJSON
+  :: ORYHydraRequest GetOidcUserInfo MimeNoContent OidcUserInfo MimeJSON
 getOidcUserInfo =
   _mkRequest "GET" ["/userinfo"]
     `_hasAuthType` (P.Proxy :: P.Proxy AuthOAuthOauth2)
@@ -177,7 +177,7 @@ instance Produces GetOidcUserInfo MimeJSON
 -- This endpoint initiates and completes user logout at the Ory OAuth2 & OpenID provider and initiates OpenID Connect Front- / Back-channel logout:  https://openid.net/specs/openid-connect-frontchannel-1_0.html https://openid.net/specs/openid-connect-backchannel-1_0.html  Back-channel logout is performed asynchronously and does not affect logout flow.
 -- 
 revokeOidcSession
-  :: OryHydraRequest RevokeOidcSession MimeNoContent NoContent MimeNoContent
+  :: ORYHydraRequest RevokeOidcSession MimeNoContent NoContent MimeNoContent
 revokeOidcSession =
   _mkRequest "GET" ["/oauth2/sessions/logout"]
 
@@ -199,7 +199,7 @@ setOidcDynamicClient
   :: (Consumes SetOidcDynamicClient MimeJSON, MimeRender MimeJSON OAuth2Client)
   => OAuth2Client -- ^ "oAuth2Client" -  OAuth 2.0 Client Request Body
   -> Id -- ^ "id" -  OAuth 2.0 Client ID
-  -> OryHydraRequest SetOidcDynamicClient MimeJSON OAuth2Client MimeJSON
+  -> ORYHydraRequest SetOidcDynamicClient MimeJSON OAuth2Client MimeJSON
 setOidcDynamicClient oAuth2Client (Id id) =
   _mkRequest "PUT" ["/oauth2/register/",toPath id]
     `_hasAuthType` (P.Proxy :: P.Proxy AuthBasicBearer)

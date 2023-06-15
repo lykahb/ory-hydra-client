@@ -3,8 +3,8 @@
 
 module Instances where
 
-import OryHydra.Model
-import OryHydra.Core
+import ORYHydra.Model
+import ORYHydra.Core
 
 import qualified Data.Aeson as A
 import qualified Data.ByteString.Lazy as BL
@@ -132,8 +132,8 @@ instance Arbitrary AcceptOAuth2ConsentRequestSession where
 genAcceptOAuth2ConsentRequestSession :: Int -> Gen AcceptOAuth2ConsentRequestSession
 genAcceptOAuth2ConsentRequestSession n =
   AcceptOAuth2ConsentRequestSession
-    <$> arbitraryReducedMaybeValue n -- acceptOAuth2ConsentRequestSessionAccessToken :: Maybe A.Value
-    <*> arbitraryReducedMaybeValue n -- acceptOAuth2ConsentRequestSessionIdToken :: Maybe A.Value
+    <$> arbitraryReducedMaybe n -- acceptOAuth2ConsentRequestSessionAccessToken :: Maybe AnyType
+    <*> arbitraryReducedMaybe n -- acceptOAuth2ConsentRequestSessionIdToken :: Maybe AnyType
   
 instance Arbitrary AcceptOAuth2LoginRequest where
   arbitrary = sized genAcceptOAuth2LoginRequest
@@ -143,7 +143,8 @@ genAcceptOAuth2LoginRequest n =
   AcceptOAuth2LoginRequest
     <$> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestAcr :: Maybe Text
     <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestAmr :: Maybe [Text]
-    <*> arbitraryReducedMaybeValue n -- acceptOAuth2LoginRequestContext :: Maybe A.Value
+    <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestContext :: Maybe AnyType
+    <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestExtendSessionLifespan :: Maybe Bool
     <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestForceSubjectIdentifier :: Maybe Text
     <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestRemember :: Maybe Bool
     <*> arbitraryReducedMaybe n -- acceptOAuth2LoginRequestRememberFor :: Maybe Integer
@@ -179,7 +180,7 @@ genGenericError n =
   GenericError
     <$> arbitraryReducedMaybe n -- genericErrorCode :: Maybe Integer
     <*> arbitraryReducedMaybe n -- genericErrorDebug :: Maybe Text
-    <*> arbitraryReducedMaybeValue n -- genericErrorDetails :: Maybe A.Value
+    <*> arbitraryReducedMaybe n -- genericErrorDetails :: Maybe AnyType
     <*> arbitraryReducedMaybe n -- genericErrorId :: Maybe Text
     <*> arbitrary -- genericErrorMessage :: Text
     <*> arbitraryReducedMaybe n -- genericErrorReason :: Maybe Text
@@ -220,7 +221,7 @@ genIntrospectedOAuth2Token n =
     <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenAud :: Maybe [Text]
     <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenClientId :: Maybe Text
     <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenExp :: Maybe Integer
-    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenExt :: Maybe (Map.Map String A.Value)
+    <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenExt :: Maybe (Map.Map String AnyType)
     <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenIat :: Maybe Integer
     <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenIss :: Maybe Text
     <*> arbitraryReducedMaybe n -- introspectedOAuth2TokenNbf :: Maybe Integer
@@ -256,7 +257,7 @@ genJsonPatch n =
     <$> arbitraryReducedMaybe n -- jsonPatchFrom :: Maybe Text
     <*> arbitrary -- jsonPatchOp :: Text
     <*> arbitrary -- jsonPatchPath :: Text
-    <*> arbitraryReducedMaybeValue n -- jsonPatchValue :: Maybe A.Value
+    <*> arbitraryReducedMaybe n -- jsonPatchValue :: Maybe AnyType
   
 instance Arbitrary JsonWebKey where
   arbitrary = sized genJsonWebKey
@@ -296,7 +297,8 @@ instance Arbitrary OAuth2Client where
 genOAuth2Client :: Int -> Gen OAuth2Client
 genOAuth2Client n =
   OAuth2Client
-    <$> arbitraryReducedMaybe n -- oAuth2ClientAllowedCorsOrigins :: Maybe [Text]
+    <$> arbitraryReducedMaybe n -- oAuth2ClientAccessTokenStrategy :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientAllowedCorsOrigins :: Maybe [Text]
     <*> arbitraryReducedMaybe n -- oAuth2ClientAudience :: Maybe [Text]
     <*> arbitraryReducedMaybe n -- oAuth2ClientAuthorizationCodeGrantAccessTokenLifespan :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientAuthorizationCodeGrantIdTokenLifespan :: Maybe Text
@@ -316,11 +318,11 @@ genOAuth2Client n =
     <*> arbitraryReducedMaybe n -- oAuth2ClientGrantTypes :: Maybe [Text]
     <*> arbitraryReducedMaybe n -- oAuth2ClientImplicitGrantAccessTokenLifespan :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientImplicitGrantIdTokenLifespan :: Maybe Text
-    <*> arbitraryReducedMaybeValue n -- oAuth2ClientJwks :: Maybe A.Value
+    <*> arbitraryReducedMaybe n -- oAuth2ClientJwks :: Maybe AnyType
     <*> arbitraryReducedMaybe n -- oAuth2ClientJwksUri :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientJwtBearerGrantAccessTokenLifespan :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientLogoUri :: Maybe Text
-    <*> arbitraryReducedMaybeValue n -- oAuth2ClientMetadata :: Maybe A.Value
+    <*> arbitraryReducedMaybe n -- oAuth2ClientMetadata :: Maybe AnyType
     <*> arbitraryReducedMaybe n -- oAuth2ClientOwner :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientPolicyUri :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientPostLogoutRedirectUris :: Maybe [Text]
@@ -335,6 +337,7 @@ genOAuth2Client n =
     <*> arbitraryReducedMaybe n -- oAuth2ClientResponseTypes :: Maybe [Text]
     <*> arbitraryReducedMaybe n -- oAuth2ClientScope :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientSectorIdentifierUri :: Maybe Text
+    <*> arbitraryReducedMaybe n -- oAuth2ClientSkipConsent :: Maybe Bool
     <*> arbitraryReducedMaybe n -- oAuth2ClientSubjectType :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientTokenEndpointAuthMethod :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ClientTokenEndpointAuthSigningAlg :: Maybe Text
@@ -369,7 +372,7 @@ genOAuth2ConsentRequest n =
     <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestAmr :: Maybe [Text]
     <*> arbitrary -- oAuth2ConsentRequestChallenge :: Text
     <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestClient :: Maybe OAuth2Client
-    <*> arbitraryReducedMaybeValue n -- oAuth2ConsentRequestContext :: Maybe A.Value
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestContext :: Maybe AnyType
     <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestLoginChallenge :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestLoginSessionId :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestOidcContext :: Maybe OAuth2ConsentRequestOpenIDConnectContext
@@ -387,7 +390,7 @@ genOAuth2ConsentRequestOpenIDConnectContext n =
   OAuth2ConsentRequestOpenIDConnectContext
     <$> arbitraryReducedMaybe n -- oAuth2ConsentRequestOpenIDConnectContextAcrValues :: Maybe [Text]
     <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestOpenIDConnectContextDisplay :: Maybe Text
-    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestOpenIDConnectContextIdTokenHintClaims :: Maybe (Map.Map String A.Value)
+    <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestOpenIDConnectContextIdTokenHintClaims :: Maybe (Map.Map String AnyType)
     <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestOpenIDConnectContextLoginHint :: Maybe Text
     <*> arbitraryReducedMaybe n -- oAuth2ConsentRequestOpenIDConnectContextUiLocales :: Maybe [Text]
   
